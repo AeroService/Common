@@ -1,0 +1,3 @@
+
+rootProject.name = "notion-common"
+
