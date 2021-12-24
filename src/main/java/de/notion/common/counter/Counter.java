@@ -1,6 +1,6 @@
 package de.notion.common.counter;
 
-import de.natrox.common.counter.event.CountEventProvider;
+import de.notion.common.counter.event.CountEventProvider;
 
 import java.util.concurrent.TimeUnit;
 
