@@ -31,7 +31,7 @@ public abstract class AbstractConfigurationLoader<T> {
     public T createFile() {
         Path parent = directory.getParent();
 
-        if (existsFile()) {
+        if (!existsFile()) {
             if (parent != null && !Files.exists(parent)) {
                 FileUtil.createDirectory(parent.toFile());
             }
@@ -61,7 +61,7 @@ public abstract class AbstractConfigurationLoader<T> {
     public abstract T createObject();
 
     public T loadOrCreateFile() {
-        if (existsFile()) {
+        if (!existsFile()) {
             return createFile();
         }
 
@@ -69,7 +69,7 @@ public abstract class AbstractConfigurationLoader<T> {
     }
 
     public T loadOrCreateConfig() {
-        if (existsFile()) {
+        if (!existsFile()) {
             return createConfig();
         }
 
@@ -77,7 +77,7 @@ public abstract class AbstractConfigurationLoader<T> {
     }
 
     public void loadOrCreateFile(Consumer<T> createConsumer, Consumer<T> loadConsumer) {
-        if (existsFile()) {
+        if (!existsFile()) {
             createConsumer.accept(createFile());
         }
 
@@ -85,7 +85,7 @@ public abstract class AbstractConfigurationLoader<T> {
     }
 
     public void loadOrCreateConfig(Consumer<T> createConsumer, Consumer<T> loadConsumer) {
-        if (existsFile()) {
+        if (!existsFile()) {
             createConsumer.accept(createConfig());
         }
 
@@ -93,7 +93,7 @@ public abstract class AbstractConfigurationLoader<T> {
     }
 
     public boolean existsFile() {
-        return !Files.exists(directory);
+        return Files.exists(directory);
     }
 
     public void saveConfig(T config) {
