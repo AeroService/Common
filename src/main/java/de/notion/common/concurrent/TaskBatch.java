@@ -63,7 +63,6 @@ public final class TaskBatch {
     }
 
     public void executeBatch(@Nullable Runnable callback) {
-        Objects.requireNonNull(callback, "Runnable can't be null!");
         this.callback = callback;
         executor.submit(new CatchingRunnable(this::runBatch));
     }
