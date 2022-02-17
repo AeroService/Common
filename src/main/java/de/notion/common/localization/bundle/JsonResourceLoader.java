@@ -1,4 +1,4 @@
-package de.notion.common.localization.resource;
+package de.notion.common.localization.bundle;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +29,14 @@ public class JsonResourceLoader extends ResourceBundle.Control {
     public JsonResourceLoader(File resourceDirectory) {
         this.resourceDirectory = resourceDirectory;
         this.logger = Logger.getLogger(this.getClass().getSimpleName());
+
+        if (!Files.exists(resourceDirectory.toPath())) {
+            try {
+                Files.createDirectories(resourceDirectory.toPath());
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -44,20 +53,19 @@ public class JsonResourceLoader extends ResourceBundle.Control {
             File file = new File(resourceDirectory, resName);
             if (!file.exists()) {
                 try (InputStream in = loader.getResourceAsStream(resName)) {
-                    if (in == null) {
-                        throw new IllegalArgumentException("Resource file " + resName + " does not exist");
-                    }
-
                     try {
-                        Files.copy(in, file.toPath());
+                        if (in != null) {
+                            Files.copy(in, file.toPath());
+                            return newBundle(baseName, locale, format, loader, reload);
+                        }
                     } catch (IOException e) {
                         return createBundle(resName, in);
                     }
                 }
-            }
-
-            try (InputStream fileIn = new FileInputStream(file)) {
-                return createBundle(resName, fileIn);
+            } else {
+                try (InputStream fileIn = new FileInputStream(file)) {
+                    return createBundle(resName, fileIn);
+                }
             }
         }
         return null;
@@ -70,7 +78,7 @@ public class JsonResourceLoader extends ResourceBundle.Control {
 
     private ResourceBundle createBundle(String resourceName, InputStream source) {
         Map<String, Object> entries = new HashMap<>();
-        JsonElement el = JsonParser.parseReader(new InputStreamReader(source));
+        JsonElement el = new JsonParser().parse(new InputStreamReader(source, StandardCharsets.UTF_8));
         if (!el.isJsonObject()) {
             throw new IllegalArgumentException("JSON resource files must have JSON object root");
         }

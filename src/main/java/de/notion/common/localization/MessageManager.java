@@ -1,12 +1,11 @@
 package de.notion.common.localization;
 
-import de.notion.common.localization.exception.MissingResourceBundleException;
-
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class MessageManager implements MessageProvider {
@@ -19,11 +18,7 @@ public class MessageManager implements MessageProvider {
 
     @Override
     public String getString(Locale locale, String key, Object... params) {
-        ResourceBundle bundle = bundles.get(locale);
-
-        if (bundle == null) {
-            throw new MissingResourceBundleException(locale);
-        }
+        ResourceBundle bundle = getBundle(locale);
 
         String bundleString = bundle.getString(key);
         MessageFormat messageFormat = new MessageFormat(bundleString, locale);
@@ -33,11 +28,7 @@ public class MessageManager implements MessageProvider {
 
     @Override
     public String[] getStringArray(Locale locale, String key, Object... params) {
-        ResourceBundle bundle = bundles.get(locale);
-
-        if (bundle == null) {
-            throw new MissingResourceBundleException(locale);
-        }
+        ResourceBundle bundle = getBundle(locale);
 
         String[] bundleArray = bundle.getStringArray(key);
         String[] localizedArray = new String[bundleArray.length];
@@ -54,5 +45,18 @@ public class MessageManager implements MessageProvider {
     @Override
     public List<String> getStringList(Locale locale, String key, Object... params) {
         return Arrays.asList(getStringArray(locale, key, params));
+    }
+
+    private ResourceBundle getBundle(Locale locale) {
+        ResourceBundle bundle = bundles.get(locale);
+
+        if (bundle == null) {
+            throw new MissingResourceException(
+                    "Can't find resource bundle, locale " + locale.getLanguage(),
+                    ResourceBundle.class.getName(),
+                    locale.getLanguage()
+            );
+        }
+        return bundle;
     }
 }

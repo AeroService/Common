@@ -1,4 +1,4 @@
-package de.notion.common.localization.resource;
+package de.notion.common.localization.bundle;
 
 import org.jetbrains.annotations.NotNull;
 
