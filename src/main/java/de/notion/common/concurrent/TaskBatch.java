@@ -86,12 +86,14 @@ public final class TaskBatch {
             else if (task.taskType.equals(TaskType.ASYNC))
                 batchExecutor.runAsync(task.runnable);
             else {
-                try {
-                    Thread.sleep(task.delay);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                locked.set(false);
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(task.delay);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    locked.set(false);
+                }).start();
             }
         }
         if (callback != null)
