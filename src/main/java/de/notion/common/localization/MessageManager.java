@@ -18,24 +18,22 @@ public class MessageManager implements MessageProvider {
 
     @Override
     public String getString(Locale locale, String key, Object... params) {
-        ResourceBundle bundle = getBundle(locale);
-
-        String bundleString = bundle.getString(key);
-        MessageFormat messageFormat = new MessageFormat(bundleString, locale);
+        var bundle = getBundle(locale);
+        var bundleString = bundle.getString(key);
+        var messageFormat = new MessageFormat(bundleString, locale);
 
         return messageFormat.format(params);
     }
 
     @Override
     public String[] getStringArray(Locale locale, String key, Object... params) {
-        ResourceBundle bundle = getBundle(locale);
-
-        String[] bundleArray = bundle.getStringArray(key);
-        String[] localizedArray = new String[bundleArray.length];
+        var bundle = getBundle(locale);
+        var bundleArray = bundle.getStringArray(key);
+        var localizedArray = new String[bundleArray.length];
 
         for (int i = 0; i < bundleArray.length; i++) {
-            String line = bundleArray[i];
-            MessageFormat messageFormat = new MessageFormat(line, locale);
+            var line = bundleArray[i];
+            var messageFormat = new MessageFormat(line, locale);
             localizedArray[i] = messageFormat.format(params);
         }
 
@@ -48,7 +46,7 @@ public class MessageManager implements MessageProvider {
     }
 
     private ResourceBundle getBundle(Locale locale) {
-        ResourceBundle bundle = bundles.get(locale);
+        var bundle = bundles.get(locale);
 
         if (bundle == null) {
             throw new MissingResourceException(

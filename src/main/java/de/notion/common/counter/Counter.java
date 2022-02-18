@@ -36,9 +36,9 @@ public interface Counter {
 
         Builder eventProvider(CountEventProvider eventProvider);
 
-        Counter createTimer();
+        Counter buildTimer();
 
-        Counter createCountdown();
+        Counter buildCountdown();
 
     }
 
