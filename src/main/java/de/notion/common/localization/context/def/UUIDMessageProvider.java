@@ -1,14 +1,53 @@
 package de.notion.common.localization.context.def;
 
 import de.notion.common.localization.MessageProvider;
-import de.notion.common.localization.context.ContextMessageProvider;
 import de.notion.common.localization.context.Contextualizer;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
-public class UUIDMessageProvider extends ContextMessageProvider<UUID> {
+public class UUIDMessageProvider implements MessageProvider<UUID> {
 
-    public UUIDMessageProvider(MessageProvider messageProvider, Contextualizer<UUID> contextualizer) {
-        super(messageProvider, contextualizer);
+    private final MessageProvider<Locale> localeMessageProvider;
+    private final Contextualizer<UUID> contextualizer;
+
+    private UUIDMessageProvider(MessageProvider<Locale> localeMessageProvider, Contextualizer<UUID> contextualizer) {
+        this.localeMessageProvider = localeMessageProvider;
+        this.contextualizer = contextualizer;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public String string(UUID context, String key, Object... params) {
+        return localeMessageProvider.string(contextualizer.locale(context), key, params);
+    }
+
+    @Override
+    public List<String> stringList(UUID context, String key, Object... params) {
+        return localeMessageProvider.stringList(contextualizer.locale(context), key, params);
+    }
+
+    @Override
+    public String[] stringArray(UUID context, String key, Object... params) {
+        return localeMessageProvider.stringArray(contextualizer.locale(context), key, params);
+    }
+
+    static class Builder extends AbstractBuilder<UUID> {
+
+        @Override
+        public MessageProvider<UUID> build() {
+            var builder = LocaleMessageProvider
+                    .builder()
+                    .contextualizer(context -> context);
+            for (var entry : locales.entrySet()) {
+                builder.bundle(entry.getValue());
+            }
+
+            var localeMessageProvider = builder.build();
+            return new UUIDMessageProvider(localeMessageProvider, this.contextualizer);
+        }
     }
 }

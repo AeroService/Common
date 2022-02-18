@@ -19,24 +19,24 @@ public class Scheduler implements SystemLoadable {
         this.scheduledExecutorService = Executors.newScheduledThreadPool(4, new DefaultThreadFactory("Scheduler"));
     }
 
-    public ScheduledFuture<?> asyncInterval(@NotNull Runnable task, long delay, long interval) {
+    public ScheduledFuture<?> interval(@NotNull Runnable task, long delay, long interval) {
         Objects.requireNonNull(task, "task can't be null");
         return scheduledExecutorService.scheduleAtFixedRate(new CatchingRunnable(task), delay * 50, interval * 50, TimeUnit.MILLISECONDS);
     }
 
-    public ScheduledFuture<?> asyncInterval(@NotNull Runnable task, long delay, long interval, @NotNull TimeUnit timeUnit) {
+    public ScheduledFuture<?> interval(@NotNull Runnable task, long delay, long interval, @NotNull TimeUnit timeUnit) {
         Objects.requireNonNull(task, "task can't be null");
         Objects.requireNonNull(timeUnit, "timeUnit can't be null");
         return scheduledExecutorService.scheduleAtFixedRate(new CatchingRunnable(task), delay, interval, timeUnit);
     }
 
 
-    public ScheduledFuture<?> asyncSchedule(@NotNull Runnable task, long delay) {
+    public ScheduledFuture<?> delay(@NotNull Runnable task, long delay) {
         Objects.requireNonNull(task, "task can't be null");
         return scheduledExecutorService.schedule(new CatchingRunnable(task), delay * 50, TimeUnit.MILLISECONDS);
     }
 
-    public ScheduledFuture<?> asyncSchedule(@NotNull Runnable task, long delay, @NotNull TimeUnit timeUnit) {
+    public ScheduledFuture<?> delay(@NotNull Runnable task, long delay, @NotNull TimeUnit timeUnit) {
         Objects.requireNonNull(task, "task can't be null");
         Objects.requireNonNull(timeUnit, "timeUnit can't be null");
         return scheduledExecutorService.schedule(new CatchingRunnable(task), delay, timeUnit);

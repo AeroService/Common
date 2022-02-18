@@ -86,12 +86,12 @@ public abstract class Countdown implements Counter, CountEventProvider {
         optionalTask = Optional.empty();
     }
 
-    public int getTickedTime() {
+    public int tickedTime() {
         return currentTime;
     }
 
     @Override
-    public int getCurrentTime() {
+    public int currentTime() {
         return currentTime;
     }
 
@@ -105,11 +105,11 @@ public abstract class Countdown implements Counter, CountEventProvider {
         return running;
     }
 
-    public int getStartTime() {
+    public int startTime() {
         return startTime;
     }
 
-    public void setCurrentTime(int currentTime) {
+    public void currentTime(int currentTime) {
         this.currentTime = currentTime;
     }
 

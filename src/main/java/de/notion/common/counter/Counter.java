@@ -14,7 +14,7 @@ public interface Counter {
 
     void stop();
 
-    int getCurrentTime();
+    int currentTime();
 
     boolean isPaused();
 
