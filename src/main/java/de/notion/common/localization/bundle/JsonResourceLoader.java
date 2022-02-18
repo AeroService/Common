@@ -1,7 +1,5 @@
 package de.notion.common.localization.bundle;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import java.io.File;
@@ -78,7 +76,7 @@ public class JsonResourceLoader extends ResourceBundle.Control {
 
     private ResourceBundle createBundle(String resourceName, InputStream source) {
         Map<String, Object> entries = new HashMap<>();
-        var el = new JsonParser().parse(new InputStreamReader(source, StandardCharsets.UTF_8));
+        var el = JsonParser.parseReader(new InputStreamReader(source, StandardCharsets.UTF_8));
         if (!el.isJsonObject()) {
             throw new IllegalArgumentException("JSON resource files must have JSON object root");
         }

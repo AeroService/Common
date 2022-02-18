@@ -17,45 +17,6 @@ dependencies {
     implementation("io.netty:netty-common:4.1.74.Final")
 }
 
-/*
-if (System.getProperty("publishName") != null && System.getProperty("publishPassword") != null) {
-    publishing {
-        (components["java"] as AdhocComponentWithVariants).withVariantsFromConfiguration(configurations["shadowRuntimeElements"]) {
-            skip()
-        }
-        publications {
-            create<MavenPublication>(project.name) {
-                groupId = "de.natrox"
-                artifactId = "natrox-common"
-                version = "1.0-SNAPSHOT"
-                from(components.findByName("java"))
-                pom {
-                    name.set(project.name)
-                    properties.put("inceptionYear", "2021")
-                    developers {
-                        developer {
-                            id.set("dasdrolpi")
-                            name.set("Lars")
-                            email.set("admin@natrox.de")
-                        }
-                    }
-                }
-            }
-            repositories {
-                maven("https://repo.natrox.de/repository/maven-internal/") {
-                    this.name = "natrox-internal"
-                    credentials {
-                        this.password = System.getProperty("publishPassword")
-                        this.username = System.getProperty("publishName")
-                    }
-                }
-            }
-        }
-    }
-}
-
- */
-
 tasks {
     compileJava {
         options.encoding = "UTF-8"
