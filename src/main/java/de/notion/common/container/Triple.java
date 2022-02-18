@@ -7,24 +7,7 @@ package de.notion.common.container;
  * @param <B> value B
  * @param <C> value C
  */
-public class Triple<A, B, C> {
-
-    public final A first;
-    public final B second;
-    public final C third;
-
-    /**
-     * Create a new triple.
-     *
-     * @param first  first value
-     * @param second second value
-     * @param third  third value
-     */
-    public Triple(A first, B second, C third) {
-        this.first = first;
-        this.second = second;
-        this.third = third;
-    }
+public record Triple<A, B, C>(A first, B second, C third) {
 
     /**
      * Create a new triple.

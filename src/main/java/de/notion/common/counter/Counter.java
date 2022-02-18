@@ -14,7 +14,7 @@ public interface Counter {
 
     void stop();
 
-    int getCurrentTime();
+    int currentTime();
 
     boolean isPaused();
 
@@ -36,9 +36,9 @@ public interface Counter {
 
         Builder eventProvider(CountEventProvider eventProvider);
 
-        Counter createTimer();
+        Counter buildTimer();
 
-        Counter createCountdown();
+        Counter buildCountdown();
 
     }
 

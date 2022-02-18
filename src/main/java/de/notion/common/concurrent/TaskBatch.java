@@ -79,7 +79,7 @@ public final class TaskBatch {
         for (int i = 0; i < tasks.size(); i++) {
             while (locked.get()) {
             }
-            TaskInfo task = tasks.get(i);
+            var task = tasks.get(i);
             locked.set(true);
             if (task.taskType.equals(TaskType.SYNC))
                 batchExecutor.runSync(task.runnable);
@@ -111,30 +111,21 @@ public final class TaskBatch {
         }));
     }
 
-    public static interface Executor {
-
-        void runSync(@NotNull Runnable runnable);
-
-         void runAsync(@NotNull Runnable runnable);
-
-         void onFinish();
-    }
-
     enum TaskType {
         SYNC,
         ASYNC,
         WAIT
     }
 
-    static class TaskInfo {
-        private final TaskType taskType;
-        private final Runnable runnable;
-        private final long delay;
+    public interface Executor {
 
-        public TaskInfo(long delay, TaskType taskType, Runnable runnable) {
-            this.delay = delay;
-            this.taskType = taskType;
-            this.runnable = runnable;
-        }
+        void runSync(@NotNull Runnable runnable);
+
+        void runAsync(@NotNull Runnable runnable);
+
+        void onFinish();
+    }
+
+    record TaskInfo(long delay, TaskType taskType, Runnable runnable) {
     }
 }

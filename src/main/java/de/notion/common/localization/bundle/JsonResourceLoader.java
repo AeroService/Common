@@ -1,7 +1,5 @@
 package de.notion.common.localization.bundle;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import java.io.File;
@@ -49,10 +47,10 @@ public class JsonResourceLoader extends ResourceBundle.Control {
     @Override
     public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IOException {
         if (format.equals(FORMAT_NAME)) {
-            String resName = toResourceName(toBundleName(baseName, locale), "json");
-            File file = new File(resourceDirectory, resName);
+            var resName = toResourceName(toBundleName(baseName, locale), "json");
+            var file = new File(resourceDirectory, resName);
             if (!file.exists()) {
-                try (InputStream in = loader.getResourceAsStream(resName)) {
+                try (var in = loader.getResourceAsStream(resName)) {
                     try {
                         if (in != null) {
                             Files.copy(in, file.toPath());
@@ -63,7 +61,7 @@ public class JsonResourceLoader extends ResourceBundle.Control {
                     }
                 }
             } else {
-                try (InputStream fileIn = new FileInputStream(file)) {
+                try (var fileIn = new FileInputStream(file)) {
                     return createBundle(resName, fileIn);
                 }
             }
@@ -78,16 +76,16 @@ public class JsonResourceLoader extends ResourceBundle.Control {
 
     private ResourceBundle createBundle(String resourceName, InputStream source) {
         Map<String, Object> entries = new HashMap<>();
-        JsonElement el = new JsonParser().parse(new InputStreamReader(source, StandardCharsets.UTF_8));
+        var el = JsonParser.parseReader(new InputStreamReader(source, StandardCharsets.UTF_8));
         if (!el.isJsonObject()) {
             throw new IllegalArgumentException("JSON resource files must have JSON object root");
         }
 
-        for (Map.Entry<String, JsonElement> e : el.getAsJsonObject().entrySet()) {
-            JsonElement value = e.getValue();
+        for (var e : el.getAsJsonObject().entrySet()) {
+            var value = e.getValue();
             if (value.isJsonArray()) {
-                JsonArray array = value.getAsJsonArray();
-                String[] res = new String[array.size()];
+                var array = value.getAsJsonArray();
+                var res = new String[array.size()];
                 for (int i = 0; i < res.length; i++) {
                     res[i] = array.get(i).getAsString();
                 }

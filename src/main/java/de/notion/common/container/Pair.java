@@ -6,21 +6,7 @@ package de.notion.common.container;
  * @param <A> value A
  * @param <B> value B
  */
-public class Pair<A, B> {
-
-    public final A first;
-    public final B second;
-
-    /**
-     * Create a new pair.
-     *
-     * @param first  first value
-     * @param second second value
-     */
-    public Pair(A first, B second) {
-        this.first = first;
-        this.second = second;
-    }
+public record Pair<A, B>(A first, B second) {
 
     /**
      * Create a new pair.

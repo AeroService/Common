@@ -29,7 +29,7 @@ public abstract class AbstractConfigurationLoader<T> {
     }
 
     public T createFile() {
-        Path parent = directory.getParent();
+        var parent = directory.getParent();
 
         if (!existsFile()) {
             if (parent != null && !Files.exists(parent)) {
@@ -109,7 +109,7 @@ public abstract class AbstractConfigurationLoader<T> {
             throw new IllegalArgumentException("The provided path can not be null.");
         }
 
-        try (FileWriter writer = new FileWriter(externalPath.toFile())) {
+        try (var writer = new FileWriter(externalPath.toFile())) {
             writer.write(GSON.toJson(object));
         } catch (IOException ignored) {
         }
@@ -124,7 +124,7 @@ public abstract class AbstractConfigurationLoader<T> {
             throw new IllegalArgumentException("The provided objectclass can not be null.");
         }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(source.toFile()))) {
+        try (var reader = new BufferedReader(new FileReader(source.toFile()))) {
             return GSON.fromJson(reader, objectClass);
         } catch (IOException e) {
             return null;

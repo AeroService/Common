@@ -9,7 +9,7 @@ public abstract class Timer extends Countdown {
     }
 
     @Override
-    public int getCurrentTime() {
-        return (stopTime - getTickedTime()) + startTime;
+    public int currentTime() {
+        return (stopTime - tickedTime()) + startTime;
     }
 }
