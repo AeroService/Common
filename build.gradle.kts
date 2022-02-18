@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains:annotations:20.1.0")
+    implementation("org.jetbrains:annotations:23.0.0")
     implementation("com.google.code.gson:gson:2.8.6")
     implementation("io.netty:netty-common:4.1.58.Final")
 }
