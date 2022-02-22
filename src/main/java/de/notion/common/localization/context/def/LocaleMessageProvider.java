@@ -69,7 +69,7 @@ public class LocaleMessageProvider implements MessageProvider<Locale> {
         return bundle;
     }
 
-    static class Builder extends AbstractBuilder<Locale> {
+    public static class Builder extends AbstractBuilder<Locale> {
 
         @Override
         public MessageProvider<Locale> build() {

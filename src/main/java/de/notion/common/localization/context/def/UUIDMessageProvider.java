@@ -35,7 +35,11 @@ public class UUIDMessageProvider implements MessageProvider<UUID> {
         return localeMessageProvider.stringArray(contextualizer.locale(context), key, params);
     }
 
-    static class Builder extends AbstractBuilder<UUID> {
+    public MessageProvider<Locale> delegate() {
+        return this.localeMessageProvider;
+    }
+
+    public static class Builder extends AbstractBuilder<UUID> {
 
         @Override
         public MessageProvider<UUID> build() {
