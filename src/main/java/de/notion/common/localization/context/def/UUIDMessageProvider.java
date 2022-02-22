@@ -42,7 +42,7 @@ public class UUIDMessageProvider implements MessageProvider<UUID> {
     public static class Builder extends AbstractBuilder<UUID> {
 
         @Override
-        public MessageProvider<UUID> build() {
+        public UUIDMessageProvider build() {
             var builder = LocaleMessageProvider
                     .builder()
                     .contextualizer(context -> context);

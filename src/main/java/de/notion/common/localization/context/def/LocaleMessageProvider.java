@@ -72,7 +72,7 @@ public class LocaleMessageProvider implements MessageProvider<Locale> {
     public static class Builder extends AbstractBuilder<Locale> {
 
         @Override
-        public MessageProvider<Locale> build() {
+        public LocaleMessageProvider build() {
             return new LocaleMessageProvider(this.locales, this.contextualizer);
         }
     }
