@@ -39,7 +39,7 @@ public class UUIDMessageProvider implements MessageProvider<UUID> {
         return this.localeMessageProvider;
     }
 
-    public static class Builder extends AbstractBuilder<UUID> {
+    public static class Builder extends AbstractBuilder<UUID, Builder> {
 
         @Override
         public UUIDMessageProvider build() {

@@ -73,7 +73,7 @@ public interface MessageProvider<T> {
      */
     String[] stringArray(T context, String key, Object... params);
 
-    abstract class AbstractBuilder<T> {
+    abstract class AbstractBuilder<T, U extends AbstractBuilder<T, U>> {
 
         protected final Map<Locale, ResourceBundle> locales;
         protected Contextualizer<T> contextualizer;
@@ -82,16 +82,16 @@ public interface MessageProvider<T> {
             this.locales = new HashMap<>();
         }
 
-        public AbstractBuilder<T> contextualizer(Contextualizer<T> contextualizer) {
+        public U contextualizer(Contextualizer<T> contextualizer) {
             this.contextualizer = contextualizer;
-            return this;
+            return (U) this;
         }
 
-        public AbstractBuilder<T> bundle(ResourceBundle bundle) {
+        public U bundle(ResourceBundle bundle) {
             Objects.requireNonNull(bundle);
 
             locales.put(bundle.getLocale(), bundle);
-            return this;
+            return (U) this;
         }
 
         public abstract MessageProvider<T> build();
