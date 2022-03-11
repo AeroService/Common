@@ -14,7 +14,7 @@ repositories {
 dependencies {
     implementation("org.jetbrains:annotations:23.0.0")
     implementation("com.google.code.gson:gson:2.9.0")
-    implementation("io.netty:netty-common:4.1.74.Final")
+    implementation("io.netty:netty-common:4.1.75.Final")
 }
 
 tasks {
