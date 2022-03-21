@@ -31,5 +31,5 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.withType<Jar> {
-    archiveFileName.set("Common.jar")
+    archiveFileName.set("common.jar")
 }
