@@ -4,6 +4,8 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
+defaultTasks("build", "shadowJar")
+
 allprojects {
     group = "de.natrox"
     version = "1.0.1-SNAPSHOT"
