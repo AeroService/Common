@@ -15,6 +15,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class TaskBatch {
 
+    //TODO: Recode
+
     private final List<TaskInfo> tasks = new ArrayList<>();
     private final ExecutorService executor = Executors.newScheduledThreadPool(4, new DefaultThreadFactory("TaskBatch"));
     private final AtomicBoolean locked = new AtomicBoolean(false);
