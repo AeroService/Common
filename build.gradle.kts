@@ -6,7 +6,7 @@ plugins {
 
 allprojects {
     group = "de.natrox"
-    version = "1.0.0-SNAPSHOT"
+    version = "1.0.1-SNAPSHOT"
     description = "A basic and common Library for the development of other projects"
 
     repositories {
