@@ -1,3 +1,2 @@
-
-rootProject.name = "notion-common"
+rootProject.name = "Common"
 

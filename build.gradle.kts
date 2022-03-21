@@ -4,11 +4,14 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
-group = "de.notion"
-version = "1.0-SNAPSHOT"
+allprojects {
+    group = "de.natrox"
+    version = "1.0.0-SNAPSHOT"
+    description = "A basic and common Library for the development of other projects"
 
-repositories {
-    mavenCentral()
+    repositories {
+        mavenCentral()
+    }
 }
 
 dependencies {
@@ -17,13 +20,14 @@ dependencies {
     implementation("io.netty:netty-common:4.1.75.Final")
 }
 
-tasks {
-    compileJava {
-        options.encoding = "UTF-8"
-    }
+tasks.withType<JavaCompile> {
+    sourceCompatibility = JavaVersion.VERSION_17.toString()
+    targetCompatibility = JavaVersion.VERSION_17.toString()
+    // options
+    options.encoding = "UTF-8"
+    options.isIncremental = true
+}
 
-    shadowJar {
-        //Set the Name of the Output File
-        archiveFileName.set("${project.name}.jar")
-    }
+tasks.withType<Jar> {
+    archiveFileName.set("Common.jar")
 }
