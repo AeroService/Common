@@ -2,8 +2,9 @@ package de.natrox.common.scheduler;
 
 import de.natrox.common.Loadable;
 import de.natrox.common.Shutdownable;
+import de.natrox.common.logger.LogManager;
+import de.natrox.common.logger.Logger;
 import de.natrox.common.runnable.CatchingRunnable;
-import de.natrox.common.system.SystemLoadable;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Scheduler implements Loadable, Shutdownable {
 
+    private final static Logger LOGGER = LogManager.logger(Scheduler.class);
     private final ScheduledExecutorService scheduledExecutorService;
 
     public Scheduler() {
@@ -51,11 +53,11 @@ public class Scheduler implements Loadable, Shutdownable {
 
     public void waitUntilShutdown() {
         shutdown();
-        System.out.println("&6Waiting 20s for Scheduler to shut down&7!"); //DEBUG
+        //LOGGER.info("Waiting 20s for Scheduler to shut down!"); //DEBUG
         try {
             scheduledExecutorService.awaitTermination(20, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            System.out.println("&cScheduler was interrupted&7!"); //DEBUG
+            LOGGER.severe("&cScheduler was interrupted!"); //DEBUG
             e.printStackTrace();
         }
     }
@@ -72,7 +74,7 @@ public class Scheduler implements Loadable, Shutdownable {
 
     @Override
     public void shutdown() {
-        System.out.println("&6Shutting down Scheduler&7!"); //DEBUG
+        //LOGGER.info("Shutting down Scheduler!"); //DEBUG
         scheduledExecutorService.shutdown();
     }
 }
