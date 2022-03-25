@@ -7,6 +7,7 @@ import java.util.ServiceLoader;
 public final class LogManager {
 
     private static final LoggerFactory LOGGER_FACTORY = loadLoggerFactory();
+    private static final String PROPERTY_KEY = "logger.debug";
 
     private LogManager() {
         throw new UnsupportedOperationException();
@@ -26,6 +27,14 @@ public final class LogManager {
 
     public static @NotNull LoggerFactory loggerFactory() {
         return LOGGER_FACTORY;
+    }
+
+    public static void setDebug(boolean debug) {
+        System.setProperty(PROPERTY_KEY, String.valueOf(debug));
+    }
+
+    public static boolean debug() {
+        return Boolean.getBoolean(PROPERTY_KEY);
     }
 
     private static @NotNull LoggerFactory loadLoggerFactory() {

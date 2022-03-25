@@ -43,6 +43,16 @@ public abstract class Logger extends java.util.logging.Logger {
         this.log(Level.INFO, message, throwable, params);
     }
 
+    public void debug(@NotNull String message) {
+        if (LogManager.debug())
+            this.log(Level.INFO, message);
+    }
+
+    public void debug(@NotNull String message, @Nullable Throwable throwable, Object @NotNull ... params) {
+        if (LogManager.debug())
+            this.log(Level.INFO, message, throwable, params);
+    }
+
     public void config(@NotNull String message, @Nullable Throwable throwable, Object @NotNull ... params) {
         this.log(Level.CONFIG, message, throwable, params);
     }
