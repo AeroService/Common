@@ -14,7 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class Scheduler implements Loadable, Shutdownable {
+public final class Scheduler implements Loadable, Shutdownable {
 
     private final static Logger LOGGER = LogManager.logger(Scheduler.class);
     private final ScheduledExecutorService scheduledExecutorService;
