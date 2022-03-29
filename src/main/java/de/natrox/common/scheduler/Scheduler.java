@@ -53,11 +53,11 @@ public final class Scheduler implements Loadable, Shutdownable {
 
     public void waitUntilShutdown() {
         shutdown();
-        //LOGGER.info("Waiting 20s for Scheduler to shut down!"); //DEBUG
+        LOGGER.debug("Waiting 20s for Scheduler to shut down!");
         try {
             scheduledExecutorService.awaitTermination(20, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            LOGGER.severe("&cScheduler was interrupted!"); //DEBUG
+            LOGGER.severe("&cScheduler was interrupted!");
             e.printStackTrace();
         }
     }
@@ -74,7 +74,7 @@ public final class Scheduler implements Loadable, Shutdownable {
 
     @Override
     public void shutdown() {
-        //LOGGER.info("Shutting down Scheduler!"); //DEBUG
+        LOGGER.debug("Shutting down Scheduler!");
         scheduledExecutorService.shutdown();
     }
 }
