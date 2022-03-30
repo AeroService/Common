@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,16 +22,16 @@ import java.util.logging.Logger;
 public class JsonResourceLoader extends ResourceBundle.Control {
 
     private static final String FORMAT_NAME = "natrox.json";
-    private final File resourceDirectory;
+    private final Path resourceDirectory;
     private final Logger logger;
 
-    public JsonResourceLoader(File resourceDirectory) {
+    public JsonResourceLoader(Path resourceDirectory) {
         this.resourceDirectory = resourceDirectory;
         this.logger = Logger.getLogger(this.getClass().getSimpleName());
 
-        if (!Files.exists(resourceDirectory.toPath())) {
+        if (!Files.exists(resourceDirectory)) {
             try {
-                Files.createDirectories(resourceDirectory.toPath());
+                Files.createDirectories(resourceDirectory);
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
@@ -48,7 +49,7 @@ public class JsonResourceLoader extends ResourceBundle.Control {
     public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IOException {
         if (format.equals(FORMAT_NAME)) {
             var resName = toResourceName(toBundleName(baseName, locale), "json");
-            var file = new File(resourceDirectory, resName);
+            var file = new File(resourceDirectory.toFile(), resName);
             if (!file.exists()) {
                 try (var in = loader.getResourceAsStream(resName)) {
                     try {
@@ -92,7 +93,7 @@ public class JsonResourceLoader extends ResourceBundle.Control {
                 entries.put(e.getKey(), res);
             } else if (value.isJsonObject()) {
                 logger.log(Level.WARNING, "Invalid value for key {0} in resource {1}",
-                        new Object[]{e.getKey(), resourceName});
+                    new Object[]{e.getKey(), resourceName});
             } else {
                 entries.put(e.getKey(), e.getValue().getAsString());
             }
