@@ -20,6 +20,8 @@ dependencies {
     implementation("org.jetbrains:annotations:23.0.0")
     implementation("com.google.code.gson:gson:2.9.0")
     implementation("io.netty:netty-common:4.1.75.Final")
+    implementation("org.jline:jline:3.21.0")
+    implementation("org.fusesource.jansi:jansi:2.4.0")
 }
 
 tasks.withType<JavaCompile> {
