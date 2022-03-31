@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class SystemMessageProvider {
 
     private final LocaleMessageProvider messageProvider;

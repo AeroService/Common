@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class UUIDMessageProvider implements MessageProvider<UUID> {
 
     private final MessageProvider<Locale> localeMessageProvider;

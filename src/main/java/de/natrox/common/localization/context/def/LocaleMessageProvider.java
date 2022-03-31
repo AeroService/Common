@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class LocaleMessageProvider implements MessageProvider<Locale> {
 
     private final Map<Locale, ResourceBundle> bundles;
