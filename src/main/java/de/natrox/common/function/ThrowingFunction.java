@@ -13,7 +13,6 @@ import java.util.function.Function;
  * @param <R> the type of the result of the function
  * @see Function
  */
-@FunctionalInterface
 public interface ThrowingFunction<R, T, E extends Exception> {
 
     /**

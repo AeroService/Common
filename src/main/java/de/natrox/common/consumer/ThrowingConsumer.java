@@ -10,7 +10,6 @@ package de.natrox.common.consumer;
  *
  * @param <T> the type of the input to the operation
  */
-@FunctionalInterface
 public interface ThrowingConsumer<T, E extends Exception> {
 
     /**
