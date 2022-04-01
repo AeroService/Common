@@ -10,6 +10,8 @@ public interface TaskBatchExecutor {
 
     void sync(@NotNull Runnable runnable);
 
-    List<Runnable> shutdown();
+    List<Runnable> interrupt();
+
+    void shutdown();
 
 }

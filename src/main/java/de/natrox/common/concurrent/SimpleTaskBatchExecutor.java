@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class SimpleTaskBatchExecutor implements TaskBatchExecutor {
+public final class SimpleTaskBatchExecutor implements TaskBatchExecutor {
 
     private final ExecutorService executor;
 
@@ -27,7 +27,12 @@ public class SimpleTaskBatchExecutor implements TaskBatchExecutor {
     }
 
     @Override
-    public List<Runnable> shutdown() {
+    public List<Runnable> interrupt() {
         return this.executor.shutdownNow();
+    }
+
+    @Override
+    public void shutdown() {
+        this.executor.shutdown();
     }
 }

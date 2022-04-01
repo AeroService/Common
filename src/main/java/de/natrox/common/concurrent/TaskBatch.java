@@ -53,7 +53,7 @@ public final class TaskBatch {
     }
 
     public List<Runnable> interrupt() {
-        return executor.shutdown();
+        return executor.interrupt();
     }
 
     private void runBatch() {
@@ -67,10 +67,13 @@ public final class TaskBatch {
             else if (task.taskType.equals(TaskType.ASYNC))
                 this.async(task.runnable());
             else {
-                executor.async(new CatchingRunnable(new ThrowingRunnable(() -> {
-                    Thread.sleep(task.delay());
-                    locked.set(false);
-                })));
+                executor.async(new ThrowingRunnable() {
+                    @Override
+                    public void run() throws Exception {
+                        Thread.sleep(task.delay());
+                        locked.set(false);
+                    }
+                });
             }
         }
         if (callback != null)

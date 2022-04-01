@@ -1,5 +1,7 @@
 import de.natrox.common.concurrent.SimpleTaskBatchFactory;
 
+import java.util.concurrent.TimeUnit;
+
 public class TaskBatchTest {
 
     public void test() {
@@ -10,6 +12,10 @@ public class TaskBatchTest {
 
             })
             .async(() -> {
+
+            })
+            .wait(10, TimeUnit.SECONDS)
+            .sync(() -> {
 
             })
             .execute();
