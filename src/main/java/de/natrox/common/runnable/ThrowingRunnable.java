@@ -9,6 +9,7 @@ package de.natrox.common.runnable;
  *
  * @see Runnable
  */
+@FunctionalInterface
 public interface ThrowingRunnable {
 
     /**
