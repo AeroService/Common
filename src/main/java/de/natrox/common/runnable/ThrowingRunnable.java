@@ -9,12 +9,11 @@ package de.natrox.common.runnable;
  *
  * @see Runnable
  */
-@FunctionalInterface
-public interface ThrowingRunnable {
+public interface ThrowingRunnable<E extends Exception> {
 
     /**
-     * @throws Exception
+     * @throws E
      */
-    void run() throws Exception;
+    void run() throws E;
 
 }
