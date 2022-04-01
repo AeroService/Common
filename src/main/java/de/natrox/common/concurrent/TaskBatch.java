@@ -1,7 +1,6 @@
 package de.natrox.common.concurrent;
 
 import de.natrox.common.runnable.CatchingRunnable;
-import de.natrox.common.runnable.ThrowingRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,15 +64,17 @@ public final class TaskBatch {
             if (task.taskType.equals(TaskType.SYNC))
                 executor.sync(task.runnable());
             else if (task.taskType.equals(TaskType.ASYNC))
-                this.async(task.runnable());
+                executor.async(task.runnable());
             else {
-                executor.async(new ThrowingRunnable() {
-                    @Override
-                    public void run() throws Exception {
+                executor.async(new CatchingRunnable(() -> {
+                    try {
                         Thread.sleep(task.delay());
-                        locked.set(false);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                });
+
+                    locked.set(false);
+                }));
             }
         }
         if (callback != null)
