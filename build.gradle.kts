@@ -9,7 +9,7 @@ defaultTasks("build", "shadowJar")
 allprojects {
     group = "de.natrox"
     version = "1.3.0-SNAPSHOT"
-    description = "A basic and common Library for the development of other projects"
+    description = "A basic and common Library for the development of java projects"
 
     repositories {
         mavenCentral()
