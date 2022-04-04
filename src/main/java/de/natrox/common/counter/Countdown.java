@@ -1,14 +1,12 @@
 package de.natrox.common.counter;
 
-import de.natrox.common.counter.event.EventHandler;
-
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public abstract class Countdown implements Counter, EventHandler {
+public abstract class Countdown implements Counter {
 
     protected final int startTime;
     protected final int stopTime;
@@ -35,7 +33,7 @@ public abstract class Countdown implements Counter, EventHandler {
             throw new IllegalStateException("The counter is already running");
         }
 
-        onStart(this);
+        handleStart();
         currentTime = startTime + 1;
 
         this.optionalTask = Optional.of(executorService.scheduleAtFixedRate(() -> {
@@ -43,12 +41,12 @@ public abstract class Countdown implements Counter, EventHandler {
 
                 if (currentTime > stopTime) {
                     currentTime--;
-                    onTick(this);
+                    handleTick();
                 }
 
                 if (currentTime == stopTime) {
                     setRunning(false);
-                    onFinish(this);
+                    handleFinish();
                     cancel();
                 }
 
@@ -75,7 +73,7 @@ public abstract class Countdown implements Counter, EventHandler {
     public void stop() {
         if (isRunning()) {
             cancel();
-            onCancel(this);
+            handleCancel();
         }
     }
 
@@ -101,8 +99,18 @@ public abstract class Countdown implements Counter, EventHandler {
     }
 
     @Override
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
+
+    @Override
     public boolean isRunning() {
         return running;
+    }
+
+    @Override
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 
     public int startTime() {
@@ -113,13 +121,11 @@ public abstract class Countdown implements Counter, EventHandler {
         this.currentTime = currentTime;
     }
 
-    @Override
-    public void setPaused(boolean paused) {
-        this.paused = paused;
-    }
+    protected abstract void handleStart();
 
-    @Override
-    public void setRunning(boolean running) {
-        this.running = running;
-    }
+    protected abstract void handleTick();
+
+    protected abstract void handleFinish();
+
+    protected abstract void handleCancel();
 }
