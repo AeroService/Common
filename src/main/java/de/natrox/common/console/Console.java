@@ -83,11 +83,6 @@ public interface Console extends AutoCloseable {
 
     void clearScreen();
 
-    @NotNull
-    String screenName();
-
-    void screenName(@NotNull String name);
-
     int width();
 
     int displayLength(@NotNull String string);

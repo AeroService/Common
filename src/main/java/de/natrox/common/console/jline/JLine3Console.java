@@ -47,13 +47,11 @@ public final class JLine3Console implements Console {
     private final LineReaderImpl lineReader;
 
     private String prompt;
-    private String screenName;
     private boolean printingEnabled = true;
     private boolean matchingHistorySearch = true;
 
-    public JLine3Console(String prompt, String screenName) throws Exception {
+    public JLine3Console(String prompt) throws Exception {
         this.prompt = prompt;
-        this.screenName = screenName;
 
         try {
             AnsiConsole.systemInstall();
@@ -282,16 +280,6 @@ public final class JLine3Console implements Console {
     public void prompt(@NotNull String prompt) {
         this.prompt = prompt;
         this.updatePrompt();
-    }
-
-    @Override
-    public @NotNull String screenName() {
-        return this.screenName;
-    }
-
-    @Override
-    public void screenName(@NotNull String screenName) {
-        this.screenName = screenName;
     }
 
     @Override
