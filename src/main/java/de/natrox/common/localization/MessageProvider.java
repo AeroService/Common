@@ -2,6 +2,7 @@ package de.natrox.common.localization;
 
 import de.natrox.common.localization.context.Contextualizer;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -46,22 +47,6 @@ public interface MessageProvider<T> {
      * (if any) replaced with the given parameters (if provided) in a localized format. Parameters are applied to all
      * individual strings.
      * <p>
-     * For texts defined as single strings in the underlying mapping, the returned {@link List} will have one element.
-     *
-     * @param context The context T.
-     * @param key     The unique identifier of the text.
-     * @param params  The parameters to replace the text's variables with.
-     * @return A {@link List} of strings associated with the key, translated and formatted for the specified {@link Locale}.
-     * @throws IllegalArgumentException If the specified {@link Locale} is null or there is no translation mapping available for it.
-     * @throws IllegalArgumentException If the key is null.
-     */
-    List<String> stringList(T context, String key, Object... params);
-
-    /**
-     * Returns the translated text, consisting of one or multiple strings, for the specified key, with its variables
-     * (if any) replaced with the given parameters (if provided) in a localized format. Parameters are applied to all
-     * individual strings.
-     * <p>
      * For texts defined as single strings in the underlying mapping, the returned array will have one element.
      *
      * @param context The context T.
@@ -72,6 +57,24 @@ public interface MessageProvider<T> {
      * @throws IllegalArgumentException If the key is null.
      */
     String[] stringArray(T context, String key, Object... params);
+
+    /**
+     * Returns the translated text, consisting of one or multiple strings, for the specified key, with its variables
+     * (if any) replaced with the given parameters (if provided) in a localized format. Parameters are applied to all
+     * individual strings.
+     * <p>
+     * For texts defined as single strings in the underlying mapping, the returned {@link List} will have one element.
+     *
+     * @param context The context T.
+     * @param key     The unique identifier of the text.
+     * @param params  The parameters to replace the text's variables with.
+     * @return A {@link List} of strings associated with the key, translated and formatted for the specified {@link Locale}.
+     * @throws IllegalArgumentException If the specified {@link Locale} is null or there is no translation mapping available for it.
+     * @throws IllegalArgumentException If the key is null.
+     */
+    default List<String> stringList(T context, String key, Object... params) {
+        return Arrays.asList(stringArray(context, key, params));
+    }
 
     abstract class AbstractBuilder<T, U extends AbstractBuilder<T, U>> {
 

@@ -1,4 +1,4 @@
-package de.natrox.common.localization.context.def;
+package de.natrox.common.localization.context;
 
 import java.util.HashMap;
 import java.util.List;

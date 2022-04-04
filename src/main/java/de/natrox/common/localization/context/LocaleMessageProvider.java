@@ -1,7 +1,6 @@
-package de.natrox.common.localization.context.def;
+package de.natrox.common.localization.context;
 
 import de.natrox.common.localization.MessageProvider;
-import de.natrox.common.localization.context.Contextualizer;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -50,11 +49,6 @@ public class LocaleMessageProvider implements MessageProvider<Locale> {
         }
 
         return localizedArray;
-    }
-
-    @Override
-    public List<String> stringList(Locale locale, String key, Object... params) {
-        return Arrays.asList(stringArray(locale, key, params));
     }
 
     private ResourceBundle bundle(Locale locale) {
