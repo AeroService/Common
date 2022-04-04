@@ -17,7 +17,7 @@ public final class TaskBatch {
     private final AtomicBoolean locked;
     private Runnable callback;
 
-    public TaskBatch(TaskBatchExecutor executor) {
+    protected TaskBatch(TaskBatchExecutor executor) {
         this.executor = executor;
 
         this.tasks = new ArrayList<>();

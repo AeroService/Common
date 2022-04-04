@@ -12,7 +12,7 @@ public final class SimpleTaskBatchExecutor implements TaskBatchExecutor {
 
     private final ExecutorService executor;
 
-    public SimpleTaskBatchExecutor() {
+    protected SimpleTaskBatchExecutor() {
         this.executor = Executors.newSingleThreadExecutor(new DefaultThreadFactory("TaskBatch"));
     }
 
