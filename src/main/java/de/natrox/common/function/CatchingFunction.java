@@ -8,7 +8,10 @@ import java.util.function.Function;
 /**
  * Function that prints exceptions thrown
  */
-public record CatchingFunction<T, R>(Function<T, R> delegate) implements Function<T, R> {
+@SuppressWarnings("ClassCanBeRecord")
+public class CatchingFunction<T, R> implements Function<T, R> {
+
+    private final Function<T, R> delegate;
 
     public CatchingFunction(@NotNull Function<T, R> delegate) {
         Objects.requireNonNull(delegate, "delegate can't be null!");

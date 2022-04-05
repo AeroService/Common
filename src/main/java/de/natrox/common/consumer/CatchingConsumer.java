@@ -8,7 +8,10 @@ import java.util.function.Consumer;
 /**
  * Consumer that prints exceptions thrown
  */
-public record CatchingConsumer<T>(Consumer<T> delegate) implements Consumer<T> {
+@SuppressWarnings("ClassCanBeRecord")
+public class CatchingConsumer<T> implements Consumer<T> {
+
+    private final Consumer<T> delegate;
 
     public CatchingConsumer(@NotNull Consumer<T> delegate) {
         Objects.requireNonNull(delegate, "delegate can't be null!");

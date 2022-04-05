@@ -7,7 +7,10 @@ import java.util.Objects;
 /**
  * Runnable that prints exceptions thrown
  */
-public record CatchingRunnable(Runnable delegate) implements Runnable {
+@SuppressWarnings("ClassCanBeRecord")
+public class CatchingRunnable implements Runnable {
+
+    private final Runnable delegate;
 
     public CatchingRunnable(@NotNull Runnable delegate) {
         Objects.requireNonNull(delegate, "delegate can't be null!");
