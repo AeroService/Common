@@ -1,7 +1,6 @@
 package de.natrox.common.concurrent;
 
 import de.natrox.common.runnable.CatchingRunnable;
-import io.netty.util.concurrent.DefaultThreadFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -13,7 +12,11 @@ final class SimpleTaskBatchExecutor implements TaskBatchExecutor {
     private final ExecutorService executor;
 
     protected SimpleTaskBatchExecutor() {
-        this.executor = Executors.newSingleThreadExecutor(new DefaultThreadFactory("TaskBatch"));
+        this.executor = Executors.newSingleThreadExecutor(runnable -> {
+            var thread = new Thread();
+            thread.setName("Task Batch");
+            return thread;
+        });
     }
 
     @Override
