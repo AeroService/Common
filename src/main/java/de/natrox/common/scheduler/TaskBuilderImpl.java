@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
-public class TaskBuilderImpl implements Task.Builder {
+final class TaskBuilderImpl implements Task.Builder {
 
     private final SchedulerImpl scheduler;
     private final Runnable runnable;
