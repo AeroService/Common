@@ -1,0 +1,66 @@
+package de.natrox.common.scheduler;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+final class SchedulerImpl implements Scheduler {
+
+    private final ExecutorService taskService;
+    private final ScheduledExecutorService timerExecutionService;
+    private final Set<Task> tasks = new LinkedHashSet<>();
+
+    public SchedulerImpl() {
+        this.taskService = Executors.newCachedThreadPool(runnable -> {
+            var thread = new Thread(runnable);
+            thread.setName("Task Scheduler - #" + thread.getId());
+            return thread;
+        });
+        this.timerExecutionService = Executors.newSingleThreadScheduledExecutor(runnable -> {
+            var thread = new Thread(runnable);
+            thread.setName("Task Scheduler Timer");
+            return thread;
+        });
+    }
+
+    @Override
+    public Task.Builder buildTask(Runnable runnable) {
+        /*
+        checkNotNull(plugin, "plugin");
+        checkNotNull(runnable, "runnable");
+        checkArgument(pluginManager.fromInstance(plugin).isPresent(), "plugin is not registered");
+
+         */
+        return new TaskBuilderImpl(this, runnable);
+    }
+
+    public boolean shutdown() throws InterruptedException {
+        Collection<Task> terminating;
+        synchronized (tasks) {
+            terminating = Collections.unmodifiableSet(tasks);
+        }
+        for (Task task : terminating) {
+            task.cancel();
+        }
+        timerExecutionService.shutdown();
+        taskService.shutdown();
+        return taskService.awaitTermination(10, TimeUnit.SECONDS);
+    }
+
+    public ExecutorService taskService() {
+        return this.taskService;
+    }
+
+    public ScheduledExecutorService timerExecutionService() {
+        return this.timerExecutionService;
+    }
+
+    public Set<Task> tasks() {
+        return this.tasks;
+    }
+}
