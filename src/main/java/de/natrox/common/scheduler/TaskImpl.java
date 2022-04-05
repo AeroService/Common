@@ -1,65 +1,95 @@
 package de.natrox.common.scheduler;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
-final class TaskImpl implements Task {
+final class TaskImpl implements Runnable, Task {
 
-    private final int id;
-    private final @NotNull Supplier<TaskSchedule> task;
-    private final @NotNull SchedulerImpl owner;
+    private final SchedulerImpl scheduler;
+    private final Runnable runnable;
+    private final long delay;
+    private final long repeat;
+    private @Nullable ScheduledFuture<?> future;
+    private volatile @Nullable Thread currentTaskThread;
 
-    volatile boolean alive;
-    volatile boolean parked;
+    protected TaskImpl(SchedulerImpl scheduler, Runnable runnable, long delay, long repeat) {
+        this.scheduler = scheduler;
+        this.runnable = runnable;
+        this.delay = delay;
+        this.repeat = repeat;
+    }
 
-    TaskImpl(int id,
-             @NotNull Supplier<TaskSchedule> task,
-             @NotNull SchedulerImpl owner
-    ) {
-        this.id = id;
-        this.task = task;
-        this.owner = owner;
-        this.alive = true;
+    void schedule() {
+        if (repeat == 0) {
+            this.future = scheduler
+                .timerExecutionService()
+                .schedule(this, delay, TimeUnit.MILLISECONDS);
+        } else {
+            this.future = scheduler
+                .timerExecutionService()
+                .scheduleAtFixedRate(this, delay, repeat, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    @Override
+    public @NotNull Scheduler owner() {
+        return scheduler;
+    }
+
+    @Override
+    public @NotNull TaskStatus status() {
+        if (future == null) {
+            return TaskStatus.SCHEDULED;
+        }
+
+        if (future.isCancelled()) {
+            return TaskStatus.CANCELLED;
+        }
+
+        if (future.isDone()) {
+            return TaskStatus.FINISHED;
+        }
+
+        return TaskStatus.SCHEDULED;
     }
 
     @Override
     public void cancel() {
-        this.alive = false;
+        if (future != null) {
+            future.cancel(false);
+
+            Thread cur = currentTaskThread;
+            if (cur != null) {
+                cur.interrupt();
+            }
+
+            //finish
+        }
     }
 
     @Override
-    public boolean isAlive() {
-        return alive;
-    }
-
-    public int id() {
-        return id;
-    }
-
-    public @NotNull Supplier<TaskSchedule> task() {
-        return task;
-    }
-
-    public @NotNull SchedulerImpl owner() {
-        return owner;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (TaskImpl) obj;
-        return this.id == that.id;
-    }
-
-
-    @Override
-    public String toString() {
-        return "TaskImpl[" +
-            "id=" + id + ", " +
-            "task=" + task + ", " +
-            "owner=" + owner + ']';
+    public void run() {
+        scheduler.taskService().execute(() -> {
+            currentTaskThread = Thread.currentThread();
+            try {
+                runnable.run();
+            } catch (Throwable e) {
+                //noinspection ConstantConditions
+                if (e instanceof InterruptedException) {
+                    Thread.currentThread().interrupt();
+                } else {
+                    //Log
+                }
+            } finally {
+                if (repeat == 0) {
+                    //finish
+                }
+                currentTaskThread = null;
+            }
+        });
     }
 
 }

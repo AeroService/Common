@@ -3,75 +3,45 @@ package de.natrox.common.scheduler;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
-import java.time.temporal.TemporalUnit;
-import java.util.function.Supplier;
+import java.util.concurrent.TimeUnit;
 
 public interface Task {
 
-    int id();
-
+    @NotNull
     Scheduler owner();
+
+    @NotNull
+    TaskStatus status();
 
     void cancel();
 
-    boolean isAlive();
+    interface Builder {
 
-    final class Builder {
+        @NotNull
+        Builder delay(long time, TimeUnit unit);
 
-        private final Scheduler scheduler;
-        private final Runnable runnable;
-        private TaskSchedule delay = TaskSchedule.immediate();
-        private TaskSchedule repeat = TaskSchedule.stop();
-
-        Builder(Scheduler scheduler, Runnable runnable) {
-            this.scheduler = scheduler;
-            this.runnable = runnable;
+        @NotNull
+        default Builder delay(Duration duration) {
+            return delay(duration.toMillis(), TimeUnit.MILLISECONDS);
         }
 
-        public @NotNull Builder delay(@NotNull TaskSchedule schedule) {
-            this.delay = schedule;
-            return this;
+        @NotNull
+        Builder repeat(long time, TimeUnit unit);
+
+        @NotNull
+        default Builder repeat(Duration duration) {
+            return repeat(duration.toMillis(), TimeUnit.MILLISECONDS);
         }
 
-        public @NotNull Builder repeat(@NotNull TaskSchedule schedule) {
-            this.repeat = schedule;
-            return this;
-        }
+        @NotNull
+        Builder clearDelay();
 
-        public @NotNull Task schedule() {
-            var runnable = this.runnable;
-            var delay = this.delay;
-            var repeat = this.repeat;
-            return scheduler.submitTask(new Supplier<>() {
-                boolean first = true;
+        @NotNull
+        Builder clearRepeat();
 
-                @Override
-                public TaskSchedule get() {
-                    if (first) {
-                        first = false;
-                        return delay;
-                    }
-                    runnable.run();
-                    return repeat;
-                }
-            });
-        }
+        @NotNull
+        Task schedule();
 
-        public @NotNull Builder delay(@NotNull Duration duration) {
-            return delay(TaskSchedule.duration(duration));
-        }
-
-        public @NotNull Builder delay(long time, @NotNull TemporalUnit unit) {
-            return delay(Duration.of(time, unit));
-        }
-
-        public @NotNull Builder repeat(@NotNull Duration duration) {
-            return repeat(TaskSchedule.duration(duration));
-        }
-
-        public @NotNull Builder repeat(long time, @NotNull TemporalUnit unit) {
-            return repeat(Duration.of(time, unit));
-        }
     }
 
 }

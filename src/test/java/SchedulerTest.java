@@ -1,20 +1,29 @@
 import de.natrox.common.scheduler.Scheduler;
-import de.natrox.common.scheduler.TaskSchedule;
 
 import java.util.concurrent.TimeUnit;
 
 public class SchedulerTest {
 
-    public void test() {
+    public static void main(String[] args) {
         Scheduler scheduler = Scheduler.create();
 
-        scheduler.buildTask(() -> {
+        /*
+        scheduler
+            .buildTask(() -> {
+                System.out.println("Test");
+            })
+            .delay(5, TimeUnit.SECONDS)
+            .schedule();
 
-        }).delay(TaskSchedule.seconds(50)).schedule();
+         */
 
-        scheduler.buildTask(() -> {
-
-        }).repeat(TaskSchedule.seconds(5)).schedule();
+        scheduler
+            .buildTask(() -> {
+                System.out.println("Test");
+            })
+            .repeat(5, TimeUnit.SECONDS)
+            .delay(10, TimeUnit.SECONDS)
+            .schedule();
     }
 
 }
