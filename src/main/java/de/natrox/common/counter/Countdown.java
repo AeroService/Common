@@ -1,9 +1,10 @@
 package de.natrox.common.counter;
 
-import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
+import de.natrox.common.runnable.CatchingRunnable;
+import de.natrox.common.scheduler.Scheduler;
+import de.natrox.common.scheduler.Task;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.TimeUnit;
 
 public abstract class Countdown implements Counter {
@@ -12,46 +13,50 @@ public abstract class Countdown implements Counter {
     protected final int stopTime;
     protected final int tick;
     protected final TimeUnit timeUnit;
-    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    protected Optional<ScheduledFuture<?>> optionalTask;
+    private final Scheduler scheduler;
 
+
+    private Task task;
     private int currentTime;
     private boolean paused;
     private boolean running;
 
-    public Countdown(int startTime, int stopTime, int tick, TimeUnit timeUnit) {
+    public Countdown(@NotNull Scheduler scheduler, int startTime, int stopTime, int tick, TimeUnit timeUnit) {
+        this.scheduler = scheduler;
         this.startTime = startTime;
         this.stopTime = stopTime;
         this.tick = tick;
         this.timeUnit = timeUnit;
-        this.optionalTask = Optional.empty();
     }
 
     @Override
     public void start() {
-        if (optionalTask.isPresent()) {
+        if (task != null) {
             throw new IllegalStateException("The counter is already running");
         }
 
         handleStart();
         currentTime = startTime + 1;
 
-        this.optionalTask = Optional.of(executorService.scheduleAtFixedRate(() -> {
-            if (!isPaused() && isRunning()) {
+        this.task = scheduler
+            .buildTask(new CatchingRunnable(() -> {
+                if (!isPaused() && isRunning()) {
 
-                if (currentTime > stopTime) {
-                    currentTime--;
-                    handleTick();
+                    if (currentTime > stopTime) {
+                        currentTime--;
+                        handleTick();
+                    }
+
+                    if (currentTime == stopTime) {
+                        setRunning(false);
+                        handleFinish();
+                        cancel();
+                    }
+
                 }
-
-                if (currentTime == stopTime) {
-                    setRunning(false);
-                    handleFinish();
-                    cancel();
-                }
-
-            }
-        }, 0, tick, timeUnit));
+            }))
+            .repeat(tick, timeUnit)
+            .schedule();
 
         setRunning(true);
         setPaused(false);
@@ -80,8 +85,9 @@ public abstract class Countdown implements Counter {
     private void cancel() {
         setRunning(false);
 
-        optionalTask.ifPresent(scheduledFuture -> scheduledFuture.cancel(true));
-        optionalTask = Optional.empty();
+        if (task != null)
+            task.cancel();
+        task = null;
     }
 
     public int tickedTime() {

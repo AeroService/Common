@@ -2,16 +2,20 @@ import de.natrox.common.counter.Countdown;
 import de.natrox.common.counter.Timer;
 import de.natrox.common.logger.LogManager;
 import de.natrox.common.logger.Logger;
+import de.natrox.common.scheduler.Scheduler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
 public class CounterTest {
 
     public static void main(String[] args) {
-        var countDown = new TestCountDown();
-        countDown.start();
+        Scheduler scheduler = Scheduler.create();
 
-        var timer = new TestTimer();
+        var countDown = new TestCountDown(scheduler);
+        //countDown.start();
+
+        var timer = new TestTimer(scheduler);
         timer.start();
     }
 
@@ -19,8 +23,8 @@ public class CounterTest {
 
         private final static Logger LOGGER = LogManager.logger(TestCountDown.class);
 
-        public TestCountDown() {
-            super(60, 1, 1, TimeUnit.SECONDS);
+        public TestCountDown(@NotNull Scheduler scheduler) {
+            super(scheduler, 60, 1, 1, TimeUnit.SECONDS);
         }
 
         @Override
@@ -49,8 +53,8 @@ public class CounterTest {
 
         private final static Logger LOGGER = LogManager.logger(TestTimer.class);
 
-        public TestTimer() {
-            super(1, 60, 1, TimeUnit.SECONDS);
+        public TestTimer(@NotNull Scheduler scheduler) {
+            super(scheduler, 1, 60, 1, TimeUnit.SECONDS);
         }
 
         @Override
