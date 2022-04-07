@@ -15,7 +15,6 @@ public abstract class Countdown implements Counter {
     protected final TimeUnit timeUnit;
     private final Scheduler scheduler;
 
-
     private Task task;
     private int currentTime;
     private boolean paused;
