@@ -1,4 +1,4 @@
-package de.natrox.common.console.jline;
+package de.natrox.common.console;
 
 import de.natrox.common.console.handler.Toggleable;
 import org.jetbrains.annotations.NotNull;

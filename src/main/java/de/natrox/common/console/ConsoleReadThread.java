@@ -1,4 +1,4 @@
-package de.natrox.common.console.jline;
+package de.natrox.common.console;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

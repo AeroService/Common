@@ -1,6 +1,5 @@
-package de.natrox.common.console.jline;
+package de.natrox.common.console;
 
-import de.natrox.common.console.Console;
 import de.natrox.common.console.color.ConsoleColor;
 import de.natrox.common.console.handler.ConsoleInputHandler;
 import de.natrox.common.console.handler.ConsoleTabCompleteHandler;
