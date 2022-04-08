@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-class JLine3ConsoleBuilder implements Console.Builder {
+final class JLine3ConsoleBuilder implements Console.Builder {
 
     private Supplier<String> prompt;
 
