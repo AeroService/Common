@@ -1,6 +1,6 @@
 package de.natrox.common.concurrent;
 
-public final class SimpleTaskBatchFactory implements TaskBatchFactory {
+public final class SimpleTaskBatchFactory implements TaskBatch.Factory {
 
     @Override
     public TaskBatch createTaskBatch() {

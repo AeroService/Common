@@ -58,4 +58,18 @@ public sealed interface TaskBatch permits SimpleTaskBatch {
      */
     @NotNull List<Runnable> interrupt();
 
+    /**
+     * Represents a factory for {@link TaskBatch}
+     */
+    interface Factory {
+
+        /**
+         * Creates a new {@link TaskBatch}.
+         *
+         * @return the created {@link TaskBatch}
+         */
+        TaskBatch createTaskBatch();
+
+    }
+
 }
