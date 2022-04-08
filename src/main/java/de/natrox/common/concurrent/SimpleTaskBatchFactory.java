@@ -4,6 +4,6 @@ public final class SimpleTaskBatchFactory implements TaskBatchFactory {
 
     @Override
     public TaskBatch createTaskBatch() {
-        return new TaskBatch(new SimpleTaskBatchExecutor());
+        return new SimpleTaskBatch(new SimpleTaskBatchExecutor());
     }
 }
