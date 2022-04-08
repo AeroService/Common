@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
-public abstract class Countdown implements Counter {
+public abstract non-sealed class Countdown implements Counter {
 
     protected final int startTime;
     protected final int stopTime;

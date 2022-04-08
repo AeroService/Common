@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Represents a scheduler to execute tasks.
  */
-public interface Scheduler {
+public sealed interface Scheduler permits SchedulerImpl {
 
     static @NotNull Scheduler create() {
         return new SchedulerImpl();

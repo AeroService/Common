@@ -1,6 +1,6 @@
 package de.natrox.common.counter;
 
-public interface Counter {
+public sealed interface Counter permits Countdown, Timer  {
 
     void start();
 

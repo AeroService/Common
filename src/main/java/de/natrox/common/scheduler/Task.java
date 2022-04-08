@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Represents a task that is scheduled to run.
  */
-public interface Task {
+public sealed interface Task permits TaskImpl {
 
     /**
      * Returns the scheduler on which the task is running.
@@ -33,7 +33,7 @@ public interface Task {
     /**
      * Represents a fluent interface to schedule tasks.
      */
-    interface Builder {
+    sealed interface Builder permits TaskBuilderImpl {
 
         /**
          * Specifies that the task should delay its execution by the specified amount of time.
@@ -72,7 +72,8 @@ public interface Task {
          * @param duration the duration of the delay
          * @return this builder, for chaining
          */
-        @NotNull default Builder repeat(Duration duration) {
+        @NotNull
+        default Builder repeat(Duration duration) {
             return repeat(duration.toMillis(), TimeUnit.MILLISECONDS);
         }
 
