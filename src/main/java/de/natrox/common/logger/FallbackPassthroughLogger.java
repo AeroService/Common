@@ -10,11 +10,20 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+/**
+ * A logger instance which wraps a given java.util.logging logger.
+ */
 final class FallbackPassthroughLogger extends Logger {
 
     private final java.util.logging.Logger logger;
     private LogRecordDispatcher logRecordDispatcher;
 
+    /**
+     * Constructs a new fallback logger instance based on the given java.util.logging logger.
+     *
+     * @param logger the logger to wrap.
+     * @throws NullPointerException if the given logger to wrap is null.
+     */
     FallbackPassthroughLogger(@NotNull java.util.logging.Logger logger) {
         super(logger.getName(), logger.getResourceBundleName());
         this.logger = logger;

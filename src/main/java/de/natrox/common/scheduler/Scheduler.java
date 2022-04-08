@@ -12,7 +12,7 @@ public interface Scheduler {
     }
 
     /**
-     * Initializes a new {@link Task.Builder} for creating a task on the proxy.
+     * Initializes a new {@link Task.Builder} for creating a task.
      *
      * @param task the task to run when scheduled
      * @return the task builder
