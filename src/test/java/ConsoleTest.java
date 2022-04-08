@@ -8,7 +8,6 @@ public class ConsoleTest {
             .prompt(() -> "")
             .build();
 
-
     }
 
 }

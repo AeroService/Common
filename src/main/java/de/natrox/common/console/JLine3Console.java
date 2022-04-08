@@ -30,11 +30,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
 public final class JLine3Console implements Console {
 
     private static final Logger LOGGER = LogManager.logger(JLine3Console.class);
+
+    private final Lock printLock = new ReentrantLock(true);
 
     private final Map<UUID, InputHandler> consoleInputHandler = new ConcurrentHashMap<>();
     private final Map<UUID, CompleteHandler> tabCompleteHandler = new ConcurrentHashMap<>();
@@ -44,9 +48,10 @@ public final class JLine3Console implements Console {
 
     private final Terminal terminal;
     private final LineReaderImpl lineReader;
-    private final Supplier<String> defaultPrompt;
 
+    private final Supplier<String> defaultPrompt;
     private String prompt;
+
     private boolean printingEnabled = true;
     private boolean matchingHistorySearch = true;
 
@@ -183,12 +188,14 @@ public final class JLine3Console implements Console {
     }
 
     @Override
-    public @NotNull Console write(@NotNull String text) {
-        if (this.printingEnabled) {
-            this.forceWrite(text);
+    public @NotNull Console writeRaw(@NotNull Supplier<String> rawText) {
+        this.printLock.lock();
+        try {
+            this.print(ConsoleColor.toColouredString('&', rawText.get()));
+            return this;
+        } finally {
+            this.printLock.unlock();
         }
-
-        return this;
     }
 
     @Override
@@ -201,24 +208,19 @@ public final class JLine3Console implements Console {
     }
 
     @Override
-    public @NotNull Console forceWrite(@NotNull String text) {
-        return this.writeRaw(Ansi.ansi().eraseLine(Ansi.Erase.ALL).toString() + '\r' + text + ConsoleColor.DEFAULT);
-    }
-
-    @Override
-    public @NotNull Console writeRaw(@NotNull String rawText) {
-        this.print(ConsoleColor.toColouredString('&', rawText));
-        return this;
-    }
-
-    @Override
     public @NotNull Console forceWriteLine(@NotNull String text) {
-        text = ConsoleColor.toColouredString('&', text);
-        if (!text.endsWith(System.lineSeparator())) {
-            text += System.lineSeparator();
-        }
+        this.printLock.lock();
+        try {
+            // ensure that the given text is formatted properly
+            text = ConsoleColor.toColouredString('&', text);
+            if (!text.endsWith(System.lineSeparator())) {
+                text += System.lineSeparator();
+            }
 
-        this.print(Ansi.ansi().eraseLine(Ansi.Erase.ALL).toString() + '\r' + text + Ansi.ansi().reset().toString());
+            this.print(Ansi.ansi().eraseLine(Ansi.Erase.ALL).toString() + '\r' + text + Ansi.ansi().reset().toString());
+        } finally {
+            this.printLock.unlock();
+        }
 
         return this;
     }
@@ -299,7 +301,7 @@ public final class JLine3Console implements Console {
         var result = 0;
         // count for the length of each char in the string
         for (var i = 0; i < string.length(); i++) {
-            result += Math.max(WCWidth.wcwidth(string.charAt(i)), 0);
+            result += Math.max(0, WCWidth.wcwidth(string.charAt(i)));
         }
         return result;
     }
@@ -314,17 +316,15 @@ public final class JLine3Console implements Console {
     }
 
     private void redisplay() {
-        if (!this.lineReader.isReading()) {
-            return;
+        if (this.lineReader.isReading()) {
+            this.lineReader.callWidget(LineReader.REDRAW_LINE);
+            this.lineReader.callWidget(LineReader.REDISPLAY);
         }
-
-        this.lineReader.callWidget(LineReader.REDRAW_LINE);
-        this.lineReader.callWidget(LineReader.REDISPLAY);
     }
 
-    private void toggleHandlers(boolean enabled, @NotNull Collection<?> handlers) {
-        for (Object handler : handlers) {
-            ((Toggleable) handler).enabled(enabled);
+    private void toggleHandlers(boolean enabled, @NotNull Collection<? extends Toggleable> handlers) {
+        for (var handler : handlers) {
+            handler.enabled(enabled);
         }
     }
 

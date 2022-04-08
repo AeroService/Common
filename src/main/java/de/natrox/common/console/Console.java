@@ -53,13 +53,9 @@ public interface Console extends AutoCloseable {
 
     void removeTabCompleteHandler(@NotNull UUID uniqueId);
 
-    @NotNull Console writeRaw(@NotNull String rawText);
-
-    @NotNull Console forceWrite(@NotNull String text);
+    @NotNull Console writeRaw(@NotNull Supplier<String> rawText);
 
     @NotNull Console forceWriteLine(@NotNull String text);
-
-    @NotNull Console write(@NotNull String text);
 
     @NotNull Console writeLine(@NotNull String text);
 
