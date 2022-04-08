@@ -1,7 +1,7 @@
 package de.natrox.common.console;
 
-import de.natrox.common.console.handler.ConsoleInputHandler;
-import de.natrox.common.console.handler.ConsoleTabCompleteHandler;
+import de.natrox.common.console.handler.InputHandler;
+import de.natrox.common.console.handler.CompleteHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -12,6 +12,10 @@ import java.util.concurrent.CompletableFuture;
 
 public interface Console extends AutoCloseable {
 
+    static Builder builder() {
+        return new JLine3ConsoleBuilder();
+    }
+
     void togglePrinting(boolean enabled);
 
     boolean printingEnabled();
@@ -20,16 +24,13 @@ public interface Console extends AutoCloseable {
         return this.hasColorSupport();
     }
 
-    @Unmodifiable
-    @NotNull
-    Collection<String> commandHistory();
+    @NotNull @Unmodifiable Collection<String> commandHistory();
 
     void commandHistory(@Nullable Collection<String> history);
 
     void commandInputValue(@NotNull String commandInputValue);
 
-    @NotNull
-    CompletableFuture<String> readLine();
+    @NotNull CompletableFuture<String> readLine();
 
     void enableAllHandlers();
 
@@ -43,28 +44,23 @@ public interface Console extends AutoCloseable {
 
     void disableAllTabCompleteHandlers();
 
-    void addCommandHandler(@NotNull UUID uniqueId, @NotNull ConsoleInputHandler handler);
+    void addCommandHandler(@NotNull UUID uniqueId, @NotNull InputHandler handler);
 
     void removeCommandHandler(@NotNull UUID uniqueId);
 
-    void addTabCompleteHandler(@NotNull UUID uniqueId, @NotNull ConsoleTabCompleteHandler handler);
+    void addTabCompleteHandler(@NotNull UUID uniqueId, @NotNull CompleteHandler handler);
 
     void removeTabCompleteHandler(@NotNull UUID uniqueId);
 
-    @NotNull
-    Console writeRaw(@NotNull String rawText);
+    @NotNull Console writeRaw(@NotNull String rawText);
 
-    @NotNull
-    Console forceWrite(@NotNull String text);
+    @NotNull Console forceWrite(@NotNull String text);
 
-    @NotNull
-    Console forceWriteLine(@NotNull String text);
+    @NotNull Console forceWriteLine(@NotNull String text);
 
-    @NotNull
-    Console write(@NotNull String text);
+    @NotNull Console write(@NotNull String text);
 
-    @NotNull
-    Console writeLine(@NotNull String text);
+    @NotNull Console writeLine(@NotNull String text);
 
     boolean hasColorSupport();
 
@@ -72,8 +68,7 @@ public interface Console extends AutoCloseable {
 
     void usingMatchingHistoryComplete(boolean matchingHistoryComplete);
 
-    @NotNull
-    String prompt();
+    @NotNull String prompt();
 
     void prompt(@NotNull String prompt);
 
@@ -86,4 +81,9 @@ public interface Console extends AutoCloseable {
     int width();
 
     int displayLength(@NotNull String string);
+
+    interface Builder {
+
+
+    }
 }

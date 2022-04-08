@@ -7,8 +7,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Scheduler {
 
-    @NotNull
-    static Scheduler create() {
+    static @NotNull Scheduler create() {
         return new SchedulerImpl();
     }
 

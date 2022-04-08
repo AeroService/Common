@@ -72,8 +72,7 @@ public interface Task {
          * @param duration the duration of the delay
          * @return this builder, for chaining
          */
-        @NotNull
-        default Builder repeat(Duration duration) {
+        @NotNull default Builder repeat(Duration duration) {
             return repeat(duration.toMillis(), TimeUnit.MILLISECONDS);
         }
 

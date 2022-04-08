@@ -14,4 +14,5 @@ public interface Nameable {
      * @return the name of this instance.
      */
     @NotNull String name();
+
 }

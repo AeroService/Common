@@ -1,8 +1,8 @@
 package de.natrox.common.console;
 
 import de.natrox.common.console.color.ConsoleColor;
-import de.natrox.common.console.handler.ConsoleInputHandler;
-import de.natrox.common.console.handler.ConsoleTabCompleteHandler;
+import de.natrox.common.console.handler.InputHandler;
+import de.natrox.common.console.handler.CompleteHandler;
 import de.natrox.common.console.handler.Toggleable;
 import de.natrox.common.logger.LogManager;
 import de.natrox.common.logger.Logger;
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -36,8 +35,8 @@ public final class JLine3Console implements Console {
 
     private static final Logger LOGGER = LogManager.logger(JLine3Console.class);
 
-    private final Map<UUID, ConsoleInputHandler> consoleInputHandler = new ConcurrentHashMap<>();
-    private final Map<UUID, ConsoleTabCompleteHandler> tabCompleteHandler = new ConcurrentHashMap<>();
+    private final Map<UUID, InputHandler> consoleInputHandler = new ConcurrentHashMap<>();
+    private final Map<UUID, CompleteHandler> tabCompleteHandler = new ConcurrentHashMap<>();
 
     private final ConsoleReadThread consoleReadThread = new ConsoleReadThread(this);
     private final ExecutorService animationThreadPool = Executors.newCachedThreadPool();
@@ -49,9 +48,7 @@ public final class JLine3Console implements Console {
     private boolean printingEnabled = true;
     private boolean matchingHistorySearch = true;
 
-    public JLine3Console(String prompt) throws Exception {
-        this.prompt = prompt;
-
+    public JLine3Console() throws Exception {
         try {
             AnsiConsole.systemInstall();
         } catch (Throwable ignored) {
@@ -95,7 +92,7 @@ public final class JLine3Console implements Console {
 
     @Override
     public @NotNull Collection<String> commandHistory() {
-        List<String> result = new ArrayList<>();
+        var result = new ArrayList<String>();
         for (var entry : this.lineReader.getHistory()) {
             result.add(entry.line());
         }
@@ -161,7 +158,7 @@ public final class JLine3Console implements Console {
     }
 
     @Override
-    public void addCommandHandler(@NotNull UUID uniqueId, @NotNull ConsoleInputHandler handler) {
+    public void addCommandHandler(@NotNull UUID uniqueId, @NotNull InputHandler handler) {
         this.consoleInputHandler.put(uniqueId, handler);
     }
 
@@ -171,7 +168,7 @@ public final class JLine3Console implements Console {
     }
 
     @Override
-    public void addTabCompleteHandler(@NotNull UUID uniqueId, @NotNull ConsoleTabCompleteHandler handler) {
+    public void addTabCompleteHandler(@NotNull UUID uniqueId, @NotNull CompleteHandler handler) {
         this.tabCompleteHandler.put(uniqueId, handler);
     }
 
@@ -328,20 +325,20 @@ public final class JLine3Console implements Console {
 
     @Internal
     @NotNull
-    Map<UUID, ConsoleInputHandler> consoleInputHandler() {
+    Map<UUID, InputHandler> consoleInputHandler() {
         return this.consoleInputHandler;
     }
 
     @Internal
     @NotNull
-    Map<UUID, ConsoleTabCompleteHandler> tabCompleteHandlers() {
+    Map<UUID, CompleteHandler> tabCompleteHandlers() {
         return this.tabCompleteHandler;
     }
 
     private final class InternalLineReader extends LineReaderImpl {
 
         private InternalLineReader(@NotNull Terminal terminal) {
-            super(terminal, "Cubicus-Console", null);
+            super(terminal, "Console", null);
         }
 
         @Override

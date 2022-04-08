@@ -24,19 +24,19 @@ public final class TaskBatch {
         this.locked = new AtomicBoolean(false);
     }
 
-    public TaskBatch sync(@NotNull Runnable runnable) {
+    public @NotNull TaskBatch sync(@NotNull Runnable runnable) {
         Objects.requireNonNull(runnable, "Runnable can't be null!");
         this.addTask(TaskType.SYNC, runnable, 0);
         return this;
     }
 
-    public TaskBatch async(@NotNull Runnable runnable) {
+    public @NotNull TaskBatch async(@NotNull Runnable runnable) {
         Objects.requireNonNull(runnable, "Runnable can't be null!");
         this.addTask(TaskType.ASYNC, runnable, 0);
         return this;
     }
 
-    public TaskBatch wait(long delay, @NotNull TimeUnit timeUnit) {
+    public @NotNull TaskBatch wait(long delay, @NotNull TimeUnit timeUnit) {
         Objects.requireNonNull(timeUnit, "timeUnit can't be null!");
         this.addTask(TaskType.WAIT, null, timeUnit.toMillis(delay));
         return this;
@@ -51,12 +51,12 @@ public final class TaskBatch {
         execute(null);
     }
 
-    public List<Runnable> interrupt() {
+    public @NotNull List<Runnable> interrupt() {
         return executor.interrupt();
     }
 
     private void runBatch() {
-        for (int i = 0; i < tasks.size(); i++) {
+        for (var i = 0; i < tasks.size(); i++) {
             while (locked.get()) {
             }
             var task = tasks.get(i);

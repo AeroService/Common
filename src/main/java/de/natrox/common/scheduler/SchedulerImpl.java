@@ -1,5 +1,7 @@
 package de.natrox.common.scheduler;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -29,7 +31,7 @@ final class SchedulerImpl implements Scheduler {
     }
 
     @Override
-    public Task.Builder buildTask(Runnable runnable) {
+    public @NotNull Task.Builder buildTask(@NotNull Runnable runnable) {
         /*
         checkNotNull(plugin, "plugin");
         checkNotNull(runnable, "runnable");
