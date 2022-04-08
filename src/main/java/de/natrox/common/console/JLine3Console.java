@@ -1,8 +1,8 @@
 package de.natrox.common.console;
 
 import de.natrox.common.console.color.ConsoleColor;
-import de.natrox.common.console.handler.InputHandler;
 import de.natrox.common.console.handler.CompleteHandler;
+import de.natrox.common.console.handler.InputHandler;
 import de.natrox.common.console.handler.Toggleable;
 import de.natrox.common.logger.LogManager;
 import de.natrox.common.logger.Logger;
@@ -30,6 +30,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Supplier;
 
 public final class JLine3Console implements Console {
 
@@ -43,12 +44,13 @@ public final class JLine3Console implements Console {
 
     private final Terminal terminal;
     private final LineReaderImpl lineReader;
+    private final Supplier<String> defaultPrompt;
 
     private String prompt;
     private boolean printingEnabled = true;
     private boolean matchingHistorySearch = true;
 
-    public JLine3Console() throws Exception {
+    protected JLine3Console(Supplier<String> defaultPrompt) throws Exception {
         try {
             AnsiConsole.systemInstall();
         } catch (Throwable ignored) {
@@ -76,6 +78,9 @@ public final class JLine3Console implements Console {
         this.lineReader.variable(LineReader.HISTORY_FILE_SIZE, 2500);
         this.lineReader.variable(LineReader.COMPLETION_STYLE_LIST_BACKGROUND, "inverse");
 
+        this.defaultPrompt = defaultPrompt;
+
+        this.resetPrompt();
         this.updatePrompt();
         this.consoleReadThread.start();
     }
@@ -275,6 +280,12 @@ public final class JLine3Console implements Console {
     @Override
     public void prompt(@NotNull String prompt) {
         this.prompt = prompt;
+        this.updatePrompt();
+    }
+
+    @Override
+    public void resetPrompt() {
+        this.prompt = defaultPrompt.get();
         this.updatePrompt();
     }
 

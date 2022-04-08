@@ -4,7 +4,11 @@ public class ConsoleTest {
 
     public static void main(String[] args) throws Exception {
         var console = Console
-            .builder();
+            .builder()
+            .prompt(() -> "")
+            .build();
+
+
     }
 
 }

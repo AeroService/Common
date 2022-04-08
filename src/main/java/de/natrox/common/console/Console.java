@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 public interface Console extends AutoCloseable {
 
@@ -72,6 +73,8 @@ public interface Console extends AutoCloseable {
 
     void prompt(@NotNull String prompt);
 
+    void resetPrompt();
+
     void removePrompt();
 
     void emptyPrompt();
@@ -84,6 +87,9 @@ public interface Console extends AutoCloseable {
 
     interface Builder {
 
+        @NotNull Builder prompt(@NotNull Supplier<String> prompt);
+
+        @NotNull Console build() throws Exception;
 
     }
 }
