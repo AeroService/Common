@@ -16,6 +16,9 @@ public record CatchingConsumer<T>(Consumer<T> delegate) implements Consumer<T> {
         this.delegate = delegate;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void accept(T t) {
         try {

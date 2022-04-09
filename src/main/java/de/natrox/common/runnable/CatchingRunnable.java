@@ -15,6 +15,9 @@ public record CatchingRunnable(Runnable delegate) implements Runnable {
         this.delegate = delegate;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
         try {

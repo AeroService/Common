@@ -16,6 +16,9 @@ public record CatchingFunction<T, R>(Function<T, R> delegate) implements Functio
         this.delegate = delegate;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public R apply(T t) {
         try {
