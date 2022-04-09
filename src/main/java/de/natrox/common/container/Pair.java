@@ -9,13 +9,13 @@ package de.natrox.common.container;
 public record Pair<A, B>(A first, B second) {
 
     /**
-     * Create a new pair.
+     * Creates a new pair.
      *
      * @param x   first value
      * @param y   second value
      * @param <X> type of first value
      * @param <Y> type of second value
-     * @return new pair
+     * @return the new created pair
      */
     public static <X, Y> Pair<X, Y> of(X x, Y y) {
         return new Pair<>(x, y);

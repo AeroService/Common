@@ -10,7 +10,7 @@ package de.natrox.common.container;
 public record Triple<A, B, C>(A first, B second, C third) {
 
     /**
-     * Create a new triple.
+     * Creates a new triple.
      *
      * @param x   first value
      * @param y   second value
@@ -18,7 +18,7 @@ public record Triple<A, B, C>(A first, B second, C third) {
      * @param <X> type of first value
      * @param <Y> type of second value
      * @param <Z> type of third value
-     * @return new triple
+     * @return the new created triple
      */
     public static <X, Y, Z> Triple<X, Y, Z> of(X x, Y y, Z z) {
         return new Triple<>(x, y, z);
