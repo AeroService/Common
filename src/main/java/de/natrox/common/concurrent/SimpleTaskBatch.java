@@ -1,5 +1,6 @@
 package de.natrox.common.concurrent;
 
+import com.google.common.base.Preconditions;
 import de.natrox.common.runnable.CatchingRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,9 +16,10 @@ final class SimpleTaskBatch implements TaskBatch {
     private final TaskBatchExecutor executor;
     private final List<TaskInfo> tasks;
     private final AtomicBoolean locked;
-    private Runnable callback;
+    private @Nullable Runnable callback;
 
-    protected SimpleTaskBatch(TaskBatchExecutor executor) {
+    protected SimpleTaskBatch(@NotNull TaskBatchExecutor executor) {
+        Preconditions.checkNotNull(executor, "executor");
         this.executor = executor;
 
         this.tasks = new ArrayList<>();
@@ -26,21 +28,21 @@ final class SimpleTaskBatch implements TaskBatch {
 
     @Override
     public @NotNull SimpleTaskBatch sync(@NotNull Runnable runnable) {
-        Objects.requireNonNull(runnable, "Runnable can't be null!");
+        Preconditions.checkNotNull(runnable, "runnable");
         this.addTask(TaskType.SYNC, runnable, 0);
         return this;
     }
 
     @Override
     public @NotNull SimpleTaskBatch async(@NotNull Runnable runnable) {
-        Objects.requireNonNull(runnable, "Runnable can't be null!");
+        Preconditions.checkNotNull(runnable, "runnable");
         this.addTask(TaskType.ASYNC, runnable, 0);
         return this;
     }
 
     @Override
     public @NotNull SimpleTaskBatch wait(long delay, @NotNull TimeUnit timeUnit) {
-        Objects.requireNonNull(timeUnit, "timeUnit can't be null!");
+        Preconditions.checkNotNull(timeUnit, "timeUnit");
         this.addTask(TaskType.WAIT, null, timeUnit.toMillis(delay));
         return this;
     }
@@ -62,10 +64,10 @@ final class SimpleTaskBatch implements TaskBatch {
     }
 
     private void runBatch() {
-        for (var i = 0; i < tasks.size(); i++) {
+        for (var task : tasks) {
             while (locked.get()) {
+
             }
-            var task = tasks.get(i);
             locked.set(true);
             if (task.taskType.equals(TaskType.SYNC))
                 executor.sync(task.runnable());
@@ -89,7 +91,7 @@ final class SimpleTaskBatch implements TaskBatch {
     }
 
     private void addTask(@NotNull TaskType taskType, @Nullable Runnable runnable, long delay) {
-        Objects.requireNonNull(taskType, "taskType can't be null!");
+        Preconditions.checkNotNull(taskType, "taskType");
         tasks.add(new TaskInfo(delay, taskType, () -> {
             if (runnable != null)
                 runnable.run();

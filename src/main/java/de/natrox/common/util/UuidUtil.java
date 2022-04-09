@@ -1,5 +1,6 @@
 package de.natrox.common.util;
 
+import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
@@ -21,6 +22,7 @@ public final class UuidUtil {
      * @return the {@link UUID} of the specified string
      */
     public static @NotNull UUID fromName(@NotNull String name) {
+        Preconditions.checkNotNull(name, "name");
         return UUID.nameUUIDFromBytes(name.toLowerCase().getBytes(StandardCharsets.UTF_8));
     }
 }

@@ -39,10 +39,10 @@ public sealed interface Task permits TaskImpl {
          * Specifies that the task should delay its execution by the specified amount of time.
          *
          * @param time the time to delay by
-         * @param unit the unit of time for {@code time}
+         * @param timeUnit the unit of time for {@code time}
          * @return this builder, for chaining
          */
-        @NotNull Builder delay(long time, TimeUnit unit);
+        @NotNull Builder delay(long time, @NotNull TimeUnit timeUnit);
 
         /**
          * Specifies that the task should delay its execution by the specified amount of time.
@@ -60,10 +60,10 @@ public sealed interface Task permits TaskImpl {
          * it is cancelled.
          *
          * @param time the time to delay by
-         * @param unit the unit of time for {@code time}
+         * @param timeUnit the unit of time for {@code time}
          * @return this builder, for chaining
          */
-        @NotNull Builder repeat(long time, TimeUnit unit);
+        @NotNull Builder repeat(long time, @NotNull TimeUnit timeUnit);
 
         /**
          * Specifies that the task should continue running after waiting for the specified amount, until

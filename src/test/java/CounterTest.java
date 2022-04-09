@@ -5,6 +5,7 @@ import de.natrox.common.logger.Logger;
 import de.natrox.common.scheduler.Scheduler;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class CounterTest {

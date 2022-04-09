@@ -1,5 +1,7 @@
 package de.natrox.common.consumer;
 
+import com.google.common.base.Preconditions;
+
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -39,8 +41,7 @@ public interface TriConsumer<T1, T2, T3> {
      * @throws NullPointerException if {@code after} is null
      */
     default TriConsumer<T1, T2, T3> andThen(TriConsumer<? super T1, ? super T2, ? super T3> after) {
-        Objects.requireNonNull(after);
-
+        Preconditions.checkNotNull(after, "after");
         return (t1, t2, t3) -> {
             accept(t1, t2, t3);
             after.accept(t1, t2, t3);

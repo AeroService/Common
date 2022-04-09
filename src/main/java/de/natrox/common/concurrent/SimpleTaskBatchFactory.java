@@ -6,4 +6,5 @@ public final class SimpleTaskBatchFactory implements TaskBatch.Factory {
     public TaskBatch createTaskBatch() {
         return new SimpleTaskBatch(new SimpleTaskBatchExecutor());
     }
+
 }

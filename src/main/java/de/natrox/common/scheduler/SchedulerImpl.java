@@ -1,5 +1,6 @@
 package de.natrox.common.scheduler;
 
+import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -33,7 +34,7 @@ final class SchedulerImpl implements Scheduler {
 
     @Override
     public @NotNull Task.Builder buildTask(@NotNull Runnable runnable) {
-        Objects.requireNonNull(runnable, "Runnable can't be null");
+        Preconditions.checkNotNull(runnable, "runnable");
         return new TaskBuilderImpl(this, runnable);
     }
 
@@ -42,7 +43,7 @@ final class SchedulerImpl implements Scheduler {
         synchronized (tasks) {
             terminating = Collections.unmodifiableSet(tasks);
         }
-        for (Task task : terminating) {
+        for (var task : terminating) {
             task.cancel();
         }
         timerExecutionService.shutdown();

@@ -1,5 +1,6 @@
 package de.natrox.common.runnable;
 
+import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -10,7 +11,7 @@ import java.util.Objects;
 public record CatchingRunnable(Runnable delegate) implements Runnable {
 
     public CatchingRunnable(@NotNull Runnable delegate) {
-        Objects.requireNonNull(delegate, "delegate can't be null!");
+        Preconditions.checkNotNull(delegate, "delegate");
         this.delegate = delegate;
     }
 
