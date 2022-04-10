@@ -3,8 +3,6 @@ package de.natrox.common.runnable;
 import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 /**
  * Runnable that prints exceptions thrown
  */

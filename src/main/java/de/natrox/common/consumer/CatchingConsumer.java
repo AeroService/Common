@@ -3,7 +3,6 @@ package de.natrox.common.consumer;
 import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /**

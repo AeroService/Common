@@ -2,7 +2,6 @@ package de.natrox.common.function;
 
 import com.google.common.base.Preconditions;
 
-import java.util.Objects;
 import java.util.function.Function;
 
 /**

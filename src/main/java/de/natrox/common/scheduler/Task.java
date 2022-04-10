@@ -38,7 +38,7 @@ public sealed interface Task permits TaskImpl {
         /**
          * Specifies that the task should delay its execution by the specified amount of time.
          *
-         * @param time the time to delay by
+         * @param time     the time to delay by
          * @param timeUnit the unit of time for {@code time}
          * @return this builder, for chaining
          */
@@ -59,7 +59,7 @@ public sealed interface Task permits TaskImpl {
          * Specifies that the task should continue running after waiting for the specified amount, until
          * it is cancelled.
          *
-         * @param time the time to delay by
+         * @param time     the time to delay by
          * @param timeUnit the unit of time for {@code time}
          * @return this builder, for chaining
          */
