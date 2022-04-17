@@ -1,4 +1,4 @@
-package de.natrox.common.concurrent;
+package de.natrox.common.batch;
 
 import com.google.common.base.Preconditions;
 import de.natrox.common.runnable.CatchingRunnable;

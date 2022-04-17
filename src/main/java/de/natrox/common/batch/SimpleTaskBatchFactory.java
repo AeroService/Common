@@ -1,4 +1,4 @@
-package de.natrox.common.concurrent;
+package de.natrox.common.batch;
 
 public final class SimpleTaskBatchFactory implements TaskBatch.Factory {
 

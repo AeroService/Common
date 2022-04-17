@@ -1,4 +1,4 @@
-import de.natrox.common.concurrent.SimpleTaskBatchFactory;
+import de.natrox.common.batch.SimpleTaskBatchFactory;
 
 import java.util.concurrent.TimeUnit;
 

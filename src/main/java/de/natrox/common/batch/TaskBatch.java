@@ -1,4 +1,4 @@
-package de.natrox.common.concurrent;
+package de.natrox.common.batch;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
