@@ -19,6 +19,7 @@ allprojects {
 dependencies {
     implementation("org.jetbrains:annotations:23.0.0")
     implementation("com.google.guava:guava:31.1-jre")
+    implementation("org.slf4j:slf4j-api:2.0.0-alpha7")
 }
 
 tasks.withType<JavaCompile> {

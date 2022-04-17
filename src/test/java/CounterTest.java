@@ -1,9 +1,9 @@
 import de.natrox.common.counter.Countdown;
 import de.natrox.common.counter.Timer;
-import de.natrox.common.logger.LogManager;
-import de.natrox.common.logger.Logger;
 import de.natrox.common.scheduler.Scheduler;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -21,7 +21,7 @@ public class CounterTest {
 
     static class TestCountDown extends Countdown {
 
-        private final static Logger LOGGER = LogManager.logger(TestCountDown.class);
+        private final static Logger LOGGER = LoggerFactory.getLogger(TestCountDown.class);
 
         public TestCountDown(@NotNull Scheduler scheduler) {
             super(scheduler, 60, 1, 1, TimeUnit.SECONDS);
@@ -51,7 +51,7 @@ public class CounterTest {
 
     static class TestTimer extends Timer {
 
-        private final static Logger LOGGER = LogManager.logger(TestTimer.class);
+        private final static Logger LOGGER = LoggerFactory.getLogger(TestTimer.class);
 
         public TestTimer(@NotNull Scheduler scheduler) {
             super(scheduler, 1, 60, 1, TimeUnit.SECONDS);
