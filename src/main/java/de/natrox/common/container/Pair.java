@@ -1,10 +1,12 @@
 package de.natrox.common.container;
 
 /**
- * Contains a immutable pair of two values
+ * This class can capture 2 references of 2 types and set or clear the data using first() and
+ * second(). It can be used to return multiple objects of a method, or to easily capture multiple
+ * objects without creating their own class.
  *
- * @param <A> value A
- * @param <B> value B
+ * @param <A> the first type, which you want to define
+ * @param <B> the second type which you want to define
  */
 public record Pair<A, B>(A first, B second) {
 

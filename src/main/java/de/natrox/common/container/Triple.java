@@ -1,11 +1,13 @@
 package de.natrox.common.container;
 
 /**
- * Contains a immutable triple of three values.
+ * This class can capture 3 references of 3 types and set or clear the data using first() and
+ * second() and third(). It can be used to return multiple objects of a method, or to easily capture multiple
+ * objects without creating their own class.
  *
- * @param <A> value A
- * @param <B> value B
- * @param <C> value C
+ * @param <A> the first type, which you want to define
+ * @param <B> the second type which you want to define
+ * @param <C> the third type which you want to define
  */
 public record Triple<A, B, C>(A first, B second, C third) {
 
