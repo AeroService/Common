@@ -17,6 +17,7 @@
 package de.natrox.common.function;
 
 import com.google.common.base.Preconditions;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.function.Function;
 
@@ -44,7 +45,7 @@ public interface TriFunction<T1, T2, T3, R> {
      * @param t3 the third function argument
      * @return the function result
      */
-    R apply(T1 t1, T2 t2, T3 t3);
+    R apply(@UnknownNullability T1 t1, @UnknownNullability T2 t2, @UnknownNullability T3 t3);
 
     /**
      * Returns a composed function that first applies this function to its input, and then applies the {@code after}

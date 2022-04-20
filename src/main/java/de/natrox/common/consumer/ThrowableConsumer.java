@@ -18,9 +18,26 @@ package de.natrox.common.consumer;
 
 import org.jetbrains.annotations.UnknownNullability;
 
+/**
+ * Represents a function that accepts one argument and does not return any value;
+ * Function might throw a checked exception instance.
+ *
+ * <p>This is a <a href="package-summary.html">functional interface</a>
+ * whose functional method is {@link #accept(E)}.
+ *
+ * @param <E> the type of the first argument to the operation
+ * @param <T> the type of the potentially thrown {@link Throwable}
+ *
+ */
 @FunctionalInterface
 public interface ThrowableConsumer<E, T extends Throwable> {
 
+    /**
+     * Consume the supplied argument, potentially throwing an exception.
+     *
+     * @param element the input argument
+     * @throws T the potentially thrown {@link Throwable}
+     */
     void accept(@UnknownNullability E element) throws T;
 
 }

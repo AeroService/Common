@@ -18,9 +18,25 @@ package de.natrox.common.supplier;
 
 import org.jetbrains.annotations.UnknownNullability;
 
+/**
+ * Represents a function that accepts zero arguments and returns some value.
+ * Function might throw a checked exception instance.
+ *
+ * <p>This is a <a href="package-summary.html">functional interface</a>
+ * whose functional method is {@link #get()}.
+ *
+ * @param <O> the type of argument supplied
+ * @param <T> the type of the potentially thrown {@link Throwable}
+ */
 @FunctionalInterface
 public interface ThrowableSupplier<O, T extends Throwable> {
 
+    /**
+     * Returns a result, potentially throwing an exception.
+     *
+     * @return a result
+     * @throws T the potentially thrown {@link Throwable}
+     */
     @UnknownNullability O get() throws T;
 
 }

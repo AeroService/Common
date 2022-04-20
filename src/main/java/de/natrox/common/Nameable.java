@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 public interface Nameable {
 
     /**
-     * Get the name of this instance.
+     * Returns the name of this instance.
      *
      * @return the name of this instance.
      */

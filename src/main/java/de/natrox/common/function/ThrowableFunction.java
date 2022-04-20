@@ -18,9 +18,27 @@ package de.natrox.common.function;
 
 import org.jetbrains.annotations.UnknownNullability;
 
+/**
+ * Represents a function that accepts one argument and returns a value;
+ * Function might throw a checked exception instance.
+ *
+ * <p>This is a <a href="package-summary.html">functional interface</a>
+ * whose functional method is {@link #apply(I)}.
+ *
+ * @param <I> the type of the first argument to the function
+ * @param <O> the type of the result of the function
+ * @param <T> the type of the thrown checked exception
+ */
 @FunctionalInterface
 public interface ThrowableFunction<I, O, T extends Throwable> {
 
+    /**
+     * Returns a result and consume the supplied argument, potentially throwing an exception.
+     *
+     * @param i the function argument
+     * @return the function result
+     * @throws T the potentially thrown {@link Throwable}
+     */
     @UnknownNullability O apply(@UnknownNullability I i) throws T;
 
 }

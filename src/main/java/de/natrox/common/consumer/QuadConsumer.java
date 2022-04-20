@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 public interface QuadConsumer<T1, T2, T3, T4> {
 
     /**
-     * Performs this operation on the given arguments.
+     * Consume the supplied arguments.
      *
      * @param t1 the first input argument
      * @param t2 the second input argument

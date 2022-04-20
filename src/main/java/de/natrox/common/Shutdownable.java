@@ -22,6 +22,9 @@ package de.natrox.common;
 @FunctionalInterface
 public interface Shutdownable {
 
+    /**
+     * Shutdowns this instance.
+     */
     void shutdown();
 
 }

@@ -22,6 +22,9 @@ package de.natrox.common;
 @FunctionalInterface
 public interface Startable {
 
+    /**
+     * Starts this instance.
+     */
     void start();
 
 }

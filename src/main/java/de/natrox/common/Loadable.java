@@ -21,8 +21,18 @@ package de.natrox.common;
  */
 public interface Loadable {
 
+    /**
+     * Loads this instance
+     */
     void load();
 
-    boolean isLoaded();
+    /**
+     * Returns whether this instance is loaded or not.
+     *
+     * @return true if the instance is loaded and false if not
+     */
+    default boolean isLoaded() {
+        return false;
+    }
 
 }
