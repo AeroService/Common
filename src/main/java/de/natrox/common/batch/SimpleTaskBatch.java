@@ -16,7 +16,7 @@
 
 package de.natrox.common.batch;
 
-import com.google.common.base.Preconditions;
+import de.natrox.common.base.Check;
 import de.natrox.common.runnable.CatchingRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +34,7 @@ final class SimpleTaskBatch implements TaskBatch {
     private @Nullable Runnable callback;
 
     protected SimpleTaskBatch(@NotNull TaskBatchExecutor executor) {
-        Preconditions.checkNotNull(executor, "executor");
+        Check.notNull(executor, "executor");
         this.executor = executor;
 
         this.tasks = new ArrayList<>();
@@ -43,21 +43,21 @@ final class SimpleTaskBatch implements TaskBatch {
 
     @Override
     public @NotNull SimpleTaskBatch sync(@NotNull Runnable runnable) {
-        Preconditions.checkNotNull(runnable, "runnable");
+        Check.notNull(runnable, "runnable");
         this.addTask(TaskType.SYNC, runnable, 0);
         return this;
     }
 
     @Override
     public @NotNull SimpleTaskBatch async(@NotNull Runnable runnable) {
-        Preconditions.checkNotNull(runnable, "runnable");
+        Check.notNull(runnable, "runnable");
         this.addTask(TaskType.ASYNC, runnable, 0);
         return this;
     }
 
     @Override
     public @NotNull SimpleTaskBatch wait(long delay, @NotNull TimeUnit timeUnit) {
-        Preconditions.checkNotNull(timeUnit, "timeUnit");
+        Check.notNull(timeUnit, "timeUnit");
         this.addTask(TaskType.WAIT, null, timeUnit.toMillis(delay));
         return this;
     }
@@ -106,7 +106,7 @@ final class SimpleTaskBatch implements TaskBatch {
     }
 
     private void addTask(@NotNull TaskType taskType, @Nullable Runnable runnable, long delay) {
-        Preconditions.checkNotNull(taskType, "taskType");
+        Check.notNull(taskType, "taskType");
         tasks.add(new TaskInfo(delay, taskType, () -> {
             if (runnable != null)
                 runnable.run();

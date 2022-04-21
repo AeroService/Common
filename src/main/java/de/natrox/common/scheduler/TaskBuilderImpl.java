@@ -16,7 +16,7 @@
 
 package de.natrox.common.scheduler;
 
-import com.google.common.base.Preconditions;
+import de.natrox.common.base.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
@@ -35,14 +35,14 @@ final class TaskBuilderImpl implements Task.Builder {
 
     @Override
     public @NotNull TaskBuilderImpl delay(long time, @NotNull TimeUnit timeUnit) {
-        Preconditions.checkNotNull(timeUnit, "timeUnit");
+        Check.notNull(timeUnit, "timeUnit");
         this.delay = timeUnit.toMillis(time);
         return this;
     }
 
     @Override
     public @NotNull TaskBuilderImpl repeat(long time, @NotNull TimeUnit timeUnit) {
-        Preconditions.checkNotNull(timeUnit, "timeUnit");
+        Check.notNull(timeUnit, "timeUnit");
         this.repeat = timeUnit.toMillis(time);
         return this;
     }

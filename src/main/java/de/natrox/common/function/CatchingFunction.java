@@ -16,7 +16,7 @@
 
 package de.natrox.common.function;
 
-import com.google.common.base.Preconditions;
+import de.natrox.common.base.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -27,7 +27,7 @@ import java.util.function.Function;
 public record CatchingFunction<T, R>(Function<T, R> delegate) implements Function<T, R> {
 
     public CatchingFunction(@NotNull Function<T, R> delegate) {
-        Preconditions.checkNotNull(delegate, "delegate");
+        Check.notNull(delegate, "delegate");
         this.delegate = delegate;
     }
 

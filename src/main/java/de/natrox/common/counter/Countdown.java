@@ -16,7 +16,7 @@
 
 package de.natrox.common.counter;
 
-import com.google.common.base.Preconditions;
+import de.natrox.common.base.Check;
 import de.natrox.common.runnable.CatchingRunnable;
 import de.natrox.common.scheduler.Scheduler;
 import de.natrox.common.scheduler.Task;
@@ -38,8 +38,8 @@ public abstract non-sealed class Countdown implements Counter {
     private boolean running;
 
     public Countdown(@NotNull Scheduler scheduler, int startTime, int stopTime, int tick, @NotNull TimeUnit timeUnit) {
-        Preconditions.checkNotNull(scheduler, "scheduler");
-        Preconditions.checkNotNull(timeUnit, "timeUnit");
+        Check.notNull(scheduler, "scheduler");
+        Check.notNull(timeUnit, "timeUnit");
         this.scheduler = scheduler;
         this.startTime = startTime;
         this.stopTime = stopTime;

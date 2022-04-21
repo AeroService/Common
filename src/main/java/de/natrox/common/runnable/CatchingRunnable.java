@@ -16,7 +16,7 @@
 
 package de.natrox.common.runnable;
 
-import com.google.common.base.Preconditions;
+import de.natrox.common.base.Check;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 public record CatchingRunnable(Runnable delegate) implements Runnable {
 
     public CatchingRunnable(@NotNull Runnable delegate) {
-        Preconditions.checkNotNull(delegate, "delegate");
+        Check.notNull(delegate, "delegate");
         this.delegate = delegate;
     }
 

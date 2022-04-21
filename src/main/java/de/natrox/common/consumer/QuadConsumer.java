@@ -16,7 +16,7 @@
 
 package de.natrox.common.consumer;
 
-import com.google.common.base.Preconditions;
+import de.natrox.common.base.Check;
 
 import java.util.function.Consumer;
 
@@ -58,7 +58,7 @@ public interface QuadConsumer<T1, T2, T3, T4> {
      * @throws NullPointerException if {@code after} is null
      */
     default QuadConsumer<T1, T2, T3, T4> andThen(QuadConsumer<? super T1, ? super T2, ? super T3, ? super T4> after) {
-        Preconditions.checkNotNull(after, "after");
+        Check.notNull(after, "after");
         return (t1, t2, t3, t4) -> {
             accept(t1, t2, t3, t4);
             after.accept(t1, t2, t3, t4);

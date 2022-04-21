@@ -16,7 +16,7 @@
 
 package de.natrox.common.function;
 
-import com.google.common.base.Preconditions;
+import de.natrox.common.base.Check;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.function.Function;
@@ -59,7 +59,7 @@ public interface QuadFunction<T1, T2, T3, T4, R> {
      * @throws NullPointerException if after is null
      */
     default <V> QuadFunction<T1, T2, T3, T4, V> andThen(Function<? super R, ? extends V> after) {
-        Preconditions.checkNotNull(after, "after");
+        Check.notNull(after, "after");
         return (T1 t1, T2 t2, T3 t3, T4 t4) -> after.apply(apply(t1, t2, t3, t4));
     }
 

@@ -34,7 +34,6 @@ allprojects {
 
 dependencies {
     implementation(libs.slf4j2)
-    implementation(libs.guava)
     implementation(libs.jetbrainsAnnotations)
 
     testImplementation(libs.junit.api)

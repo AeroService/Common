@@ -16,7 +16,7 @@
 
 package de.natrox.common.batch;
 
-import com.google.common.base.Preconditions;
+import de.natrox.common.base.Check;
 import de.natrox.common.runnable.CatchingRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,13 +38,13 @@ final class SimpleTaskBatchExecutor implements TaskBatchExecutor {
 
     @Override
     public void async(@NotNull Runnable runnable) {
-        Preconditions.checkNotNull(runnable, "runnable");
+        Check.notNull(runnable, "runnable");
         this.executor.submit(new CatchingRunnable(runnable));
     }
 
     @Override
     public void sync(@NotNull Runnable runnable) {
-        Preconditions.checkNotNull(runnable, "runnable");
+        Check.notNull(runnable, "runnable");
         runnable.run();
     }
 

@@ -16,7 +16,7 @@
 
 package de.natrox.common.scheduler;
 
-import com.google.common.base.Preconditions;
+import de.natrox.common.base.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -49,7 +49,7 @@ final class SchedulerImpl implements Scheduler {
 
     @Override
     public @NotNull Task.Builder buildTask(@NotNull Runnable runnable) {
-        Preconditions.checkNotNull(runnable, "runnable");
+        Check.notNull(runnable, "runnable");
         return new TaskBuilderImpl(this, runnable);
     }
 

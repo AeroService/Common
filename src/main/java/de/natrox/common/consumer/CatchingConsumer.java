@@ -16,7 +16,7 @@
 
 package de.natrox.common.consumer;
 
-import com.google.common.base.Preconditions;
+import de.natrox.common.base.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 public record CatchingConsumer<T>(Consumer<T> delegate) implements Consumer<T> {
 
     public CatchingConsumer(@NotNull Consumer<T> delegate) {
-        Preconditions.checkNotNull(delegate, "delegate");
+        Check.notNull(delegate, "delegate");
         this.delegate = delegate;
     }
 
