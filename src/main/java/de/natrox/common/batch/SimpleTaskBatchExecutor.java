@@ -16,7 +16,7 @@
 
 package de.natrox.common.batch;
 
-import de.natrox.common.base.Check;
+import de.natrox.common.validate.Check;
 import de.natrox.common.runnable.CatchingRunnable;
 import org.jetbrains.annotations.NotNull;
 

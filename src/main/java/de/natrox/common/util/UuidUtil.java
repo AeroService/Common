@@ -16,7 +16,7 @@
 
 package de.natrox.common.util;
 
-import de.natrox.common.base.Check;
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;

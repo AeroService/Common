@@ -16,7 +16,7 @@
 
 package de.natrox.common.function;
 
-import de.natrox.common.base.Check;
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.function.Function;

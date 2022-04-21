@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.natrox.common.base;
+package de.natrox.common.validate;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

@@ -16,7 +16,7 @@
 
 package de.natrox.common.scheduler;
 
-import de.natrox.common.base.Check;
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;

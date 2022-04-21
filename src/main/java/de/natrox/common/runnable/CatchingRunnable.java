@@ -16,7 +16,7 @@
 
 package de.natrox.common.runnable;
 
-import de.natrox.common.base.Check;
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 /**

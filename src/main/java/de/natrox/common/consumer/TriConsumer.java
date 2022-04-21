@@ -16,7 +16,7 @@
 
 package de.natrox.common.consumer;
 
-import de.natrox.common.base.Check;
+import de.natrox.common.validate.Check;
 
 import java.util.function.Consumer;
 
