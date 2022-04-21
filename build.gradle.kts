@@ -33,9 +33,15 @@ allprojects {
 }
 
 dependencies {
-    implementation("org.jetbrains:annotations:23.0.0")
-    implementation("com.google.guava:guava:31.1-jre")
-    implementation("org.slf4j:slf4j-api:2.0.0-alpha7")
+    implementation(libs.slf4j2)
+    implementation(libs.guava)
+    implementation(libs.jetbrainsAnnotations)
+
+    testImplementation(libs.junit.api)
+    testImplementation(libs.junit.params)
+    testRuntimeOnly(libs.junit.engine)
+    testImplementation(libs.junit.suite.api)
+    testRuntimeOnly(libs.junit.suite.engine)
 }
 
 tasks.withType<JavaCompile> {
