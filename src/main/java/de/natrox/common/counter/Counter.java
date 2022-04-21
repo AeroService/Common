@@ -30,10 +30,6 @@ public sealed interface Counter permits Countdown, Timer {
 
     boolean isPaused();
 
-    void setPaused(boolean paused);
-
     boolean isRunning();
-
-    void setRunning(boolean running);
 
 }

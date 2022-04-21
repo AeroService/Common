@@ -49,96 +49,86 @@ public abstract non-sealed class Countdown implements Counter {
 
     @Override
     public void start() {
-        if (task != null) {
+        if (this.task != null) {
             throw new IllegalStateException("The counter is already running");
         }
 
-        handleStart();
-        currentTime = startTime + 1;
+        this.handleStart();
+        this.currentTime = this.startTime + 1;
 
-        this.task = scheduler
+        this.task = this.scheduler
             .buildTask(new CatchingRunnable(() -> {
-                if (!isPaused() && isRunning()) {
+                if (!this.isPaused() && this.isRunning()) {
 
-                    if (currentTime > stopTime) {
-                        currentTime--;
-                        handleTick();
+                    if (this.currentTime > this.stopTime) {
+                        this.currentTime -= this.tick;
+                        this.handleTick();
                     }
 
-                    if (currentTime == stopTime) {
-                        setRunning(false);
-                        handleFinish();
-                        cancel();
+                    if (this.currentTime == this.stopTime) {
+                        this.running = false;
+                        this.handleFinish();
+                        this.cancel();
                     }
 
                 }
             }))
-            .repeat(tick, timeUnit)
+            .repeat(this.tick, this.timeUnit)
             .schedule();
 
-        setRunning(true);
-        setPaused(false);
+        this.running = true;
+        this.paused = false;
     }
 
     @Override
     public void pause() {
-        setPaused(true);
-        setRunning(false);
+        this.paused = true;
+        this.running = false;
     }
 
     @Override
     public void resume() {
-        setPaused(false);
-        setRunning(true);
+        this.paused = false;
+        this.running = true;
     }
 
     @Override
     public void stop() {
-        if (isRunning()) {
-            cancel();
-            handleCancel();
+        if (this.isRunning()) {
+            this.cancel();
+            this.handleCancel();
         }
     }
 
     private void cancel() {
-        setRunning(false);
+        this.running = false;
 
-        if (task != null)
-            task.cancel();
-        task = null;
+        if (this.task != null)
+            this.task.cancel();
+        this.task = null;
     }
 
     public int tickedTime() {
-        return currentTime;
+        return this.currentTime;
     }
 
     @Override
     public int currentTime() {
-        return currentTime;
+        return this.currentTime;
     }
 
     @Override
     public boolean isPaused() {
-        return paused;
-    }
-
-    @Override
-    public void setPaused(boolean paused) {
-        this.paused = paused;
+        return this.paused;
     }
 
     @Override
     public boolean isRunning() {
-        return running;
-    }
-
-    @Override
-    public void setRunning(boolean running) {
-        this.running = running;
+        return this.running;
     }
 
     public int startTime() {
-        return startTime;
+        return this.startTime;
     }
 
     public void currentTime(int currentTime) {
