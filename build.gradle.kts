@@ -24,7 +24,7 @@ defaultTasks("build", "shadowJar")
 
 allprojects {
     group = "de.natrox"
-    version = "1.3.0-SNAPSHOT"
+    version = "1.0.0-SNAPSHOT"
     description = "A basic and common library for the development of Java projects"
 
     repositories {
