@@ -74,7 +74,43 @@ Task task = scheduler
 Comming soon.
 
 # Taskbatch
-Comming soon.
+
+**Step 1:** Instantiating a TaskBatch Factory.
+
+Code example:
+```java
+TaskBatch.Factory taskBatchFactory = new SimpleTaskBatchFactory();
+```
+
+**Step 2:** Creating and building a TaskBatch.
+```java
+TaskBatch taskBatch = taskBatchFactory
+    .createTaskBatch()
+    .sync(() -> {
+        //Code here
+    })
+    .async(() -> {
+        //Code here
+    })
+    .wait(10, TimeUnit.SECONDS)
+    .sync(() -> {
+        //Code here
+    });
+```
+
+**Step 3:** Executing the TaskBatch.
+
+Code example:
+```java
+taskBatch.execute();
+```
+
+Or code exmaple:
+```java
+taskBatch.execute(() -> {
+    //Callback
+});
+```
 
 # Contributing
 See [the contributing file](CONTRIBUTING.md)!
