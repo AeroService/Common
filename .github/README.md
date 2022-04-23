@@ -9,6 +9,8 @@ A basic and common library for the development of Java projects
 - [How to use](#how-to-use)
   - [Add to your project](#add-to-your-project)
   - [Scheduler](#scheduler)
+  - [Counter](#counter)
+  - [TaskBatch](#taskbatch)
 - [Contributing](#contributing)
 - [License](#license)
 
