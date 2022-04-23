@@ -19,6 +19,8 @@ package de.natrox.common.batch;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Duration;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +44,23 @@ public sealed interface TaskBatch permits SimpleTaskBatch {
      * @return this TaskBatch, for chaining
      */
     @NotNull TaskBatch async(@NotNull Runnable runnable);
+
+    /**
+     * Adds a delay to the batch execution.
+     *
+     * @param duration the duration of the delay before next task
+     * @param temporalUnit the {@link TemporalUnit} in which the duration is specified
+     * @return this TaskBatch, for chaining
+     */
+    @NotNull TaskBatch wait(long duration, @NotNull TemporalUnit temporalUnit);
+
+    /**
+     * Adds a delay to the batch execution.
+     *
+     * @param duration the {@link Duration} of the delay before next task
+     * @return this TaskBatch, for chaining
+     */
+    @NotNull TaskBatch wait(Duration duration);
 
     /**
      * Adds a delay to the batch execution.

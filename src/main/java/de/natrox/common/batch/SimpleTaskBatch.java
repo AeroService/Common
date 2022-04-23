@@ -21,6 +21,8 @@ import de.natrox.common.runnable.CatchingRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Duration;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -52,6 +54,20 @@ final class SimpleTaskBatch implements TaskBatch {
     public @NotNull SimpleTaskBatch async(@NotNull Runnable runnable) {
         Check.notNull(runnable, "runnable");
         this.addTask(TaskType.ASYNC, runnable, 0);
+        return this;
+    }
+
+    @Override
+    public @NotNull TaskBatch wait(Duration duration) {
+        Check.notNull(duration, "duration");
+        this.addTask(TaskType.WAIT, null, duration.toMillis());
+        return this;
+    }
+
+    @Override
+    public @NotNull TaskBatch wait(long duration, @NotNull TemporalUnit temporalUnit) {
+        Check.notNull(temporalUnit, "temporalUnit");
+        this.addTask(TaskType.WAIT, null, Duration.of(duration, temporalUnit).toMillis());
         return this;
     }
 
