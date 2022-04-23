@@ -19,6 +19,7 @@ package de.natrox.common.scheduler;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
+import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -71,6 +72,17 @@ public sealed interface Task permits TaskImpl {
         }
 
         /**
+         * Specifies that the task should delay its execution by the specified amount of time.
+         *
+         * @param time         the time to delay by
+         * @param temporalUnit the unit of time for {@code time}
+         * @return this builder, for chaining
+         */
+        default @NotNull Builder delay(long time, @NotNull TemporalUnit temporalUnit) {
+            return delay(Duration.of(time, temporalUnit));
+        }
+
+        /**
          * Specifies that the task should continue running after waiting for the specified amount, until
          * it is cancelled.
          *
@@ -89,6 +101,18 @@ public sealed interface Task permits TaskImpl {
          */
         default @NotNull Builder repeat(Duration duration) {
             return repeat(duration.toMillis(), TimeUnit.MILLISECONDS);
+        }
+
+        /**
+         * Specifies that the task should continue running after waiting for the specified amount, until
+         * it is cancelled.
+         *
+         * @param time         the time to delay by
+         * @param temporalUnit the unit of time for {@code time}
+         * @return this builder, for chaining
+         */
+        default @NotNull Builder repeat(long time, @NotNull TemporalUnit temporalUnit) {
+            return repeat(Duration.of(time, temporalUnit));
         }
 
         /**
