@@ -94,7 +94,7 @@ TaskBatch taskBatch = taskBatchFactory
     .async(() -> {
         //Code here
     })
-    .wait(10, TimeUnit.SECONDS)
+    .wait(10, ChronoUnit.SECONDS)
     .sync(() -> {
         //Code here
     });
