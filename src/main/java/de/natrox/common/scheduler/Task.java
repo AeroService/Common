@@ -66,8 +66,7 @@ public sealed interface Task permits TaskImpl {
          * @param duration the duration of the delay
          * @return this builder, for chaining
          */
-        @NotNull
-        default Builder delay(Duration duration) {
+        default @NotNull Builder delay(Duration duration) {
             return delay(duration.toMillis(), TimeUnit.MILLISECONDS);
         }
 
@@ -88,8 +87,7 @@ public sealed interface Task permits TaskImpl {
          * @param duration the duration of the delay
          * @return this builder, for chaining
          */
-        @NotNull
-        default Builder repeat(Duration duration) {
+        default @NotNull Builder repeat(Duration duration) {
             return repeat(duration.toMillis(), TimeUnit.MILLISECONDS);
         }
 
