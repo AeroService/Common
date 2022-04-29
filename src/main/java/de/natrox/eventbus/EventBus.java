@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
-public interface EventBus {
+public sealed interface EventBus permits EventBusImpl {
 
     static @NotNull EventBus create() {
         return new EventBusImpl();
