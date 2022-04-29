@@ -27,7 +27,7 @@ defaultTasks("build", "shadowJar")
 allprojects {
     group = "de.natrox"
     version = "1.0.0-SNAPSHOT"
-    description = ""
+    description = "An simple event bus"
 
     repositories {
         mavenCentral()
@@ -35,7 +35,6 @@ allprojects {
 }
 
 dependencies {
-    implementation("com.android.support:support-annotations:28.0.0")
     //TEMP
     compileOnly(files("D:\\workspace\\NatroxMC\\Common\\build\\libs\\common.jar"))
 
