@@ -38,7 +38,14 @@ dependencies {
     //TEMP
     compileOnly(files("D:\\workspace\\NatroxMC\\Common\\build\\libs\\common.jar"))
 
-    compileOnly("org.jetbrains:annotations:23.0.0")
+    implementation(libs.slf4j2)
+    implementation(libs.jetbrainsAnnotations)
+
+    testImplementation(libs.junit.api)
+    testImplementation(libs.junit.params)
+    testRuntimeOnly(libs.junit.engine)
+    testImplementation(libs.junit.suite.api)
+    testRuntimeOnly(libs.junit.suite.engine)
 }
 
 tasks.withType<JavaCompile> {
@@ -47,4 +54,8 @@ tasks.withType<JavaCompile> {
     // options
     options.encoding = "UTF-8"
     options.isIncremental = true
+}
+
+tasks.withType<Jar> {
+    archiveFileName.set("eventbus.jar")
 }
