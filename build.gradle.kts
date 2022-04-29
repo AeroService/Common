@@ -27,7 +27,7 @@ defaultTasks("build", "shadowJar")
 allprojects {
     group = "de.natrox"
     version = "1.0.0-SNAPSHOT"
-    description = "An simple event bus"
+    description = "An simple event bus for Java projects"
 
     repositories {
         mavenCentral()
