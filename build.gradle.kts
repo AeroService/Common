@@ -34,23 +34,18 @@ allprojects {
     }
 }
 
-subprojects {
-    apply(plugin = "java")
-    apply(plugin = "maven-publish")
-    apply(plugin = "com.github.johnrengelman.shadow")
+dependencies {
+    implementation("com.android.support:support-annotations:28.0.0")
+    //TEMP
+    compileOnly(files("D:\\workspace\\NatroxMC\\Common\\build\\libs\\common.jar"))
 
-    dependencies {
-        //TEMP
-        compileOnly(files("D:\\workspace\\NatroxMC\\Common\\build\\libs\\common.jar"))
+    compileOnly("org.jetbrains:annotations:23.0.0")
+}
 
-        compileOnly("org.jetbrains:annotations:23.0.0")
-    }
-
-    tasks.withType<JavaCompile> {
-        sourceCompatibility = JavaVersion.VERSION_17.toString()
-        targetCompatibility = JavaVersion.VERSION_17.toString()
-        // options
-        options.encoding = "UTF-8"
-        options.isIncremental = true
-    }
+tasks.withType<JavaCompile> {
+    sourceCompatibility = JavaVersion.VERSION_17.toString()
+    targetCompatibility = JavaVersion.VERSION_17.toString()
+    // options
+    options.encoding = "UTF-8"
+    options.isIncremental = true
 }
