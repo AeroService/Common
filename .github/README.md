@@ -2,7 +2,7 @@
 [![license](https://img.shields.io/github/license/NatroxMC/EventBus?style=for-the-badge&color=b2204c)](../LICENSE)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=for-the-badge)](https://github.com/RichardLitt/standard-readme)
 
-Description
+An simple event bus
 
 # Table of contents
 - [Why use the EventBus?](#why-use-the-eventbus)
