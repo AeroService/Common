@@ -1,4 +1,4 @@
-## How to contribute to the Pipeline project
+## How to contribute to the EventBus project
 
 #### Did you find a bug?
 
@@ -17,8 +17,8 @@
 
 #### **Do you have questions about the source code?**
 
-* Ask any question about how to use the Pipeline in the GitHub issues section.
+* Ask any question about how to use the EventBus in the GitHub issues section.
 
 ## General Contribution Rules
 
-* By contributing to the Pipeline project your code/contribution will be licensed under the [Apache Version 2.0](../LICENSE) license.
+* By contributing to the EventBus project your code/contribution will be licensed under the [Apache Version 2.0](../LICENSE) license.
