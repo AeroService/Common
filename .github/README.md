@@ -8,9 +8,6 @@ Description
 - [Why use the EventBus?](#why-use-the-eventbus)
 - [How to use](#how-to-use)
   - [Add to your project](#add-to-your-project)
-  - [Scheduler](#scheduler)
-  - [Counter](#counter)
-  - [TaskBatch](#taskbatch)
 - [Contributing](#contributing)
 - [License](#license)
 
