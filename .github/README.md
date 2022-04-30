@@ -44,7 +44,7 @@ Task task = scheduler
     .buildTask(() -> {
         //Code here
     })
-    .repeat(Duration.of(10, ChronoUnit.SECONDS))
+    .repeat(10, ChronoUnit.SECONDS)
     .schedule();
 ```
 
@@ -56,7 +56,7 @@ Task task = scheduler
     .buildTask(() -> {
         //Code here
     })
-    .delay(Duration.of(5, ChronoUnit.SECONDS))
+    .delay(5, ChronoUnit.SECONDS)
     .schedule();
 ```
 ### Delayed repeating task
@@ -67,8 +67,8 @@ Task task = scheduler
     .buildTask(() -> {
         //Code here
     })
-    .delay(Duration.of(5, ChronoUnit.SECONDS))
-    .repeat(Duration.of(10, ChronoUnit.SECONDS))
+    .delay(5, ChronoUnit.SECONDS)
+    .repeat(10, ChronoUnit.SECONDS)
     .schedule();
 ```
 
