@@ -33,14 +33,14 @@ allprojects {
 }
 
 dependencies {
-    implementation(libs.slf4j2)
-    implementation(libs.jetbrainsAnnotations)
+    implementation("org.jetbrains:annotations:23.0.0")
+    implementation("org.slf4j:slf4j-api:2.0.0-alpha7")
 
-    testImplementation(libs.junit.api)
-    testImplementation(libs.junit.params)
-    testRuntimeOnly(libs.junit.engine)
-    testImplementation(libs.junit.suite.api)
-    testRuntimeOnly(libs.junit.suite.engine)
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-params:5.8.2")
+    testImplementation("org.junit.platform:junit-platform-suite-api:1.8.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:junit-platform")
 }
 
 tasks.withType<JavaCompile> {
