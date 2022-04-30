@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package de.natrox.common.counter;import de.natrox.common.counter.Countdown;
+package de.natrox.common.counter;
+
 import de.natrox.common.scheduler.Scheduler;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;

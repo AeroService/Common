@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
-public abstract non-sealed class Countdown implements Counter {
+public non-sealed class Countdown implements Counter {
 
     protected final int startTime;
     protected final int stopTime;
@@ -135,11 +135,19 @@ public abstract non-sealed class Countdown implements Counter {
         this.currentTime = currentTime;
     }
 
-    protected abstract void handleStart();
+    protected void handleStart() {
 
-    protected abstract void handleTick();
+    }
 
-    protected abstract void handleFinish();
+    protected void handleTick() {
 
-    protected abstract void handleCancel();
+    }
+
+    protected void handleFinish() {
+
+    }
+
+    protected void handleCancel() {
+
+    }
 }

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
-public abstract non-sealed class Timer extends Countdown implements Counter {
+public non-sealed class Timer extends Countdown implements Counter {
 
     public Timer(@NotNull Scheduler scheduler, int startTime, int stopTime, int tick, @NotNull TimeUnit timeUnit) {
         super(scheduler, stopTime, startTime, tick, timeUnit);
