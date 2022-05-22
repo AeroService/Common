@@ -41,4 +41,16 @@ public record Triple<A, B, C>(A first, B second, C third) {
     public static <X, Y, Z> Triple<X, Y, Z> of(X x, Y y, Z z) {
         return new Triple<>(x, y, z);
     }
+
+    /**
+     * Creates a new empty triple.
+     *
+     * @param <X> type of first value
+     * @param <Y> type of second value
+     * @param <Z> type of third value
+     * @return the new created triple
+     */
+    public static <X, Y, Z> Triple<X, Y, Z> empty() {
+        return new Triple<>(null, null, null);
+    }
 }

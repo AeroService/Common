@@ -39,4 +39,15 @@ public record Pair<A, B>(A first, B second) {
         return new Pair<>(x, y);
     }
 
+    /**
+     * Creates a new empty pair.
+     *
+     * @param <X> type of first value
+     * @param <Y> type of second value
+     * @return the new created pair
+     */
+    public static <X, Y> Pair<X, Y> empty() {
+        return new Pair<>(null, null);
+    }
+
 }
