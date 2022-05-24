@@ -34,7 +34,7 @@ allprojects {
 
 dependencies {
     //TEMP
-    compileOnly(files("D:\\workspace\\NatroxMC\\Common\\build\\libs\\common.jar"))
+    implementation(files("D:\\workspace\\NatroxMC\\Common\\build\\libs\\common.jar"))
 
     implementation(libs.slf4j2)
     implementation(libs.jetbrainsAnnotations)
