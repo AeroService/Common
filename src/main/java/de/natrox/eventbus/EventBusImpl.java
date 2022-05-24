@@ -16,6 +16,7 @@
 
 package de.natrox.eventbus;
 
+import de.natrox.common.container.Pair;
 import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,10 +24,10 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Predicate;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"rawtypes"})
 final class EventBusImpl implements EventBus {
 
-    private final Set<ListenerEntry> listeners;
+    private final Set<Pair<Class, EventListener>> listeners;
 
     EventBusImpl() {
         this.listeners = new CopyOnWriteArraySet<>();
@@ -35,42 +36,39 @@ final class EventBusImpl implements EventBus {
     @Override
     public void register(@NotNull EventListener<?> listener) {
         Check.notNull(listener, "listener");
-        this.listeners.add(new ListenerEntry(listener.eventType(), listener));
+        this.listeners.add(Pair.of(listener.eventType(), listener));
     }
 
     @Override
     public void unregister(@NotNull EventListener<?> listener) {
         Check.notNull(listener, "listener");
-        this.listeners.removeIf(entry -> entry.listener().equals(listener));
+        this.listeners.removeIf(entry -> entry.second().equals(listener));
     }
 
     @Override
     public void unregisterIf(@NotNull Predicate<EventListener<?>> predicate) {
         Check.notNull(predicate, "predicate");
-        this.listeners.removeIf(entry -> predicate.test(entry.listener()));
+        this.listeners.removeIf(entry -> predicate.test(entry.second()));
     }
 
     @Override
     public boolean listening(@NotNull EventListener<?> listener) {
         Check.notNull(listener, "listener");
         for (var entry : this.listeners) {
-            if (entry.listener().equals(listener))
+            if (entry.second().equals(listener))
                 return true;
         }
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void call(@NotNull Object event) {
         Check.notNull(event, "event");
         for (var entry : this.listeners) {
-            if (!entry.type().isAssignableFrom(event.getClass()))
+            if (!entry.first().isAssignableFrom(event.getClass()))
                 continue;
-            entry.listener().handle(event);
+            entry.second().handle(event);
         }
-    }
-
-    private record ListenerEntry(Class type, EventListener listener) {
-
     }
 }
