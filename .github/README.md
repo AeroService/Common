@@ -42,7 +42,7 @@ Code example:
 ```java
 Task task = scheduler
     .buildTask(() -> {
-        //Code here
+        // Code here
     })
     .repeat(10, ChronoUnit.SECONDS)
     .schedule();
@@ -54,7 +54,7 @@ Code example:
 ```java
 Task task = scheduler
     .buildTask(() -> {
-        //Code here
+        // Code here
     })
     .delay(5, ChronoUnit.SECONDS)
     .schedule();
@@ -65,7 +65,7 @@ Code example:
 ```java
 Task task = scheduler
     .buildTask(() -> {
-        //Code here
+        // Code here
     })
     .delay(5, ChronoUnit.SECONDS)
     .repeat(10, ChronoUnit.SECONDS)
@@ -89,14 +89,14 @@ TaskBatch.Factory taskBatchFactory = new SimpleTaskBatchFactory();
 TaskBatch taskBatch = taskBatchFactory
     .createTaskBatch()
     .sync(() -> {
-        //Code here
+        // Code here
     })
     .async(() -> {
-        //Code here
+        // Code here
     })
     .wait(10, ChronoUnit.SECONDS)
     .sync(() -> {
-        //Code here
+        // Code here
     });
 ```
 
@@ -110,7 +110,7 @@ taskBatch.execute();
 Or code exmaple:
 ```java
 taskBatch.execute(() -> {
-    //Callback
+    // Callback
 });
 ```
 
