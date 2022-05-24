@@ -44,7 +44,16 @@ Code example:
 EventBus eventBus = EventBus.create();
 ```
 
-**Step 2:** Register an listener.
+**Step 2:** Create an event class.
+
+Code example:
+```java
+public record TestEvent(String value) {
+
+}
+```
+
+**Step 3:** Register an listener.
 
 ### Using an Consumer.
 
@@ -77,15 +86,6 @@ Code example:
 eventBus.register(EventListener.of(TestEvent.class, event -> {
     // Code here
 }));
-```
-
-**Step 3:** Create an event class.
-
-Code example:
-```java
-public record TestEvent(String value) {
-
-}
 ```
 
 **Step 4:** Call an event.
