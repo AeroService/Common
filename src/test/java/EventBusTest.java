@@ -26,13 +26,13 @@ public class EventBusTest {
     public void test() {
         EventBus eventBus = EventBus.create();
 
-        EventListener<TestEvent> listener = event -> {
-
-        };
+        EventListener<TestEvent> listener = event -> System.out.println("Test");
 
         assertFalse(eventBus.listening(listener));
-        eventBus.register(listener);
+        eventBus.register(TestEvent.class, listener);
         assertTrue(eventBus.listening(listener));
+
+        eventBus.call(new TestEvent());
 
         eventBus.unregister(listener);
         assertFalse(eventBus.listening(listener));

@@ -22,36 +22,49 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Predicate;
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 final class EventBusImpl implements EventBus {
 
-    private final Set<EventListener<?>> listeners;
+    private final Set<ListenerEntry> listeners;
 
     EventBusImpl() {
         this.listeners = new CopyOnWriteArraySet<>();
     }
 
     @Override
-    public void register(@NotNull EventListener<?> eventListener) {
-        listeners.add(eventListener);
+    public void register(@NotNull Class<?> type, @NotNull EventListener<?> eventListener) {
+        this.listeners.add(new ListenerEntry(type, eventListener));
     }
 
     @Override
     public void unregister(@NotNull EventListener<?> eventListener) {
-        listeners.remove(eventListener);
+        this.listeners.removeIf(entry -> entry.listener().equals(eventListener));
     }
 
     @Override
     public void unregisterIf(@NotNull Predicate<EventListener<?>> predicate) {
-        listeners.removeIf(predicate);
+        this.listeners.removeIf(entry -> predicate.test(entry.listener()));
     }
 
     @Override
     public boolean listening(@NotNull EventListener<?> listener) {
-        return listeners.contains(listener);
+        for (var entry : this.listeners) {
+            if (entry.listener().equals(listener))
+                return true;
+        }
+        return false;
     }
 
     @Override
     public void call(@NotNull Object event) {
+        for (var entry : this.listeners) {
+            if (!entry.type().isAssignableFrom(event.getClass()))
+                continue;
+            entry.listener().handle(event);
+        }
+    }
+
+    private record ListenerEntry(Class type, EventListener listener) {
 
     }
 }
