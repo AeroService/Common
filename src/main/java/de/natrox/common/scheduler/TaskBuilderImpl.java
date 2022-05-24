@@ -28,7 +28,7 @@ final class TaskBuilderImpl implements Task.Builder {
     private long delay; // ms
     private long repeat; // ms
 
-    protected TaskBuilderImpl(SchedulerImpl scheduler, Runnable runnable) {
+    TaskBuilderImpl(SchedulerImpl scheduler, Runnable runnable) {
         this.scheduler = scheduler;
         this.runnable = runnable;
     }

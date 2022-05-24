@@ -35,7 +35,7 @@ final class SimpleTaskBatch implements TaskBatch {
     private final AtomicBoolean locked;
     private @Nullable Runnable callback;
 
-    protected SimpleTaskBatch(@NotNull TaskBatchExecutor executor) {
+    SimpleTaskBatch(@NotNull TaskBatchExecutor executor) {
         Check.notNull(executor, "executor");
         this.executor = executor;
 

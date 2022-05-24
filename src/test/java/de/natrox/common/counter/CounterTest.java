@@ -87,7 +87,7 @@ public class CounterTest {
     }
 
 
-    class TestCountDown extends Countdown {
+    static class TestCountDown extends Countdown {
 
         public boolean started = false;
         public boolean finished = false;

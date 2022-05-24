@@ -31,7 +31,7 @@ final class TaskImpl implements Runnable, Task {
     private @Nullable ScheduledFuture<?> future;
     private volatile @Nullable Thread currentTaskThread;
 
-    protected TaskImpl(SchedulerImpl scheduler, Runnable runnable, long delay, long repeat) {
+    TaskImpl(SchedulerImpl scheduler, Runnable runnable, long delay, long repeat) {
         this.scheduler = scheduler;
         this.runnable = runnable;
         this.delay = delay;

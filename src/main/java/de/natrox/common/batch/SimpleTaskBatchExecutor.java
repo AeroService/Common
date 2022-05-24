@@ -28,7 +28,7 @@ final class SimpleTaskBatchExecutor implements TaskBatchExecutor {
 
     private final ExecutorService executor;
 
-    protected SimpleTaskBatchExecutor() {
+    SimpleTaskBatchExecutor() {
         this.executor = Executors.newSingleThreadExecutor(runnable -> {
             var thread = new Thread(runnable);
             thread.setName("Task Batch");
