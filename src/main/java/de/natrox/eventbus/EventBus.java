@@ -16,6 +16,7 @@
 
 package de.natrox.eventbus;
 
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -29,8 +30,10 @@ public sealed interface EventBus permits EventBusImpl {
 
     void register(@NotNull EventListener<?> listener);
 
-    default <T> void register(@NotNull Class<T> type, @NotNull Consumer<T> consumer) {
-        this.register(EventListener.of(type, consumer));
+    default <T> void register(@NotNull Class<T> type, @NotNull Consumer<T> handler) {
+        Check.notNull(type, "type");
+        Check.notNull(handler, "handler");
+        this.register(EventListener.of(type, handler));
     }
 
     void unregister(@NotNull EventListener<?> listener);

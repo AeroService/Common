@@ -17,6 +17,7 @@
 package de.natrox.eventbus;
 
 import de.natrox.common.builder.IBuilder;
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -29,12 +30,14 @@ public interface EventListener<T> {
     }
 
     static <T> @NotNull EventListener<T> of(@NotNull Class<T> type, @NotNull Consumer<T> handler) {
+        Check.notNull(type, "type");
+        Check.notNull(handler, "handler");
         return EventListener.builder(type).handler(handler).build();
     }
 
     @NotNull Class<T> eventType();
 
-    void handle(T event);
+    void handle(@NotNull T event);
 
     sealed interface Builder<T> extends IBuilder<EventListener<T>> permits EventListenerBuilderImpl {
 

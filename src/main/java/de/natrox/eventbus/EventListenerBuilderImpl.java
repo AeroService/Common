@@ -61,7 +61,7 @@ final class EventListenerBuilderImpl<T> implements EventListener.Builder<T> {
             }
 
             @Override
-            public void handle(T event) {
+            public void handle(@NotNull T event) {
                 if(!predicates.isEmpty()) {
                     for(var predicate : predicates) {
                         if(!predicate.test(event)) {
