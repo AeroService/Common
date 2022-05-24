@@ -33,10 +33,9 @@ final class EventBusImpl implements EventBus {
     }
 
     @Override
-    public void register(@NotNull Class<?> type, @NotNull EventListener<?> listener) {
-        Check.notNull(type, "type");
+    public void register(@NotNull EventListener<?> listener) {
         Check.notNull(listener, "listener");
-        this.listeners.add(new ListenerEntry(type, listener));
+        this.listeners.add(new ListenerEntry(listener.eventType(), listener));
     }
 
     @Override

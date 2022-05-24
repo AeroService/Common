@@ -18,24 +18,23 @@ import de.natrox.eventbus.EventBus;
 import de.natrox.eventbus.EventListener;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class EventBusTest {
 
     @Test
     public void test() {
         EventBus eventBus = EventBus.create();
 
-        EventListener<TestEvent> listener = event -> System.out.println("Test");
+        eventBus.register(TestEvent.class, event -> System.out.println("Test1"));
+        eventBus.register(EventListener.of(TestEvent.class, event -> System.out.println("Test2")));
 
-        assertFalse(eventBus.listening(listener));
-        eventBus.register(TestEvent.class, listener);
-        assertTrue(eventBus.listening(listener));
-
-        eventBus.call(new TestEvent());
-
-        eventBus.unregister(listener);
-        assertFalse(eventBus.listening(listener));
+        eventBus.register(
+            EventListener
+                .builder(TestEvent.class)
+                .condition(event -> true)
+                .condition(event -> true)
+                .handler(event -> System.out.println("Test3"))
+                .build()
+        );
     }
 
 }

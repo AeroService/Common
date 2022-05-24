@@ -18,6 +18,7 @@ package de.natrox.eventbus;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public sealed interface EventBus permits EventBusImpl {
@@ -26,7 +27,11 @@ public sealed interface EventBus permits EventBusImpl {
         return new EventBusImpl();
     }
 
-    void register(@NotNull Class<?> type, @NotNull EventListener<?> listener);
+    void register(@NotNull EventListener<?> listener);
+
+    default <T> void register(@NotNull Class<T> type, @NotNull Consumer<T> consumer) {
+        this.register(EventListener.of(type, consumer));
+    }
 
     void unregister(@NotNull EventListener<?> listener);
 
