@@ -6,11 +6,8 @@ A basic and common library for the development of Java projects
 
 # Table of contents
 - [Why use Common?](#why-use-common)
-- [How to use](#how-to-use)
-  - [Add to your project](#add-to-your-project)
-  - [Scheduler](#scheduler)
-  - [Counter](#counter)
-  - [TaskBatch](#taskbatch)
+- [Advantages & Disadvantages](#advantages-and-disadvantages)
+- [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -18,7 +15,21 @@ A basic and common library for the development of Java projects
 
 Coming soon.
 
-# How to Use
+# Advantages and Disadvantages
+
+Coming soon.
+
+## Advantages
+
+- Coming soon
+- Coming soon
+
+## Disadvantages
+
+- Coming soon
+- Coming soon
+
+# Usage
 The following explains in detail how to use Common and what it does.
 
 # Add to your project
@@ -27,14 +38,14 @@ The following explains in detail how to use Common and what it does.
 
 # Scheduler
 
-**Step 1:** Instantiating a Scheduler.
+**Step 1:** Instantiate an Scheduler.
 
 Code example:
 ```java
 Scheduler scheduler = Scheduler.create();
 ```
 
-**Step 2:** Building and schedule a Task.
+**Step 2:** Build and schedule an Task.
 
 ### Repeating task
 
@@ -77,14 +88,14 @@ Comming soon.
 
 # Taskbatch
 
-**Step 1:** Instantiating a TaskBatch Factory.
+**Step 1:** Instantiate an TaskBatch Factory.
 
 Code example:
 ```java
 TaskBatch.Factory taskBatchFactory = new SimpleTaskBatchFactory();
 ```
 
-**Step 2:** Creating and building a TaskBatch.
+**Step 2:** Create and build an TaskBatch.
 ```java
 TaskBatch taskBatch = taskBatchFactory
     .createTaskBatch()
@@ -100,7 +111,7 @@ TaskBatch taskBatch = taskBatchFactory
     });
 ```
 
-**Step 3:** Executing the TaskBatch.
+**Step 3:** Execute the TaskBatch.
 
 Code example:
 ```java
@@ -116,7 +127,7 @@ taskBatch.execute(() -> {
 
 # Contributing
 See [the contributing file](CONTRIBUTING.md)!
-All WIP features are previewed as Draft PRs
+All WIP features are previewed as Draft PRs!
 
 # License
 This project is licensed under the [Apache License Version 2.0](../LICENSE).
