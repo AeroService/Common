@@ -16,6 +16,7 @@
 
 package de.natrox.eventbus;
 
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -32,22 +33,27 @@ final class EventBusImpl implements EventBus {
     }
 
     @Override
-    public void register(@NotNull Class<?> type, @NotNull EventListener<?> eventListener) {
-        this.listeners.add(new ListenerEntry(type, eventListener));
+    public void register(@NotNull Class<?> type, @NotNull EventListener<?> listener) {
+        Check.notNull(type, "type");
+        Check.notNull(listener, "listener");
+        this.listeners.add(new ListenerEntry(type, listener));
     }
 
     @Override
-    public void unregister(@NotNull EventListener<?> eventListener) {
-        this.listeners.removeIf(entry -> entry.listener().equals(eventListener));
+    public void unregister(@NotNull EventListener<?> listener) {
+        Check.notNull(listener, "listener");
+        this.listeners.removeIf(entry -> entry.listener().equals(listener));
     }
 
     @Override
     public void unregisterIf(@NotNull Predicate<EventListener<?>> predicate) {
+        Check.notNull(predicate, "predicate");
         this.listeners.removeIf(entry -> predicate.test(entry.listener()));
     }
 
     @Override
     public boolean listening(@NotNull EventListener<?> listener) {
+        Check.notNull(listener, "listener");
         for (var entry : this.listeners) {
             if (entry.listener().equals(listener))
                 return true;
@@ -57,6 +63,7 @@ final class EventBusImpl implements EventBus {
 
     @Override
     public void call(@NotNull Object event) {
+        Check.notNull(event, "event");
         for (var entry : this.listeners) {
             if (!entry.type().isAssignableFrom(event.getClass()))
                 continue;

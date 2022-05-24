@@ -26,9 +26,9 @@ public sealed interface EventBus permits EventBusImpl {
         return new EventBusImpl();
     }
 
-    void register(@NotNull Class<?> type, @NotNull EventListener<?> eventListener);
+    void register(@NotNull Class<?> type, @NotNull EventListener<?> listener);
 
-    void unregister(@NotNull EventListener<?> eventListener);
+    void unregister(@NotNull EventListener<?> listener);
 
     void unregisterIf(@NotNull Predicate<EventListener<?>> predicate);
 
