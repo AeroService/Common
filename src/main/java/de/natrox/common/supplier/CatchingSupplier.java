@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package de.natrox.common.consumer;
+package de.natrox.common.supplier;
 
 import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
- * Consumer that prints exceptions thrown
+ * Supplier that prints exceptions thrown
  */
-public record CatchingConsumer<T>(Consumer<T> delegate) implements Consumer<T> {
+public record CatchingSupplier<T>(Supplier<T> delegate) implements Supplier<T> {
 
-    public CatchingConsumer(@NotNull Consumer<T> delegate) {
+    public CatchingSupplier(@NotNull Supplier<T> delegate) {
         Check.notNull(delegate, "delegate");
         this.delegate = delegate;
     }
@@ -35,9 +35,9 @@ public record CatchingConsumer<T>(Consumer<T> delegate) implements Consumer<T> {
      * {@inheritDoc}
      */
     @Override
-    public void accept(T t) {
+    public T get() {
         try {
-            this.delegate.accept(t);
+            return this.delegate.get();
         } catch (Throwable e) {
             e.printStackTrace();
             throw e;
