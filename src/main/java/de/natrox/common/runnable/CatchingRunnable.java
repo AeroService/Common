@@ -35,7 +35,7 @@ public record CatchingRunnable(Runnable delegate) implements Runnable {
     @Override
     public void run() {
         try {
-            delegate.run();
+            this.delegate.run();
         } catch (Throwable e) {
             e.printStackTrace();
             throw e;

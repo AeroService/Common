@@ -37,7 +37,7 @@ public record CatchingConsumer<T>(Consumer<T> delegate) implements Consumer<T> {
     @Override
     public void accept(T t) {
         try {
-            delegate.accept(t);
+            this.delegate.accept(t);
         } catch (Throwable e) {
             e.printStackTrace();
             throw e;

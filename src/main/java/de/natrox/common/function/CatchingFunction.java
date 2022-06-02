@@ -37,7 +37,7 @@ public record CatchingFunction<T, R>(Function<T, R> delegate) implements Functio
     @Override
     public R apply(T t) {
         try {
-            return delegate.apply(t);
+            return this.delegate.apply(t);
         } catch (Throwable e) {
             e.printStackTrace();
             throw e;
