@@ -13,7 +13,7 @@
 * Ensure the PR description clearly describes the feature.
 
 #### **Do you have questions about the source code?**
-* Ask any question about how to use the Common in the GitHub issues section.
+* Ask any question about how to use Common in the GitHub issues section.
 
 ## General Contribution Rules
-* By contributing to the Common project your code/contribution will be licensed under the [Apache Version 2.0](../LICENSE) license.
+* By contributing to Common project your code/contribution will be licensed under the [Apache Version 2.0](../LICENSE) license.
