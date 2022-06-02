@@ -16,6 +16,10 @@
 
 package de.natrox.common.counter;
 
+import de.natrox.common.scheduler.Scheduler;
+
+import java.util.concurrent.TimeUnit;
+
 public sealed interface Counter permits Countdown, Timer {
 
     void start();
@@ -26,10 +30,36 @@ public sealed interface Counter permits Countdown, Timer {
 
     void stop();
 
-    int currentTime();
-
     boolean isPaused();
 
     boolean isRunning();
 
+    CounterStatus status();
+
+    long startTime();
+
+    long stopTime();
+
+    long tickValue();
+
+    long currentTime();
+
+    void currentTime(long currentTime);
+
+    TimeUnit tickUnit();
+
+    sealed interface Builder permits CounterBuilderImpl {
+
+        Builder startTime(long startTime);
+
+        Builder stopTime(long stopTime);
+
+        Builder scheduler(Scheduler scheduler);
+
+        Builder tick(long tick, TimeUnit tickUnit);
+
+        Countdown buildCountdown();
+
+        Timer buildTimer();
+    }
 }

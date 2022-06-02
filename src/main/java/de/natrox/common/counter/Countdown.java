@@ -16,40 +16,40 @@
 
 package de.natrox.common.counter;
 
-import de.natrox.common.validate.Check;
 import de.natrox.common.runnable.CatchingRunnable;
 import de.natrox.common.scheduler.Scheduler;
 import de.natrox.common.scheduler.Task;
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
-public non-sealed class Countdown implements Counter {
+non-sealed class Countdown implements Counter {
 
-    protected final int startTime;
-    protected final int stopTime;
-    protected final int tick;
-    protected final TimeUnit timeUnit;
+    protected final long startTime;
+    protected final long stopTime;
+    protected final long tick;
+    protected final TimeUnit tickUnit;
     private final Scheduler scheduler;
 
     private Task task;
-    private int currentTime;
-    private boolean paused;
-    private boolean running;
+    private long currentTime;
+    private CounterStatus status;
 
-    public Countdown(@NotNull Scheduler scheduler, int startTime, int stopTime, int tick, @NotNull TimeUnit timeUnit) {
+    public Countdown(@NotNull Scheduler scheduler, long startTime, long stopTime, long tick, @NotNull TimeUnit tickUnit) {
         Check.notNull(scheduler, "scheduler");
-        Check.notNull(timeUnit, "timeUnit");
-        this.scheduler = scheduler;
+        Check.notNull(tickUnit, "tickUnit");
         this.startTime = startTime;
         this.stopTime = stopTime;
         this.tick = tick;
-        this.timeUnit = timeUnit;
+        this.tickUnit = tickUnit;
+        this.scheduler = scheduler;
+        this.status = CounterStatus.IDLING;
     }
 
     @Override
     public void start() {
-        if (this.task != null) {
+        if(this.task != null) {
             throw new IllegalStateException("The counter is already running");
         }
 
@@ -57,82 +57,83 @@ public non-sealed class Countdown implements Counter {
         this.currentTime = this.startTime + 1;
 
         this.task = this.scheduler
-            .buildTask(new CatchingRunnable(() -> {
-                if (!this.isPaused() && this.isRunning()) {
-
-                    if (this.currentTime > this.stopTime) {
-                        this.currentTime -= this.tick;
-                        this.handleTick();
-                    }
-
-                    if (this.currentTime == this.stopTime) {
-                        this.running = false;
-                        this.handleFinish();
-                        this.cancel();
-                    }
-
-                }
-            }))
-            .repeat(this.tick, this.timeUnit)
+            .buildTask(new CatchingRunnable(this::tick))
+            .repeat(this.tick, this.tickUnit)
             .schedule();
 
-        this.running = true;
-        this.paused = false;
+        this.status = CounterStatus.RUNNING;
     }
 
     @Override
     public void pause() {
-        this.paused = true;
-        this.running = false;
+        if(status == CounterStatus.RUNNING)
+            this.status = CounterStatus.PAUSED;
     }
 
     @Override
     public void resume() {
-        this.paused = false;
-        this.running = true;
+        if(status == CounterStatus.PAUSED)
+            this.status = CounterStatus.RUNNING;
     }
 
     @Override
     public void stop() {
-        if (this.isRunning()) {
-            this.cancel();
-            this.handleCancel();
-        }
-    }
-
-    private void cancel() {
-        this.running = false;
-
-        if (this.task != null)
-            this.task.cancel();
-        this.task = null;
-    }
-
-    public int tickedTime() {
-        return this.currentTime;
-    }
-
-    @Override
-    public int currentTime() {
-        return this.currentTime;
+        if(status == CounterStatus.PAUSED)
+            this.status = CounterStatus.IDLING;
     }
 
     @Override
     public boolean isPaused() {
-        return this.paused;
+        return status ==  CounterStatus.PAUSED;
     }
 
     @Override
     public boolean isRunning() {
-        return this.running;
+        return status == CounterStatus.RUNNING;
     }
 
-    public int startTime() {
+    private void cancel() {
+        this.status = CounterStatus.IDLING;
+
+        if(this.task != null)
+            this.task.cancel();
+        this.task = null;
+    }
+
+    public long tickedTime() {return this.currentTime;}
+
+    @Override
+    public long currentTime() {
+        return this.currentTime;
+    }
+
+    @Override
+    public void currentTime(long currentTime) {
+        this.currentTime = currentTime;
+    }
+
+    @Override
+    public TimeUnit tickUnit() {
+        return tickUnit;
+    }
+
+    @Override
+    public CounterStatus status() {
+        return status;
+    }
+
+    public long startTime() {
         return this.startTime;
     }
 
-    public void currentTime(int currentTime) {
-        this.currentTime = currentTime;
+    @Override
+    public long stopTime() {
+        return this.stopTime;
+    }
+
+    @Override
+    public long tickValue() {
+        return this.tick;
     }
 
     protected void handleStart() {
@@ -149,5 +150,22 @@ public non-sealed class Countdown implements Counter {
 
     protected void handleCancel() {
 
+    }
+
+    private void tick() {
+        if(this.status == CounterStatus.RUNNING) {
+
+            if(this.currentTime > this.stopTime) {
+                this.currentTime -= this.tick;
+                this.handleTick();
+            }
+
+            if(this.currentTime == this.stopTime) {
+                this.status = CounterStatus.IDLING;
+                this.handleFinish();
+                this.cancel();
+            }
+
+        }
     }
 }
