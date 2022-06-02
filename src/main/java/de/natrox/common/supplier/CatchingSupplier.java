@@ -16,12 +16,20 @@
 
 package de.natrox.common.supplier;
 
+import de.natrox.common.validate.Check;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Supplier;
 
 /**
  * Supplier that prints exceptions thrown
  */
 public record CatchingSupplier<T>(Supplier<T> delegate) implements Supplier<T> {
+
+    public CatchingSupplier(@NotNull Supplier<T> delegate) {
+        Check.notNull(delegate, "delegate");
+        this.delegate = delegate;
+    }
 
     /**
      * {@inheritDoc}
