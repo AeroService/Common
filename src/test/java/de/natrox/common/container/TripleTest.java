@@ -63,4 +63,25 @@ public class TripleTest {
         Triple<?, String, String> triple = Triple.of(null, "second", "third");
         assertNotEquals(triple, Triple.empty());
     }
+
+    @Test
+    public void setFirstTest() {
+        Triple<String, String, String> triple = Triple.empty();
+        triple.setFirst("first");
+        assertEquals(triple.first(), "first");
+    }
+
+    @Test
+    public void setSecondTest() {
+        Triple<String, String, String> triple = Triple.empty();
+        triple.setSecond("second");
+        assertEquals(triple.second(), "second");
+    }
+
+    @Test
+    public void setThirdTest() {
+        Triple<String, String, String> triple = Triple.empty();
+        triple.setThird("third");
+        assertEquals(triple.second(), "third");
+    }
 }

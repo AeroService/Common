@@ -63,4 +63,18 @@ public class PairTest {
         Pair<?, String> pair = Pair.of(null, "second");
         assertNotEquals(pair, Pair.empty());
     }
+
+    @Test
+    public void setFirstTest() {
+        Pair<String, String> pair = Pair.empty();
+        pair.setFirst("first");
+        assertEquals(pair.first(), "first");
+    }
+
+    @Test
+    public void setSecondTest() {
+        Pair<String, String> pair = Pair.empty();
+        pair.setSecond("second");
+        assertEquals(pair.second(), "second");
+    }
 }

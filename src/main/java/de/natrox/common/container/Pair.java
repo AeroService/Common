@@ -26,11 +26,10 @@ import java.util.Objects;
  * @param <A> the first type, which you want to define
  * @param <B> the second type which you want to define
  */
-@SuppressWarnings("ClassCanBeRecord")
 public final class Pair<A, B> {
 
-    private final A first;
-    private final B second;
+    private A first;
+    private B second;
 
     private Pair(A first, B second) {
         this.first = first;
@@ -65,8 +64,18 @@ public final class Pair<A, B> {
         return first;
     }
 
+    public Pair<A, B> setFirst(A first) {
+        this.first = first;
+        return this;
+    }
+
     public B second() {
         return second;
+    }
+
+    public Pair<A, B> setSecond(B second) {
+        this.second = second;
+        return this;
     }
 
     @Override

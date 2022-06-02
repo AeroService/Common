@@ -27,12 +27,11 @@ import java.util.Objects;
  * @param <B> the second type which you want to define
  * @param <C> the third type which you want to define
  */
-@SuppressWarnings("ClassCanBeRecord")
 public final class Triple<A, B, C> {
 
-    private final A first;
-    private final B second;
-    private final C third;
+    private A first;
+    private B second;
+    private C third;
 
     private Triple(A first, B second, C third) {
         this.first = first;
@@ -71,12 +70,27 @@ public final class Triple<A, B, C> {
         return first;
     }
 
+    public Triple<A, B, C> setFirst(A first) {
+        this.first = first;
+        return this;
+    }
+
     public B second() {
         return second;
     }
 
+    public Triple<A, B, C> setSecond(B second) {
+        this.second = second;
+        return this;
+    }
+
     public C third() {
         return third;
+    }
+
+    public Triple<A, B, C> setThird(C third) {
+        this.third = third;
+        return this;
     }
 
     @Override
