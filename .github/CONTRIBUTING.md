@@ -16,4 +16,4 @@
 * Ask any question about how to use Common in the GitHub issues section.
 
 ## General Contribution Rules
-* By contributing to Common project your code/contribution will be licensed under the [Apache Version 2.0](../LICENSE) license.
+* By contributing to the Common project your code/contribution will be licensed under the [Apache Version 2.0](../LICENSE) license.
