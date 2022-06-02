@@ -16,6 +16,8 @@
 
 package de.natrox.common.container;
 
+import java.util.Objects;
+
 /**
  * This class can capture 2 references of 2 types and set or clear the data using first() and
  * second(). It can be used to return multiple objects of a method, or to easily capture multiple
@@ -24,7 +26,16 @@ package de.natrox.common.container;
  * @param <A> the first type, which you want to define
  * @param <B> the second type which you want to define
  */
-public record Pair<A, B>(A first, B second) {
+@SuppressWarnings("ClassCanBeRecord")
+public final class Pair<A, B> {
+
+    private final A first;
+    private final B second;
+
+    private Pair(A first, B second) {
+        this.first = first;
+        this.second = second;
+    }
 
     /**
      * Creates a new pair.
@@ -50,4 +61,32 @@ public record Pair<A, B>(A first, B second) {
         return new Pair<>(null, null);
     }
 
+    public A first() {
+        return first;
+    }
+
+    public B second() {
+        return second;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (Pair<?, ?>) obj;
+        return Objects.equals(this.first, that.first) &&
+            Objects.equals(this.second, that.second);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second);
+    }
+
+    @Override
+    public String toString() {
+        return "Pair[" +
+            "first=" + first + ", " +
+            "second=" + second + ']';
+    }
 }

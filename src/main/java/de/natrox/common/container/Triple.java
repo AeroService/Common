@@ -16,6 +16,8 @@
 
 package de.natrox.common.container;
 
+import java.util.Objects;
+
 /**
  * This class can capture 3 references of 3 types and set or clear the data using first() and
  * second() and third(). It can be used to return multiple objects of a method, or to easily capture multiple
@@ -25,7 +27,18 @@ package de.natrox.common.container;
  * @param <B> the second type which you want to define
  * @param <C> the third type which you want to define
  */
-public record Triple<A, B, C>(A first, B second, C third) {
+@SuppressWarnings("ClassCanBeRecord")
+public final class Triple<A, B, C> {
+
+    private final A first;
+    private final B second;
+    private final C third;
+
+    private Triple(A first, B second, C third) {
+        this.first = first;
+        this.second = second;
+        this.third = third;
+    }
 
     /**
      * Creates a new triple.
@@ -53,4 +66,40 @@ public record Triple<A, B, C>(A first, B second, C third) {
     public static <X, Y, Z> Triple<X, Y, Z> empty() {
         return new Triple<>(null, null, null);
     }
+
+    public A first() {
+        return first;
+    }
+
+    public B second() {
+        return second;
+    }
+
+    public C third() {
+        return third;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (Triple<?, ?, ?>) obj;
+        return Objects.equals(this.first, that.first) &&
+            Objects.equals(this.second, that.second) &&
+            Objects.equals(this.third, that.third);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second, third);
+    }
+
+    @Override
+    public String toString() {
+        return "Triple[" +
+            "first=" + first + ", " +
+            "second=" + second + ", " +
+            "third=" + third + ']';
+    }
+
 }
