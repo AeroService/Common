@@ -44,4 +44,13 @@ public sealed interface EventBus permits EventBusImpl {
 
     void call(@NotNull Object event);
 
+    default void callCancellable(@NotNull Object event, @NotNull Runnable callback) {
+        Check.notNull(event, "event");
+        Check.notNull(callback, "callback");
+        this.call(event);
+        if (event instanceof CancellableEvent cancellableEvent && cancellableEvent.isCancelled())
+            return;
+        callback.run();
+    }
+
 }
