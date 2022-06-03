@@ -18,9 +18,17 @@ package de.natrox.common.counter;
 
 import de.natrox.common.scheduler.Scheduler;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public sealed interface Counter permits Countdown, Timer {
+
+    static Counter.Builder builder() {
+        return new CounterBuilderImpl();
+    }
 
     void start();
 
@@ -42,6 +50,8 @@ public sealed interface Counter permits Countdown, Timer {
 
     long tickValue();
 
+    long tickedTime();
+
     long currentTime();
 
     void currentTime(long currentTime);
@@ -57,6 +67,18 @@ public sealed interface Counter permits Countdown, Timer {
         Builder scheduler(Scheduler scheduler);
 
         Builder tick(long tick, TimeUnit tickUnit);
+
+        default Builder tick(long tick, ChronoUnit tickUnit) {
+            return tick(tick, TimeUnit.of(tickUnit));
+        }
+
+        Builder startHandler(Consumer<CounterInfo> startHandler);
+
+        Builder tickHandler(Consumer<CounterInfo> tickHandler);
+
+        Builder finishHandler(Consumer<CounterInfo> finishHandler);
+
+        Builder cancelHandler(Consumer<CounterInfo> cancelHandler);
 
         Countdown buildCountdown();
 

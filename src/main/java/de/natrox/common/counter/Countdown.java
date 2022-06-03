@@ -23,6 +23,7 @@ import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 non-sealed class Countdown implements Counter {
 
@@ -31,14 +32,32 @@ non-sealed class Countdown implements Counter {
     protected final long tick;
     protected final TimeUnit tickUnit;
     private final Scheduler scheduler;
+    private final Consumer<CounterInfo> startHandler;
+    private final Consumer<CounterInfo> tickHandler;
+    private final Consumer<CounterInfo> finishHandler;
+    private final Consumer<CounterInfo> cancelHandler;
 
     private Task task;
     private long currentTime;
     private CounterStatus status;
 
-    public Countdown(@NotNull Scheduler scheduler, long startTime, long stopTime, long tick, @NotNull TimeUnit tickUnit) {
+    Countdown(
+        @NotNull Scheduler scheduler,
+        long startTime,
+        long stopTime,
+        long tick,
+        @NotNull TimeUnit tickUnit,
+        Consumer<CounterInfo> startHandler,
+        Consumer<CounterInfo> tickHandler,
+        Consumer<CounterInfo> finishHandler,
+        Consumer<CounterInfo> cancelHandler
+    ) {
         Check.notNull(scheduler, "scheduler");
         Check.notNull(tickUnit, "tickUnit");
+        this.startHandler = startHandler;
+        this.tickHandler = tickHandler;
+        this.finishHandler = finishHandler;
+        this.cancelHandler = cancelHandler;
         this.startTime = startTime;
         this.stopTime = stopTime;
         this.tick = tick;
@@ -49,9 +68,8 @@ non-sealed class Countdown implements Counter {
 
     @Override
     public void start() {
-        if(this.task != null) {
+        if(this.task != null)
             throw new IllegalStateException("The counter is already running");
-        }
 
         this.handleStart();
         this.currentTime = this.startTime + 1;
@@ -84,7 +102,7 @@ non-sealed class Countdown implements Counter {
 
     @Override
     public boolean isPaused() {
-        return status ==  CounterStatus.PAUSED;
+        return status == CounterStatus.PAUSED;
     }
 
     @Override
@@ -95,12 +113,17 @@ non-sealed class Countdown implements Counter {
     private void cancel() {
         this.status = CounterStatus.IDLING;
 
-        if(this.task != null)
+        if(this.task != null) {
             this.task.cancel();
+            this.handleCancel();
+        }
         this.task = null;
     }
 
-    public long tickedTime() {return this.currentTime;}
+    @Override
+    public long tickedTime() {
+        return this.currentTime;
+    }
 
     @Override
     public long currentTime() {
@@ -137,19 +160,27 @@ non-sealed class Countdown implements Counter {
     }
 
     protected void handleStart() {
-
+        if(startHandler == null)
+            return;
+        this.startHandler.accept(createInfo());
     }
 
     protected void handleTick() {
-
+        if(tickHandler == null)
+            return;
+        this.tickHandler.accept(createInfo());
     }
 
     protected void handleFinish() {
-
+        if(finishHandler == null)
+            return;
+        this.finishHandler.accept(createInfo());
     }
 
     protected void handleCancel() {
-
+        if(cancelHandler == null)
+            return;
+        this.cancelHandler.accept(createInfo());
     }
 
     private void tick() {
@@ -167,5 +198,9 @@ non-sealed class Countdown implements Counter {
             }
 
         }
+    }
+
+    private CounterInfo createInfo() {
+        return new CounterInfo(this.status, tickedTime(), this.currentTime);
     }
 }
