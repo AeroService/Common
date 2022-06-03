@@ -23,7 +23,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-public sealed interface Counter permits Countdown, Timer {
+public sealed interface Counter permits CounterImpl {
 
     Scheduler defaultScheduler = Scheduler.create();
 
@@ -200,19 +200,11 @@ public sealed interface Counter permits Countdown, Timer {
         Builder cancelHandler(@NotNull Consumer<Counter> cancelHandler);
 
         /**
-         * Builds the {@link Counter} as a {@link Countdown}
-         * A countdown decreases the number by 1 every tick
+         * Builds the {@link Counter}
          *
-         * @return the Countdown
+         * @return the Counter
          */
-        Countdown buildCountdown();
+        Counter build();
 
-        /**
-         * Builds the {@link Counter} as a {@link Timer}
-         * A timer increases the number by 1 every tick
-         *
-         * @return the timer
-         */
-        Timer buildTimer();
     }
 }

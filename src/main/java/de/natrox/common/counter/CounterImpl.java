@@ -25,12 +25,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-non-sealed class Countdown implements Counter {
+non-sealed class CounterImpl implements Counter {
 
-    protected final long startCount;
-    protected final long stopCount;
-    protected final long tick;
-    protected final TimeUnit tickUnit;
+    private final long startCount;
+    private final long stopCount;
+    private final long tick;
+    private final int step;
+    private final TimeUnit tickUnit;
     private final Scheduler scheduler;
     private final Consumer<Counter> startHandler;
     private final Consumer<Counter> tickHandler;
@@ -41,7 +42,7 @@ non-sealed class Countdown implements Counter {
     private Task task;
     private CounterStatus status;
 
-    Countdown(
+    CounterImpl(
         @NotNull Scheduler scheduler,
         long startCount,
         long stopCount,
@@ -64,6 +65,7 @@ non-sealed class Countdown implements Counter {
         this.tickUnit = tickUnit;
         this.scheduler = scheduler;
         this.status = CounterStatus.IDLING;
+        this.step = stopCount > startCount ? 1 : -1;
     }
 
     @Override
@@ -71,7 +73,7 @@ non-sealed class Countdown implements Counter {
         if(this.task != null)
             throw new IllegalStateException("The counter is already running");
 
-        this.currentCount = this.startCount+1;
+        this.currentCount = this.startCount-step;
 
         this.task = this.scheduler
             .buildTask(new CatchingRunnable(this::tick))
@@ -114,7 +116,7 @@ non-sealed class Countdown implements Counter {
 
     @Override
     public long tickedTime() {
-        return this.currentCount;
+        return (this.startCount - this.currentCount) * -step;
     }
 
     @Override
@@ -188,12 +190,13 @@ non-sealed class Countdown implements Counter {
 
     private void tick() {
         if(this.status == CounterStatus.RUNNING) {
-            if(this.currentCount >= this.stopCount) {
-                this.currentCount -= 1;
+            if(this.currentCount*step <= this.stopCount*step) {
+                this.currentCount += step;
+                System.out.println("Ticker: Ticked to "+currentCount+" with step "+step);
                 this.handleTick();
             }
 
-            if(this.currentCount+1 == this.stopCount) {
+            if(this.currentCount-step == this.stopCount) {
                 this.handleFinish();
                 this.cancel(null);
             }

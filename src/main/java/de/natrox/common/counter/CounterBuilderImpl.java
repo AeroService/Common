@@ -68,12 +68,7 @@ final class CounterBuilderImpl implements Counter.Builder {
     }
 
     @Override
-    public Countdown buildCountdown() {
-        return new Countdown(this.scheduler, this.startCount, this.stopCount, this.tick, this.tickUnit, this.startHandler, this.tickHandler, this.finishHandler, this.cancelHandler);
-    }
-
-    @Override
-    public Timer buildTimer() {
-        return new Timer(this.scheduler, this.startCount, this.stopCount, this.tick, this.tickUnit, this.startHandler, this.tickHandler, this.finishHandler, this.cancelHandler);
+    public Counter build() {
+        return new CounterImpl(this.scheduler, this.startCount, this.stopCount, this.tick, this.tickUnit, this.startHandler, this.tickHandler, this.finishHandler, this.cancelHandler);
     }
 }
