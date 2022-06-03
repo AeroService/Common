@@ -48,8 +48,8 @@ public sealed interface EventBus permits EventBusImpl {
      * if the event passes all parent filtering.
      *
      * @param type    the event type to handle
-     * @param handler The handler function
-     * @param <T>     The event type to handle
+     * @param handler the handler function
+     * @param <T>     the event type to handle
      */
     default <T> void register(@NotNull Class<T> type, @NotNull Consumer<T> handler) {
         Check.notNull(type, "type");
