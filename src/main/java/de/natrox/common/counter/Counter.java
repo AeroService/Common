@@ -25,32 +25,51 @@ import java.util.function.Consumer;
 
 public sealed interface Counter permits Countdown, Timer {
 
+    Scheduler defaultScheduler = Scheduler.create();
+
+    /**
+     *
+     * Create a {@link Builder} for a {@link Counter} scheduling the tasks with the default{@link Scheduler}
+     *
+     * @return the Builder
+     */
     static Counter.Builder builder() {
-        return new CounterBuilderImpl();
+        return new CounterBuilderImpl(defaultScheduler);
+    }
+
+    /**
+     *
+     * Create a {@link Builder} for a {@link Counter} scheduling the tasks with the passed {@link Scheduler}
+     *
+     * @param scheduler the {@link Scheduler}
+     * @return the Builder
+     */
+    static Counter.Builder builder(Scheduler scheduler) {
+        return new CounterBuilderImpl(scheduler);
     }
 
     /**
      * Starts the {@link Counter} if its {@link CounterStatus} is IDLING
-     * Sets the {@link CounterStatus} to RUNNING
+     * Sets the status to RUNNING
      */
     void start();
 
     /**
      * Pauses the {@link Counter} if its {@link CounterStatus} is RUNNING
-     * Sets the {@link CounterStatus} to PAUSED
+     * Sets the status to PAUSED
      */
     void pause();
 
     /**
      * Resumes the {@link Counter} if its {@link CounterStatus} is PAUSED
-     * Sets the {@link CounterStatus} to RUNNING
+     * Sets the status to RUNNING
      */
     void resume();
 
 
     /**
      * Stops the {@link Counter} if its {@link CounterStatus} not IDLING
-     * Sets the {@link CounterStatus} to IDLING
+     * Sets the status to IDLING
      */
     void stop();
 
@@ -95,7 +114,6 @@ public sealed interface Counter permits Countdown, Timer {
      */
     long currentCount();
 
-
     /**
      *
      * Sets the current number the specified value
@@ -132,15 +150,6 @@ public sealed interface Counter permits Countdown, Timer {
 
         /**
          *
-         * Sets the scheduler
-         *
-         * @param scheduler the scheduler
-         * @return the {@link Builder}
-         */
-        Builder scheduler(@NotNull Scheduler scheduler);
-
-        /**
-         *
          * Sets the delay between two ticks
          *
          * @param tick the amount of tickUnits needed to the next tick
@@ -166,55 +175,55 @@ public sealed interface Counter permits Countdown, Timer {
          * Sets the startHandler
          * Gets executed if the {@link Counter} is started
          *
-         * @param startHandler a consumer consuming a {@link CounterInfo}
+         * @param startHandler a consumer consuming the counter
          * @return the {@link Builder}
          */
-        Builder startHandler(@NotNull Consumer<CounterInfo> startHandler);
+        Builder startHandler(@NotNull Consumer<Counter> startHandler);
 
         /**
          *
          * Sets the tickHandler
          * Gets executed if the {@link Counter} ticked
          *
-         * @param tickHandler a consumer consuming a {@link CounterInfo}
+         * @param tickHandler a consumer consuming the counter
          * @return the {@link Builder}
          */
-        Builder tickHandler(@NotNull Consumer<CounterInfo> tickHandler);
+        Builder tickHandler(@NotNull Consumer<Counter> tickHandler);
 
         /**
          *
          * Sets the finishHandler
          * Gets executed if the {@link Counter} finished counting
          *
-         * @param finishHandler a consumer consuming a {@link CounterInfo}
+         * @param finishHandler a consumer consuming the counter
          * @return the {@link Builder}
          */
-        Builder finishHandler(@NotNull Consumer<CounterInfo> finishHandler);
+        Builder finishHandler(@NotNull Consumer<Counter> finishHandler);
 
         /**
          *
          * Sets the cancelHandler
          * Gets executed if the {@link Counter} is canceled
          *
-         * @param cancelHandler a consumer consuming a {@link CounterInfo}
+         * @param cancelHandler a consumer consuming the counter
          * @return the {@link Builder}
          */
-        Builder cancelHandler(@NotNull Consumer<CounterInfo> cancelHandler);
+        Builder cancelHandler(@NotNull Consumer<Counter> cancelHandler);
 
         /**
          *
          * Builds the {@link Counter} as a {@link Countdown}
-         * A {@link Countdown} decreases the number by 1 every tick
+         * A countdown decreases the number by 1 every tick
          *
-         * @return the {@link Countdown}
+         * @return the Countdown
          */
         Countdown buildCountdown();
         /**
          *
          * Builds the {@link Counter} as a {@link Timer}
-         * A {@link Timer} increases the number by 1 every tick
+         * A timer increases the number by 1 every tick
          *
-         * @return the {@link Timer}
+         * @return the timer
          */
         Timer buildTimer();
     }
