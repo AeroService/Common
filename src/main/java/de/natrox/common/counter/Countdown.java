@@ -23,7 +23,6 @@ import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 non-sealed class Countdown implements Counter {
@@ -37,8 +36,8 @@ non-sealed class Countdown implements Counter {
     private final Consumer<Counter> tickHandler;
     private final Consumer<Counter> finishHandler;
     private final Consumer<Counter> cancelHandler;
-    private final AtomicLong currentCount = new AtomicLong();
 
+    private long currentCount;
     private Task task;
     private CounterStatus status;
 
@@ -72,7 +71,7 @@ non-sealed class Countdown implements Counter {
         if(this.task != null)
             throw new IllegalStateException("The counter is already running");
 
-        this.currentCount.set(this.startCount);
+        this.currentCount = this.startCount+1;
 
         this.task = this.scheduler
             .buildTask(new CatchingRunnable(this::tick))
@@ -99,7 +98,7 @@ non-sealed class Countdown implements Counter {
     @Override
     public void stop() {
         if(status != CounterStatus.IDLING) {
-            cancel();
+            cancel(this::handleCancel);
         }
     }
 
@@ -115,17 +114,17 @@ non-sealed class Countdown implements Counter {
 
     @Override
     public long tickedTime() {
-        return this.currentCount.get();
+        return this.currentCount;
     }
 
     @Override
     public long currentCount() {
-        return this.currentCount.get();
+        return this.currentCount;
     }
 
     @Override
     public void currentCount(long currentCount) {
-        this.currentCount.set(currentCount);
+        this.currentCount = currentCount;
     }
 
     @Override
@@ -176,29 +175,28 @@ non-sealed class Countdown implements Counter {
         this.cancelHandler.accept(this);
     }
 
-    private void cancel() {
+    private void cancel(Runnable callback) {
         this.status = CounterStatus.IDLING;
 
         if(this.task != null) {
             this.task.cancel();
-            this.handleCancel();
+            if(callback != null)
+                callback.run();
         }
         this.task = null;
     }
 
     private void tick() {
         if(this.status == CounterStatus.RUNNING) {
-
-            if(this.currentCount.get() >= this.stopCount) {
-                this.currentCount.decrementAndGet();
+            if(this.currentCount >= this.stopCount) {
+                this.currentCount -= 1;
                 this.handleTick();
             }
 
-            if(this.currentCount.get() == this.stopCount) {
-                this.status = CounterStatus.IDLING;
+            if(this.currentCount+1 == this.stopCount) {
                 this.handleFinish();
+                this.cancel(null);
             }
-
         }
     }
 }

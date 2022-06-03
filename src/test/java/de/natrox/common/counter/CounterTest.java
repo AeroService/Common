@@ -20,101 +20,97 @@ import de.natrox.common.scheduler.Scheduler;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CounterTest {
 
     @Test
     public void startTest() {
-        var scheduler = Scheduler.create();
-        var countDown = new TestCountDown(scheduler);
-        assertFalse(countDown.isRunning(), "The countdown has not yet started");
-        countDown.start();
-        assertTrue(countDown.isRunning(), "The countdown has already started");
-        countDown.stop();
+        Countdown countdown = Counter.builder()
+            .tick(100, ChronoUnit.MILLIS)
+            .startCount(5)
+            .stopCount(1)
+            .buildCountdown();
+        assertFalse(countdown.isRunning(), "The countdown has not yet started");
+        countdown.start();
+        assertTrue(countdown.isRunning(), "The countdown has already started");
+        countdown.stop();
     }
 
     @Test
     public void pauseTest() {
-        var scheduler = Scheduler.create();
-        var countDown = new TestCountDown(scheduler);
-
-        assertFalse(countDown.isPaused(), "The countdown is not paused");
-        countDown.start();
-        assertFalse(countDown.isPaused(), "The countdown is not paused");
-        countDown.pause();
-        assertTrue(countDown.isPaused(), "The countdown is currently paused");
-        assertFalse(countDown.isRunning(), "The countdown is currently paused");
-
-        countDown.resume();
-        assertFalse(countDown.isPaused(), "The countdown is now resumed");
-        assertTrue(countDown.isRunning(), "The countdown is now resumed");
+        Countdown countdown = Counter.builder()
+            .tick(100, ChronoUnit.MILLIS)
+            .startCount(5)
+            .stopCount(1)
+            .buildCountdown();
+        assertFalse(countdown.isPaused(), "The countdown is not paused");
+        countdown.start();
+        assertFalse(countdown.isPaused(), "The countdown is not paused");
+        countdown.pause();
+        assertTrue(countdown.isPaused(), "The countdown is currently paused");
+        assertFalse(countdown.isRunning(), "The countdown is currently paused");
+        countdown.resume();
+        assertFalse(countdown.isPaused(), "The countdown is now resumed");
+        assertTrue(countdown.isRunning(), "The countdown is now resumed");
     }
 
     @Test
     public void stopTest() {
-        var scheduler = Scheduler.create();
-        var countDown = new TestCountDown(scheduler);
-
-        countDown.start();
-        assertTrue(countDown.isRunning(), "The countdown has already started");
-        countDown.stop();
-        assertFalse(countDown.isRunning(), "The countdown is now stopped");
+        Countdown countdown = Counter.builder()
+            .tick(100, ChronoUnit.MILLIS)
+            .startCount(5)
+            .stopCount(1)
+            .buildCountdown();
+        countdown.start();
+        assertTrue(countdown.isRunning(), "The countdown has already started");
+        countdown.stop();
+        assertFalse(countdown.isRunning(), "The countdown is now stopped");
     }
 
     @Test
     public void handlerTest() throws InterruptedException {
-        var scheduler = Scheduler.create();
-        var countDown = new TestCountDown(scheduler);
+        AtomicBoolean started = new AtomicBoolean();
+        AtomicInteger ticks = new AtomicInteger();
+        AtomicBoolean finished = new AtomicBoolean();
+        AtomicBoolean canceled = new AtomicBoolean();
+        Countdown countdown = Counter.builder()
+                    .tick(100, ChronoUnit.MILLIS)
+                    .startCount(5)
+                    .stopCount(1)
+                    .startHandler(counter -> started.set(true))
+                    .tickHandler(counter -> ticks.incrementAndGet())
+                    .finishHandler(counter -> finished.set(true))
+                    .cancelHandler(counter -> canceled.set(true))
+                    .buildCountdown();
 
-        assertFalse(countDown.started, "The countdown has not yet started");
-        countDown.start();
-        assertTrue(countDown.started, "The countdown has now started");
+        assertEquals(ticks.get(), 0, "The countdown has not yet ticked");
 
-        assertFalse(countDown.canceled, "The countdown was yet not canceled");
-        countDown.stop();
-        assertTrue(countDown.canceled, "The countdown was canceled");
+        assertFalse(started.get(), "The countdown has not yet started");
+        countdown.start();
+        assertTrue(started.get(), "The countdown has now started");
 
-        assertFalse(countDown.finished, "The countdown is not finished yet");
-        countDown.start();
-        Thread.sleep(600);
-        assertFalse(countDown.finished, "400 ms remaining");
-        Thread.sleep(600);
-        assertTrue(countDown.finished, "The countdown is now finished");
-    }
+        Thread.sleep(1500);
+        assertEquals(6, ticks.get(), "The countdown has already ticked exactly 6 times");
+        assertTrue(finished.get());
 
+        assertFalse(canceled.get(), "The countdown was yet not canceled");
+        countdown.stop();
+        assertFalse(canceled.get(), "The countdown was yet not canceled");
 
-    static class TestCountDown extends Countdown {
-
-        public boolean started = false;
-        public boolean finished = false;
-        public boolean canceled = false;
-
-        public TestCountDown(@NotNull Scheduler scheduler) {
-            super(scheduler, 1000, 0, 1, TimeUnit.MILLISECONDS);
-        }
-
-        @Override
-        protected void handleStart() {
-            this.started = true;
-        }
-
-        @Override
-        protected void handleTick() {
-
-        }
-
-        @Override
-        protected void handleFinish() {
-            this.finished = true;
-        }
-
-        @Override
-        protected void handleCancel() {
-            this.canceled = true;
-        }
+        countdown.start();
+        Thread.sleep(1000);
+        assertTrue(finished.get(), "The countdown has finished yet");
+        finished.set(false);
+        countdown.start();
+        Thread.sleep(50);
+        assertFalse(finished.get(), "The countdown has not finished yet");
+        Thread.sleep(950);
+        assertTrue(finished.get(), "The countdown is now finished");
     }
 }
