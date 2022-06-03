@@ -17,7 +17,10 @@
 package de.natrox.common.counter;
 
 import de.natrox.common.scheduler.Scheduler;
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
@@ -25,15 +28,15 @@ import java.util.function.Consumer;
 
 public sealed interface Counter permits CounterImpl {
 
-    Scheduler defaultScheduler = Scheduler.create();
+    Scheduler DEFAULT_SCHEDULER = Scheduler.create();
 
     /**
      * Create a {@link Builder} for a {@link Counter} scheduling the tasks with the default{@link Scheduler}
      *
      * @return the Builder
      */
-    static Counter.Builder builder() {
-        return new CounterBuilderImpl(defaultScheduler);
+    static Counter.@NotNull Builder builder() {
+        return new CounterBuilderImpl(DEFAULT_SCHEDULER);
     }
 
     /**
@@ -42,7 +45,7 @@ public sealed interface Counter permits CounterImpl {
      * @param scheduler the {@link Scheduler}
      * @return the Builder
      */
-    static Counter.Builder builder(Scheduler scheduler) {
+    static Counter.@NotNull Builder builder(@NotNull Scheduler scheduler) {
         return new CounterBuilderImpl(scheduler);
     }
 
@@ -51,6 +54,7 @@ public sealed interface Counter permits CounterImpl {
      * Sets the status to RUNNING
      */
     void start();
+
 
     /**
      * Pauses the {@link Counter} if its {@link CounterStatus} is RUNNING
@@ -85,7 +89,7 @@ public sealed interface Counter permits CounterImpl {
     /**
      * @return the current {@link CounterStatus}
      */
-    CounterStatus status();
+    @NotNull CounterStatus status();
 
     /**
      * @return the number with witch the {@link Counter} starts
@@ -122,7 +126,7 @@ public sealed interface Counter permits CounterImpl {
     /**
      * @return the {@link TimeUnit} to multiply with the tickValue to get the delay between two ticks
      */
-    TimeUnit tickUnit();
+    @NotNull TimeUnit tickUnit();
 
     sealed interface Builder permits CounterBuilderImpl {
 
@@ -132,7 +136,7 @@ public sealed interface Counter permits CounterImpl {
          * @param startCount the startCount
          * @return the {@link Builder}
          */
-        Builder startCount(long startCount);
+        @NotNull Builder startCount(long startCount);
 
         /**
          * Sets the stopCount to the specified value
@@ -140,17 +144,7 @@ public sealed interface Counter permits CounterImpl {
          * @param stopCount the stopCount
          * @return the {@link Builder}
          */
-        Builder stopCount(long stopCount);
-
-
-        /**
-         * Sets the delay between two ticks
-         *
-         * @param tick     the amount of tickUnits needed to the next tick
-         * @param tickUnit the matching type to the tick parameter
-         * @return the {@link Builder}
-         */
-        Builder tick(long tick, @NotNull TimeUnit tickUnit);
+        @NotNull Builder stopCount(long stopCount);
 
         /**
          * Sets the delay between two ticks
@@ -159,7 +153,18 @@ public sealed interface Counter permits CounterImpl {
          * @param tickUnit the matching type to the tick parameter
          * @return the {@link Builder}
          */
-        default Builder tick(long tick, @NotNull ChronoUnit tickUnit) {
+        @NotNull Builder tick(@Range(from = 0, to = Long.MAX_VALUE)long tick, @NotNull TimeUnit tickUnit);
+
+        /**
+         * Sets the delay between two ticks
+         *
+         * @param tick     the amount of tickUnits needed to the next tick
+         * @param tickUnit the matching type to the tick parameter
+         * @return the {@link Builder}
+         */
+        default @NotNull Builder tick(@Range(from = 0, to = Long.MAX_VALUE) long tick, @NotNull ChronoUnit tickUnit) {
+            Check.argCondition(tick <= 0, "tick must be positive");
+            Check.notNull(tickUnit, "tickUnit");
             return tick(tick, TimeUnit.of(tickUnit));
         }
 
@@ -170,7 +175,7 @@ public sealed interface Counter permits CounterImpl {
          * @param startHandler a consumer consuming the counter
          * @return the {@link Builder}
          */
-        Builder startHandler(@NotNull Consumer<Counter> startHandler);
+        @NotNull Builder startHandler(@Nullable Consumer<Counter> startHandler);
 
         /**
          * Sets the tickHandler
@@ -179,7 +184,7 @@ public sealed interface Counter permits CounterImpl {
          * @param tickHandler a consumer consuming the counter
          * @return the {@link Builder}
          */
-        Builder tickHandler(@NotNull Consumer<Counter> tickHandler);
+        @NotNull Builder tickHandler(@Nullable Consumer<Counter> tickHandler);
 
         /**
          * Sets the finishHandler
@@ -188,7 +193,7 @@ public sealed interface Counter permits CounterImpl {
          * @param finishHandler a consumer consuming the counter
          * @return the {@link Builder}
          */
-        Builder finishHandler(@NotNull Consumer<Counter> finishHandler);
+        @NotNull Builder finishHandler(@Nullable Consumer<Counter> finishHandler);
 
         /**
          * Sets the cancelHandler
@@ -197,14 +202,14 @@ public sealed interface Counter permits CounterImpl {
          * @param cancelHandler a consumer consuming the counter
          * @return the {@link Builder}
          */
-        Builder cancelHandler(@NotNull Consumer<Counter> cancelHandler);
+        @NotNull Builder cancelHandler(@Nullable Consumer<Counter> cancelHandler);
 
         /**
          * Builds the {@link Counter}
          *
          * @return the Counter
          */
-        Counter build();
+        @NotNull Counter build();
 
     }
 }
