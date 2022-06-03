@@ -16,6 +16,7 @@
 
 package de.natrox.common.scheduler;
 
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
@@ -50,7 +51,7 @@ public sealed interface Task permits TaskImpl {
     /**
      * Represents a fluent interface to schedule tasks.
      */
-    sealed interface Builder permits TaskBuilderImpl {
+    sealed interface Builder permits TaskImpl.BuilderImpl {
 
         /**
          * Specifies that the task should delay its execution by the specified amount of time.
@@ -68,6 +69,7 @@ public sealed interface Task permits TaskImpl {
          * @return this builder, for chaining
          */
         default @NotNull Builder delay(Duration duration) {
+            Check.notNull(duration, "duration");
             return delay(duration.toMillis(), TimeUnit.MILLISECONDS);
         }
 
@@ -79,6 +81,7 @@ public sealed interface Task permits TaskImpl {
          * @return this builder, for chaining
          */
         default @NotNull Builder delay(long time, @NotNull TemporalUnit temporalUnit) {
+            Check.notNull(temporalUnit, "temporalUnit");
             return delay(Duration.of(time, temporalUnit));
         }
 
@@ -100,6 +103,7 @@ public sealed interface Task permits TaskImpl {
          * @return this builder, for chaining
          */
         default @NotNull Builder repeat(Duration duration) {
+            Check.notNull(duration, "duration");
             return repeat(duration.toMillis(), TimeUnit.MILLISECONDS);
         }
 
@@ -112,6 +116,7 @@ public sealed interface Task permits TaskImpl {
          * @return this builder, for chaining
          */
         default @NotNull Builder repeat(long time, @NotNull TemporalUnit temporalUnit) {
+            Check.notNull(temporalUnit, "temporalUnit");
             return repeat(Duration.of(time, temporalUnit));
         }
 

@@ -36,7 +36,7 @@ public sealed interface Counter permits CounterImpl {
      * @return the Builder
      */
     static Counter.@NotNull Builder builder() {
-        return new CounterBuilderImpl(DEFAULT_SCHEDULER);
+        return new CounterImpl.BuilderImpl(DEFAULT_SCHEDULER);
     }
 
     /**
@@ -46,7 +46,7 @@ public sealed interface Counter permits CounterImpl {
      * @return the Builder
      */
     static Counter.@NotNull Builder builder(@NotNull Scheduler scheduler) {
-        return new CounterBuilderImpl(scheduler);
+        return new CounterImpl.BuilderImpl(scheduler);
     }
 
     /**
@@ -128,7 +128,7 @@ public sealed interface Counter permits CounterImpl {
      */
     @NotNull TimeUnit tickUnit();
 
-    sealed interface Builder permits CounterBuilderImpl {
+    sealed interface Builder permits CounterImpl.BuilderImpl {
 
         /**
          * Sets the startCount to the specified value
@@ -153,7 +153,7 @@ public sealed interface Counter permits CounterImpl {
          * @param tickUnit the matching type to the tick parameter
          * @return the {@link Builder}
          */
-        @NotNull Builder tick(@Range(from = 0, to = Long.MAX_VALUE)long tick, @NotNull TimeUnit tickUnit);
+        @NotNull Builder tick(@Range(from = 0, to = Long.MAX_VALUE) long tick, @NotNull TimeUnit tickUnit);
 
         /**
          * Sets the delay between two ticks

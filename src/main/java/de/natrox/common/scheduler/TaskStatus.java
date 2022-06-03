@@ -18,6 +18,8 @@ package de.natrox.common.scheduler;
 
 public enum TaskStatus {
 
+    //TODO: Add java doc
+
     SCHEDULED,
     CANCELLED,
     FINISHED

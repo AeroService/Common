@@ -16,8 +16,8 @@
 
 package de.natrox.common.batch;
 
-import de.natrox.common.validate.Check;
 import de.natrox.common.runnable.CatchingRunnable;
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,48 +86,51 @@ final class SimpleTaskBatch implements TaskBatch {
 
     @Override
     public void execute() {
-        execute(null);
+        this.execute(null);
     }
 
     @Override
     public @NotNull List<Runnable> interrupt() {
-        return executor.interrupt();
+        return this.executor.interrupt();
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     private void runBatch() {
-        for (var task : tasks) {
-            while (locked.get()) {
+        for (var task : this.tasks) {
+            while (this.locked.get()) {
 
             }
-            locked.set(true);
-            if (task.taskType.equals(TaskType.SYNC))
-                executor.sync(task.runnable());
-            else if (task.taskType.equals(TaskType.ASYNC))
-                executor.async(task.runnable());
-            else {
-                executor.async(new CatchingRunnable(() -> {
-                    try {
-                        Thread.sleep(task.delay());
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    locked.set(false);
-                }));
+            this.locked.set(true);
+            switch (task.taskType) {
+                case SYNC -> this.executor.sync(task.runnable());
+                case ASYNC -> this.executor.async(task.runnable());
+                default -> this.executor.async(new CatchingRunnable(() -> this.delay(task.delay())));
             }
         }
-        if (callback != null)
-            callback.run();
-        executor.shutdown();
+        if (this.callback != null)
+            this.callback.run();
+        this.executor.shutdown();
+    }
+
+    private void delay(long delay) {
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        this.locked.set(false);
     }
 
     private void addTask(@NotNull TaskType taskType, @Nullable Runnable runnable, long delay) {
         Check.notNull(taskType, "taskType");
-        tasks.add(new TaskInfo(delay, taskType, () -> {
-            if (runnable != null)
-                runnable.run();
-            locked.set(false);
-        }));
+        this.tasks.add(new TaskInfo(delay, taskType, () -> this.runTask(runnable)));
+    }
+
+    private void runTask(Runnable runnable) {
+        if (runnable != null)
+            runnable.run();
+        this.locked.set(false);
     }
 
     enum TaskType {

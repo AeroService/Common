@@ -16,8 +16,8 @@
 
 package de.natrox.common.batch;
 
-import de.natrox.common.validate.Check;
 import de.natrox.common.runnable.CatchingRunnable;
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

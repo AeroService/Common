@@ -35,35 +35,39 @@ final class SchedulerImpl implements Scheduler {
     private final Set<Task> tasks = new LinkedHashSet<>();
 
     public SchedulerImpl() {
-        this.taskService = Executors.newCachedThreadPool(runnable -> {
-            var thread = new Thread(runnable);
-            thread.setName("Task Scheduler - #" + thread.getId());
-            return thread;
-        });
-        this.timerExecutionService = Executors.newSingleThreadScheduledExecutor(runnable -> {
-            var thread = new Thread(runnable);
-            thread.setName("Task Scheduler Timer");
-            return thread;
-        });
+        this.taskService = Executors.newCachedThreadPool(this::createThread);
+        this.timerExecutionService = Executors.newSingleThreadScheduledExecutor(this::createTimerThread);
+    }
+
+    private Thread createThread(Runnable runnable) {
+        Thread thread = new Thread(runnable);
+        thread.setName("Task Scheduler - #" + thread.getId());
+        return thread;
+    }
+
+    private Thread createTimerThread(Runnable runnable) {
+        Thread thread = new Thread(runnable);
+        thread.setName("Task Scheduler Timer");
+        return thread;
     }
 
     @Override
     public @NotNull Task.Builder buildTask(@NotNull Runnable runnable) {
         Check.notNull(runnable, "runnable");
-        return new TaskBuilderImpl(this, runnable);
+        return new TaskImpl.BuilderImpl(this, runnable);
     }
 
     public boolean shutdown() throws InterruptedException {
         Collection<Task> terminating;
-        synchronized (tasks) {
-            terminating = Collections.unmodifiableSet(tasks);
+        synchronized (this.tasks) {
+            terminating = Collections.unmodifiableSet(this.tasks);
         }
-        for (var task : terminating) {
+        for (Task task : terminating) {
             task.cancel();
         }
-        timerExecutionService.shutdown();
-        taskService.shutdown();
-        return taskService.awaitTermination(10, TimeUnit.SECONDS);
+        this.timerExecutionService.shutdown();
+        this.taskService.shutdown();
+        return this.taskService.awaitTermination(10, TimeUnit.SECONDS);
     }
 
     public ExecutorService taskService() {

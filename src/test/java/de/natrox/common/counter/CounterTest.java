@@ -16,12 +16,9 @@
 
 package de.natrox.common.counter;
 
-import de.natrox.common.scheduler.Scheduler;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -81,14 +78,14 @@ public class CounterTest {
         AtomicBoolean finished = new AtomicBoolean();
         AtomicBoolean canceled = new AtomicBoolean();
         Counter countdown = Counter.builder()
-                    .tick(100, ChronoUnit.MILLIS)
-                    .startCount(5)
-                    .stopCount(1)
-                    .startHandler(counter -> started.set(true))
-                    .tickHandler(counter -> ticks.incrementAndGet())
-                    .finishHandler(counter -> finished.set(true))
-                    .cancelHandler(counter -> canceled.set(true))
-                    .build();
+            .tick(100, ChronoUnit.MILLIS)
+            .startCount(5)
+            .stopCount(1)
+            .startHandler(counter -> started.set(true))
+            .tickHandler(counter -> ticks.incrementAndGet())
+            .finishHandler(counter -> finished.set(true))
+            .cancelHandler(counter -> canceled.set(true))
+            .build();
 
         assertEquals(ticks.get(), 0, "The counter has not yet ticked");
 
@@ -116,7 +113,7 @@ public class CounterTest {
     }
 
     @Test
-    public void tickTest() throws InterruptedException{
+    public void tickTest() throws InterruptedException {
         AtomicLong upTicked = new AtomicLong();
         AtomicLong downTicked = new AtomicLong();
         Counter upTicker = Counter.builder()

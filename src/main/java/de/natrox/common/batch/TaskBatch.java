@@ -48,7 +48,7 @@ public sealed interface TaskBatch permits SimpleTaskBatch {
     /**
      * Adds a delay to the batch execution.
      *
-     * @param duration the duration of the delay before next task
+     * @param duration     the duration of the delay before next task
      * @param temporalUnit the {@link TemporalUnit} in which the duration is specified
      * @return this TaskBatch, for chaining
      */

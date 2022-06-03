@@ -16,6 +16,7 @@
 
 package de.natrox.common.scheduler;
 
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,33 +40,33 @@ final class TaskImpl implements Runnable, Task {
     }
 
     void schedule() {
-        if (repeat == 0) {
-            this.future = scheduler
+        if (this.repeat == 0) {
+            this.future = this.scheduler
                 .timerExecutionService()
-                .schedule(this, delay, TimeUnit.MILLISECONDS);
+                .schedule(this, this.delay, TimeUnit.MILLISECONDS);
         } else {
-            this.future = scheduler
+            this.future = this.scheduler
                 .timerExecutionService()
-                .scheduleAtFixedRate(this, delay, repeat, TimeUnit.MILLISECONDS);
+                .scheduleAtFixedRate(this, this.delay, this.repeat, TimeUnit.MILLISECONDS);
         }
     }
 
     @Override
     public @NotNull Scheduler owner() {
-        return scheduler;
+        return this.scheduler;
     }
 
     @Override
     public @NotNull TaskStatus status() {
-        if (future == null) {
+        if (this.future == null) {
             return TaskStatus.SCHEDULED;
         }
 
-        if (future.isCancelled()) {
+        if (this.future.isCancelled()) {
             return TaskStatus.CANCELLED;
         }
 
-        if (future.isDone()) {
+        if (this.future.isDone()) {
             return TaskStatus.FINISHED;
         }
 
@@ -74,38 +75,87 @@ final class TaskImpl implements Runnable, Task {
 
     @Override
     public void cancel() {
-        if (future != null) {
-            future.cancel(false);
+        if (this.future == null)
+            return;
 
-            Thread cur = currentTaskThread;
-            if (cur != null) {
-                cur.interrupt();
-            }
+        this.future.cancel(false);
 
-            //finish
+        Thread cur = this.currentTaskThread;
+        if (cur != null) {
+            cur.interrupt();
         }
+
+        //finish
     }
 
     @Override
     public void run() {
-        scheduler.taskService().execute(() -> {
-            currentTaskThread = Thread.currentThread();
-            try {
-                runnable.run();
-            } catch (Throwable e) {
-                //noinspection ConstantConditions
-                if (e instanceof InterruptedException) {
-                    Thread.currentThread().interrupt();
-                } else {
-                    //Log
-                }
-            } finally {
-                if (repeat == 0) {
-                    //finish
-                }
-                currentTaskThread = null;
+        this.scheduler.taskService().execute(this::execute);
+    }
+
+    private void execute() {
+        this.currentTaskThread = Thread.currentThread();
+        try {
+            this.runnable.run();
+        } catch (Throwable e) {
+            //noinspection ConstantConditions
+            if (e instanceof InterruptedException) {
+                Thread.currentThread().interrupt();
+            } else {
+                //Log
             }
-        });
+        } finally {
+            if (this.repeat == 0) {
+                //finish
+            }
+            this.currentTaskThread = null;
+        }
+    }
+
+    static final class BuilderImpl implements Task.Builder {
+
+        private final SchedulerImpl scheduler;
+        private final Runnable runnable;
+        private long delay; // ms
+        private long repeat; // ms
+
+        BuilderImpl(SchedulerImpl scheduler, Runnable runnable) {
+            this.scheduler = scheduler;
+            this.runnable = runnable;
+        }
+
+        @Override
+        public Task.@NotNull Builder delay(long time, @NotNull TimeUnit timeUnit) {
+            Check.notNull(timeUnit, "timeUnit");
+            this.delay = timeUnit.toMillis(time);
+            return this;
+        }
+
+        @Override
+        public Task.@NotNull Builder repeat(long time, @NotNull TimeUnit timeUnit) {
+            Check.notNull(timeUnit, "timeUnit");
+            this.repeat = timeUnit.toMillis(time);
+            return this;
+        }
+
+        @Override
+        public Task.@NotNull Builder clearDelay() {
+            this.delay = 0;
+            return this;
+        }
+
+        @Override
+        public Task.@NotNull Builder clearRepeat() {
+            this.repeat = 0;
+            return this;
+        }
+
+        @Override
+        public @NotNull Task schedule() {
+            TaskImpl task = new TaskImpl(this.scheduler, this.runnable, this.delay, this.repeat);
+            task.schedule();
+            return task;
+        }
     }
 
 }

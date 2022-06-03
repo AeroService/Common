@@ -27,7 +27,6 @@ import org.jetbrains.annotations.UnknownNullability;
  *
  * @param <E> the type of the first argument to the operation
  * @param <T> the type of the potentially thrown {@link Throwable}
- *
  */
 @FunctionalInterface
 public interface ThrowableConsumer<E, T extends Throwable> {
