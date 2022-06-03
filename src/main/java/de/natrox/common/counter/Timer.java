@@ -21,10 +21,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
-public final class Timer extends Countdown implements Counter {
+final class Timer extends Countdown implements Counter {
 
-    public Timer(@NotNull Scheduler scheduler, long startTime, long stopTime, long tick, @NotNull TimeUnit timeUnit) {
-        super(scheduler, stopTime, startTime, tick, timeUnit);
+    Timer(
+        @NotNull Scheduler scheduler,
+        long startTime,
+        long stopTime,
+        long tick,
+        @NotNull TimeUnit timeUnit,
+        Runnable startHandler,
+        Runnable tickHandler,
+        Runnable finishHandler,
+        Runnable cancelHandler
+    ) {
+        super(scheduler, stopTime, startTime, tick, timeUnit, startHandler, tickHandler, finishHandler, cancelHandler);
     }
 
     @Override
