@@ -27,8 +27,8 @@ import java.util.function.Consumer;
 
 non-sealed class Countdown implements Counter {
 
-    protected final long startTime;
-    protected final long stopTime;
+    protected final long startCount;
+    protected final long stopCount;
     protected final long tick;
     protected final TimeUnit tickUnit;
     private final Scheduler scheduler;
@@ -43,8 +43,8 @@ non-sealed class Countdown implements Counter {
 
     Countdown(
         @NotNull Scheduler scheduler,
-        long startTime,
-        long stopTime,
+        long startCount,
+        long stopCount,
         long tick,
         @NotNull TimeUnit tickUnit,
         Consumer<CounterInfo> startHandler,
@@ -58,13 +58,15 @@ non-sealed class Countdown implements Counter {
         this.tickHandler = tickHandler;
         this.finishHandler = finishHandler;
         this.cancelHandler = cancelHandler;
-        this.startTime = startTime;
-        this.stopTime = stopTime;
+        this.startCount = startCount;
+        this.stopCount = stopCount;
         this.tick = tick;
         this.tickUnit = tickUnit;
         this.scheduler = scheduler;
         this.status = CounterStatus.IDLING;
     }
+
+
 
     @Override
     public void start() {
@@ -72,7 +74,7 @@ non-sealed class Countdown implements Counter {
             throw new IllegalStateException("The counter is already running");
 
         this.handleStart();
-        this.currentTime = this.startTime + 1;
+        this.currentTime = this.startCount + 1;
 
         this.task = this.scheduler
             .buildTask(new CatchingRunnable(this::tick))
@@ -145,13 +147,13 @@ non-sealed class Countdown implements Counter {
         return status;
     }
 
-    public long startTime() {
-        return this.startTime;
+    public long startCount() {
+        return this.startCount;
     }
 
     @Override
-    public long stopTime() {
-        return this.stopTime;
+    public long stopCount() {
+        return this.stopCount;
     }
 
     @Override
@@ -186,12 +188,12 @@ non-sealed class Countdown implements Counter {
     private void tick() {
         if(this.status == CounterStatus.RUNNING) {
 
-            if(this.currentTime > this.stopTime) {
+            if(this.currentTime > this.stopCount) {
                 this.currentTime -= this.tick;
                 this.handleTick();
             }
 
-            if(this.currentTime == this.stopTime) {
+            if(this.currentTime == this.stopCount) {
                 this.status = CounterStatus.IDLING;
                 this.handleFinish();
                 this.cancel();

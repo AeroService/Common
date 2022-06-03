@@ -26,8 +26,8 @@ final class Timer extends Countdown implements Counter {
 
     Timer(
         @NotNull Scheduler scheduler,
-        long startTime,
-        long stopTime,
+        long startCount,
+        long stopCount,
         long tick,
         @NotNull TimeUnit timeUnit,
         Consumer<CounterInfo> startHandler,
@@ -35,11 +35,11 @@ final class Timer extends Countdown implements Counter {
         Consumer<CounterInfo> finishHandler,
         Consumer<CounterInfo> cancelHandler
     ) {
-        super(scheduler, stopTime, startTime, tick, timeUnit, startHandler, tickHandler, finishHandler, cancelHandler);
+        super(scheduler, stopCount, startCount, tick, timeUnit, startHandler, tickHandler, finishHandler, cancelHandler);
     }
 
     @Override
     public long currentTime() {
-        return (this.stopTime - this.tickedTime()) + this.startTime;
+        return (this.stopCount - this.tickedTime()) + this.startCount;
     }
 }

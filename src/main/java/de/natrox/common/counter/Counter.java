@@ -42,9 +42,9 @@ public sealed interface Counter permits Countdown, Timer {
 
     CounterStatus status();
 
-    long startTime();
+    long startCount();
 
-    long stopTime();
+    long stopCount();
 
     long tickValue();
 
@@ -58,9 +58,9 @@ public sealed interface Counter permits Countdown, Timer {
 
     sealed interface Builder permits CounterBuilderImpl {
 
-        Builder startTime(long startTime);
+        Builder startCount(long startCount);
 
-        Builder stopTime(long stopTime);
+        Builder stopCount(long stopCount);
 
         Builder scheduler(Scheduler scheduler);
 

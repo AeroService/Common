@@ -12,8 +12,8 @@ final class CounterBuilderImpl implements Counter.Builder {
     private Consumer<CounterInfo> finishHandler;
     private Consumer<CounterInfo> cancelHandler;
 
-    private long startTime;
-    private long stopTime;
+    private long startCount;
+    private long stopCount;
     private Scheduler scheduler;
     private long tick;
     private TimeUnit tickUnit;
@@ -22,14 +22,14 @@ final class CounterBuilderImpl implements Counter.Builder {
     }
 
     @Override
-    public Counter.Builder startTime(long startTime) {
-        this.startTime = startTime;
+    public Counter.Builder startCount(long startCount) {
+        this.startCount = startCount;
         return this;
     }
 
     @Override
-    public Counter.Builder stopTime(long stopTime) {
-        this.stopTime = stopTime;
+    public Counter.Builder stopCount(long stopCount) {
+        this.stopCount = stopCount;
         return this;
     }
 
@@ -72,11 +72,11 @@ final class CounterBuilderImpl implements Counter.Builder {
 
     @Override
     public Countdown buildCountdown() {
-        return new Countdown(scheduler, startTime, stopTime, tick, tickUnit, startHandler, tickHandler, finishHandler, cancelHandler);
+        return new Countdown(scheduler, startCount, stopCount, tick, tickUnit, startHandler, tickHandler, finishHandler, cancelHandler);
     }
 
     @Override
     public Timer buildTimer() {
-        return new Timer(scheduler, startTime, stopTime, tick, tickUnit, startHandler, tickHandler, finishHandler, cancelHandler);
+        return new Timer(scheduler, startCount, stopCount, tick, tickUnit, startHandler, tickHandler, finishHandler, cancelHandler);
     }
 }
