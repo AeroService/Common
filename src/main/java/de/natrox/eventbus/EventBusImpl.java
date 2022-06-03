@@ -52,7 +52,7 @@ final class EventBusImpl implements EventBus {
     }
 
     @Override
-    public boolean listening(@NotNull EventListener<?> listener) {
+    public boolean has(@NotNull EventListener<?> listener) {
         Check.notNull(listener, "listener");
         for (var entry : this.listeners) {
             if (entry.second().equals(listener))

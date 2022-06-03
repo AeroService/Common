@@ -17,19 +17,19 @@
 package de.natrox.eventbus;
 
 /**
- * Represents an Event which can be cancelled.
+ * Represents an event which can be cancelled.
  */
 public interface CancellableEvent {
 
     /**
-     * Gets if the Event should be cancelled or not.
+     * Gets if the event should be cancelled or not.
      *
      * @return true if the event should be cancelled
      */
     boolean isCancelled();
 
     /**
-     * Marks the Event as cancelled or not.
+     * Marks the event as cancelled or not.
      *
      * @param cancel true if the event should be cancelled, false otherwise
      */

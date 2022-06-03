@@ -22,28 +22,77 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+/**
+ * Represents an event bus.
+ */
 public sealed interface EventBus permits EventBusImpl {
 
+    /**
+     * Creates a new event bus.
+     *
+     * @return the created event bus
+     */
     static @NotNull EventBus create() {
         return new EventBusImpl();
     }
 
+    /**
+     * Registers an {@link EventListener}.
+     *
+     * @param listener the event listener
+     */
     void register(@NotNull EventListener<?> listener);
 
+    /**
+     * Registers an {@link EventListener} without any special options. The given listener will be executed
+     * if the event passes all parent filtering.
+     *
+     * @param type    the event type to handle
+     * @param handler The handler function
+     * @param <T>     The event type to handle
+     */
     default <T> void register(@NotNull Class<T> type, @NotNull Consumer<T> handler) {
         Check.notNull(type, "type");
         Check.notNull(handler, "handler");
         this.register(EventListener.of(type, handler));
     }
 
+    /**
+     * Unregisters an {@link EventListener}.
+     *
+     * @param listener the event listener
+     */
     void unregister(@NotNull EventListener<?> listener);
 
+    /**
+     * Unregisters all {@link EventListener} that passed the condition.
+     *
+     * @param predicate the event listener
+     */
     void unregisterIf(@NotNull Predicate<EventListener<?>> predicate);
 
-    boolean listening(@NotNull EventListener<?> type);
+    /**
+     * Checks if the event bus has registered the event listener.
+     *
+     * @param listener the event listener
+     * @return true, if the event bus has registered the event listener, false, if not
+     */
+    boolean has(@NotNull EventListener<?> listener);
 
+    /**
+     * Calls an event starting from this node.
+     *
+     * @param event the event to call
+     */
     void call(@NotNull Object event);
 
+    /**
+     * Execute a cancellable event with a callback to execute if the event is successful.
+     * Event conditions and propagation is the same as {@link #call(Object)}.
+     *
+     * @param event    the event to execute
+     * @param callback a callback if the event is not cancelled
+     */
     default void callCancellable(@NotNull Object event, @NotNull Runnable callback) {
         Check.notNull(event, "event");
         Check.notNull(callback, "callback");
@@ -52,5 +101,4 @@ public sealed interface EventBus permits EventBusImpl {
             return;
         callback.run();
     }
-
 }
