@@ -18,9 +18,7 @@ package de.natrox.common.counter;
 
 import de.natrox.common.scheduler.Scheduler;
 
-import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
