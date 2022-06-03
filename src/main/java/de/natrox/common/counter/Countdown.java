@@ -23,6 +23,7 @@ import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 non-sealed class Countdown implements Counter {
@@ -36,9 +37,9 @@ non-sealed class Countdown implements Counter {
     private final Consumer<Counter> tickHandler;
     private final Consumer<Counter> finishHandler;
     private final Consumer<Counter> cancelHandler;
+    private final AtomicLong currentCount = new AtomicLong();
 
     private Task task;
-    private long currentCount;
     private CounterStatus status;
 
     Countdown(
@@ -71,8 +72,7 @@ non-sealed class Countdown implements Counter {
         if(this.task != null)
             throw new IllegalStateException("The counter is already running");
 
-        this.handleStart();
-        this.currentCount = this.startCount + 1;
+        this.currentCount.set(this.startCount);
 
         this.task = this.scheduler
             .buildTask(new CatchingRunnable(this::tick))
@@ -80,6 +80,8 @@ non-sealed class Countdown implements Counter {
             .schedule();
 
         this.status = CounterStatus.RUNNING;
+
+        this.handleStart();
     }
 
     @Override
@@ -113,17 +115,17 @@ non-sealed class Countdown implements Counter {
 
     @Override
     public long tickedTime() {
-        return this.currentCount;
+        return this.currentCount.get();
     }
 
     @Override
     public long currentCount() {
-        return this.currentCount;
+        return this.currentCount.get();
     }
 
     @Override
     public void currentCount(long currentCount) {
-        this.currentCount = currentCount;
+        this.currentCount.set(currentCount);
     }
 
     @Override
@@ -187,15 +189,14 @@ non-sealed class Countdown implements Counter {
     private void tick() {
         if(this.status == CounterStatus.RUNNING) {
 
-            if(this.currentCount > this.stopCount) {
-                this.currentCount -= 1;
+            if(this.currentCount.get() >= this.stopCount) {
+                this.currentCount.decrementAndGet();
                 this.handleTick();
             }
 
-            if(this.currentCount == this.stopCount) {
+            if(this.currentCount.get() == this.stopCount) {
                 this.status = CounterStatus.IDLING;
                 this.handleFinish();
-                this.cancel();
             }
 
         }
