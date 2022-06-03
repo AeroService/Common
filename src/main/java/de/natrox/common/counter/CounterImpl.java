@@ -192,7 +192,6 @@ non-sealed class CounterImpl implements Counter {
         if(this.status == CounterStatus.RUNNING) {
             if(this.currentCount*step <= this.stopCount*step) {
                 this.currentCount += step;
-                System.out.println("Ticker: Ticked to "+currentCount+" with step "+step);
                 this.handleTick();
             }
 
