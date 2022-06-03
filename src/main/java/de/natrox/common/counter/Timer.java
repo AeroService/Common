@@ -20,6 +20,7 @@ import de.natrox.common.scheduler.Scheduler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 final class Timer extends Countdown implements Counter {
 
@@ -29,10 +30,10 @@ final class Timer extends Countdown implements Counter {
         long stopTime,
         long tick,
         @NotNull TimeUnit timeUnit,
-        Runnable startHandler,
-        Runnable tickHandler,
-        Runnable finishHandler,
-        Runnable cancelHandler
+        Consumer<CounterInfo> startHandler,
+        Consumer<CounterInfo> tickHandler,
+        Consumer<CounterInfo> finishHandler,
+        Consumer<CounterInfo> cancelHandler
     ) {
         super(scheduler, stopTime, startTime, tick, timeUnit, startHandler, tickHandler, finishHandler, cancelHandler);
     }
