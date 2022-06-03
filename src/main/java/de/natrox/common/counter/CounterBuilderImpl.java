@@ -1,24 +1,27 @@
 package de.natrox.common.counter;
 
 import de.natrox.common.scheduler.Scheduler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 final class CounterBuilderImpl implements Counter.Builder {
 
-    private Consumer<CounterInfo> startHandler;
-    private Consumer<CounterInfo> tickHandler;
-    private Consumer<CounterInfo> finishHandler;
-    private Consumer<CounterInfo> cancelHandler;
+    private final Scheduler scheduler;
+
+    private Consumer<Counter> startHandler;
+    private Consumer<Counter> tickHandler;
+    private Consumer<Counter> finishHandler;
+    private Consumer<Counter> cancelHandler;
 
     private long startCount;
     private long stopCount;
-    private Scheduler scheduler;
     private long tick;
     private TimeUnit tickUnit;
 
-    CounterBuilderImpl() {
+    CounterBuilderImpl(Scheduler scheduler) {
+        this.scheduler = scheduler;
     }
 
     @Override
@@ -34,38 +37,32 @@ final class CounterBuilderImpl implements Counter.Builder {
     }
 
     @Override
-    public Counter.Builder scheduler(Scheduler scheduler) {
-        this.scheduler = scheduler;
-        return this;
-    }
-
-    @Override
-    public Counter.Builder tick(long tick, TimeUnit tickUnit) {
+    public Counter.Builder tick(long tick, @NotNull TimeUnit tickUnit) {
         this.tick = tick;
         this.tickUnit = tickUnit;
         return this;
     }
 
     @Override
-    public Counter.Builder startHandler(Consumer<CounterInfo> startHandler) {
+    public Counter.Builder startHandler(@NotNull Consumer<Counter> startHandler) {
         this.startHandler = startHandler;
         return this;
     }
 
     @Override
-    public Counter.Builder tickHandler(Consumer<CounterInfo> tickHandler) {
+    public Counter.Builder tickHandler(@NotNull Consumer<Counter> tickHandler) {
         this.tickHandler = tickHandler;
         return this;
     }
 
     @Override
-    public Counter.Builder finishHandler(Consumer<CounterInfo> finishHandler) {
+    public Counter.Builder finishHandler(@NotNull Consumer<Counter> finishHandler) {
         this.finishHandler = finishHandler;
         return this;
     }
 
     @Override
-    public Counter.Builder cancelHandler(Consumer<CounterInfo> cancelHandler) {
+    public Counter.Builder cancelHandler(@NotNull Consumer<Counter> cancelHandler) {
         this.cancelHandler = cancelHandler;
         return this;
     }
