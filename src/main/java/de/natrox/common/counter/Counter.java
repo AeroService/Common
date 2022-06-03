@@ -28,7 +28,6 @@ public sealed interface Counter permits Countdown, Timer {
     Scheduler defaultScheduler = Scheduler.create();
 
     /**
-     *
      * Create a {@link Builder} for a {@link Counter} scheduling the tasks with the default{@link Scheduler}
      *
      * @return the Builder
@@ -38,7 +37,6 @@ public sealed interface Counter permits Countdown, Timer {
     }
 
     /**
-     *
      * Create a {@link Builder} for a {@link Counter} scheduling the tasks with the passed {@link Scheduler}
      *
      * @param scheduler the {@link Scheduler}
@@ -115,7 +113,6 @@ public sealed interface Counter permits Countdown, Timer {
     long currentCount();
 
     /**
-     *
      * Sets the current number the specified value
      *
      * @param currentCount the new current number
@@ -130,7 +127,6 @@ public sealed interface Counter permits Countdown, Timer {
     sealed interface Builder permits CounterBuilderImpl {
 
         /**
-         *
          * Sets the startCount to the specified value
          *
          * @param startCount the startCount
@@ -139,7 +135,6 @@ public sealed interface Counter permits Countdown, Timer {
         Builder startCount(long startCount);
 
         /**
-         *
          * Sets the stopCount to the specified value
          *
          * @param stopCount the stopCount
@@ -149,20 +144,18 @@ public sealed interface Counter permits Countdown, Timer {
 
 
         /**
-         *
          * Sets the delay between two ticks
          *
-         * @param tick the amount of tickUnits needed to the next tick
+         * @param tick     the amount of tickUnits needed to the next tick
          * @param tickUnit the matching type to the tick parameter
          * @return the {@link Builder}
          */
         Builder tick(long tick, @NotNull TimeUnit tickUnit);
 
         /**
-         *
          * Sets the delay between two ticks
          *
-         * @param tick the amount of tickUnits needed to the next tick
+         * @param tick     the amount of tickUnits needed to the next tick
          * @param tickUnit the matching type to the tick parameter
          * @return the {@link Builder}
          */
@@ -171,7 +164,6 @@ public sealed interface Counter permits Countdown, Timer {
         }
 
         /**
-         *
          * Sets the startHandler
          * Gets executed if the {@link Counter} is started
          *
@@ -181,7 +173,6 @@ public sealed interface Counter permits Countdown, Timer {
         Builder startHandler(@NotNull Consumer<Counter> startHandler);
 
         /**
-         *
          * Sets the tickHandler
          * Gets executed if the {@link Counter} ticked
          *
@@ -191,7 +182,6 @@ public sealed interface Counter permits Countdown, Timer {
         Builder tickHandler(@NotNull Consumer<Counter> tickHandler);
 
         /**
-         *
          * Sets the finishHandler
          * Gets executed if the {@link Counter} finished counting
          *
@@ -201,7 +191,6 @@ public sealed interface Counter permits Countdown, Timer {
         Builder finishHandler(@NotNull Consumer<Counter> finishHandler);
 
         /**
-         *
          * Sets the cancelHandler
          * Gets executed if the {@link Counter} is canceled
          *
@@ -211,15 +200,14 @@ public sealed interface Counter permits Countdown, Timer {
         Builder cancelHandler(@NotNull Consumer<Counter> cancelHandler);
 
         /**
-         *
          * Builds the {@link Counter} as a {@link Countdown}
          * A countdown decreases the number by 1 every tick
          *
          * @return the Countdown
          */
         Countdown buildCountdown();
+
         /**
-         *
          * Builds the {@link Counter} as a {@link Timer}
          * A timer increases the number by 1 every tick
          *
