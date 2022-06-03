@@ -25,29 +25,31 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-non-sealed class CounterImpl implements Counter {
+final class CounterImpl implements Counter {
+
+    private final Scheduler scheduler;
 
     private final long startCount;
     private final long stopCount;
     private final long tick;
-    private final int step;
     private final TimeUnit tickUnit;
-    private final Scheduler scheduler;
+
     private final Consumer<Counter> startHandler;
     private final Consumer<Counter> tickHandler;
     private final Consumer<Counter> finishHandler;
     private final Consumer<Counter> cancelHandler;
 
+    private final int step;
     private long currentCount;
     private Task task;
     private CounterStatus status;
 
     CounterImpl(
-        @NotNull Scheduler scheduler,
+        Scheduler scheduler,
         long startCount,
         long stopCount,
         long tick,
-        @NotNull TimeUnit tickUnit,
+        TimeUnit tickUnit,
         Consumer<Counter> startHandler,
         Consumer<Counter> tickHandler,
         Consumer<Counter> finishHandler,
@@ -55,6 +57,7 @@ non-sealed class CounterImpl implements Counter {
     ) {
         Check.notNull(scheduler, "scheduler");
         Check.notNull(tickUnit, "tickUnit");
+        Check.argCondition(tick <= 0, "tick must be positive");
         this.startHandler = startHandler;
         this.tickHandler = tickHandler;
         this.finishHandler = finishHandler;
@@ -70,10 +73,10 @@ non-sealed class CounterImpl implements Counter {
 
     @Override
     public void start() {
-        if(this.task != null)
+        if (this.task != null)
             throw new IllegalStateException("The counter is already running");
 
-        this.currentCount = this.startCount-step;
+        this.currentCount = this.startCount - step;
 
         this.task = this.scheduler
             .buildTask(new CatchingRunnable(this::tick))
@@ -87,21 +90,23 @@ non-sealed class CounterImpl implements Counter {
 
     @Override
     public void pause() {
-        if(status == CounterStatus.RUNNING)
-            this.status = CounterStatus.PAUSED;
+        if (this.status != CounterStatus.RUNNING)
+            return;
+        this.status = CounterStatus.PAUSED;
     }
 
     @Override
     public void resume() {
-        if(status == CounterStatus.PAUSED)
-            this.status = CounterStatus.RUNNING;
+        if (this.status != CounterStatus.PAUSED)
+            return;
+        this.status = CounterStatus.RUNNING;
     }
 
     @Override
     public void stop() {
-        if(status != CounterStatus.IDLING) {
-            cancel(this::handleCancel);
-        }
+        if (this.status == CounterStatus.IDLING)
+            return;
+        this.cancel(this::handleCancel);
     }
 
     @Override
@@ -116,7 +121,7 @@ non-sealed class CounterImpl implements Counter {
 
     @Override
     public long tickedTime() {
-        return (this.startCount - this.currentCount) * -step;
+        return (this.startCount - this.currentCount) * -this.step;
     }
 
     @Override
@@ -130,12 +135,12 @@ non-sealed class CounterImpl implements Counter {
     }
 
     @Override
-    public TimeUnit tickUnit() {
+    public @NotNull TimeUnit tickUnit() {
         return this.tickUnit;
     }
 
     @Override
-    public CounterStatus status() {
+    public @NotNull CounterStatus status() {
         return this.status;
     }
 
@@ -153,53 +158,53 @@ non-sealed class CounterImpl implements Counter {
         return this.tick;
     }
 
-    protected void handleStart() {
-        if(this.startHandler == null)
+    private void handleStart() {
+        if (this.startHandler == null)
             return;
         this.startHandler.accept(this);
     }
 
-    protected void handleTick() {
-        if(this.tickHandler == null)
+    private void handleTick() {
+        if (this.tickHandler == null)
             return;
         this.tickHandler.accept(this);
     }
 
-    protected void handleFinish() {
-        if(this.finishHandler == null)
+    private void handleFinish() {
+        if (this.finishHandler == null)
             return;
         this.finishHandler.accept(this);
     }
 
-    protected void handleCancel() {
-        if(this.cancelHandler == null)
+    private void handleCancel() {
+        if (this.cancelHandler == null)
             return;
         this.cancelHandler.accept(this);
     }
 
     private void cancel(Runnable callback) {
         this.status = CounterStatus.IDLING;
-
-        if(this.task != null) {
-            this.task.cancel();
-            if(callback != null)
-                callback.run();
-        }
+        if (this.task == null)
+            return;
+        this.task.cancel();
         this.task = null;
+        if (callback == null)
+            return;
+        callback.run();
     }
 
     private void tick() {
-        if(this.status == CounterStatus.RUNNING) {
-            if(this.currentCount*step <= this.stopCount*step) {
-                this.currentCount += step;
-                System.out.println("Ticker: Ticked to "+currentCount+" with step "+step);
-                this.handleTick();
-            }
+        if (this.status != CounterStatus.RUNNING)
+            return;
 
-            if(this.currentCount-step == this.stopCount) {
-                this.handleFinish();
-                this.cancel(null);
-            }
+        if (this.currentCount * this.step <= this.stopCount * this.step) {
+            this.currentCount += this.step;
+            this.handleTick();
+        }
+
+        if (this.currentCount - this.step == this.stopCount) {
+            this.handleFinish();
+            this.cancel(null);
         }
     }
 }
