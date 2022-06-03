@@ -202,7 +202,7 @@ final class CounterImpl implements Counter {
             this.handleTick();
         }
 
-        if (this.currentCount - this.step == this.stopCount) {
+        if ((this.currentCount - this.step) * this.step >= this.stopCount * this.step) {
             this.handleFinish();
             this.cancel(null);
         }
