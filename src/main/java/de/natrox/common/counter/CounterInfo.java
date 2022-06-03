@@ -16,23 +16,23 @@ public final class CounterInfo {
     }
 
     public CounterStatus status() {
-        return status;
+        return this.status;
     }
 
     public long tickedTime() {
-        return tickedTime;
+        return this.tickedTime;
     }
 
     public long currentTime() {
-        return currentTime;
+        return this.currentTime;
     }
 
     public boolean isRunning() {
-        return status == CounterStatus.RUNNING;
+        return this.status == CounterStatus.RUNNING;
     }
 
     public boolean isPaused() {
-        return status == CounterStatus.PAUSED;
+        return this.status == CounterStatus.PAUSED;
     }
 
     @Override

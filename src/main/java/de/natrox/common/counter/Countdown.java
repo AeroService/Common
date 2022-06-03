@@ -104,12 +104,12 @@ non-sealed class Countdown implements Counter {
 
     @Override
     public boolean isPaused() {
-        return status == CounterStatus.PAUSED;
+        return this.status == CounterStatus.PAUSED;
     }
 
     @Override
     public boolean isRunning() {
-        return status == CounterStatus.RUNNING;
+        return this.status == CounterStatus.RUNNING;
     }
 
     private void cancel() {
@@ -139,12 +139,12 @@ non-sealed class Countdown implements Counter {
 
     @Override
     public TimeUnit tickUnit() {
-        return tickUnit;
+        return this.tickUnit;
     }
 
     @Override
     public CounterStatus status() {
-        return status;
+        return this.status;
     }
 
     public long startCount() {
@@ -162,25 +162,25 @@ non-sealed class Countdown implements Counter {
     }
 
     protected void handleStart() {
-        if(startHandler == null)
+        if(this.startHandler == null)
             return;
         this.startHandler.accept(createInfo());
     }
 
     protected void handleTick() {
-        if(tickHandler == null)
+        if(this.tickHandler == null)
             return;
         this.tickHandler.accept(createInfo());
     }
 
     protected void handleFinish() {
-        if(finishHandler == null)
+        if(this.finishHandler == null)
             return;
         this.finishHandler.accept(createInfo());
     }
 
     protected void handleCancel() {
-        if(cancelHandler == null)
+        if(this.cancelHandler == null)
             return;
         this.cancelHandler.accept(createInfo());
     }
@@ -203,6 +203,6 @@ non-sealed class Countdown implements Counter {
     }
 
     private CounterInfo createInfo() {
-        return new CounterInfo(this.status, tickedTime(), this.currentTime);
+        return new CounterInfo(this.status, this.tickedTime(), this.currentTime);
     }
 }
