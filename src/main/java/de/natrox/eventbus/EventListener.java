@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 public interface EventListener<T> {
 
     static <T> @NotNull Builder<T> builder(@NotNull Class<T> type) {
-        return new EventListenerBuilderImpl<>(type);
+        return new EventListenerImpl.BuilderImpl<>(type);
     }
 
     static <T> @NotNull EventListener<T> of(@NotNull Class<T> type, @NotNull Consumer<T> handler) {
@@ -39,7 +39,7 @@ public interface EventListener<T> {
 
     void handle(@NotNull T event);
 
-    sealed interface Builder<T> extends IBuilder<EventListener<T>> permits EventListenerBuilderImpl {
+    sealed interface Builder<T> extends IBuilder<EventListener<T>> permits EventListenerImpl.BuilderImpl {
 
         @NotNull Builder<T> condition(@NotNull Predicate<T> condition);
 

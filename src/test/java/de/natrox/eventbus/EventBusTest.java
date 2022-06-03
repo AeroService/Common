@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import de.natrox.eventbus.EventBus;
-import de.natrox.eventbus.EventListener;
-import org.junit.jupiter.api.Test;
+package de.natrox.eventbus;import org.junit.jupiter.api.Test;
 
 public class EventBusTest {
 
@@ -24,8 +22,12 @@ public class EventBusTest {
     public void test() {
         EventBus eventBus = EventBus.create();
 
-        eventBus.register(TestEvent.class, event -> System.out.println("Test1"));
-        eventBus.register(EventListener.of(TestEvent.class, event -> System.out.println("Test2")));
+        eventBus.register(TestEvent.class, event -> {
+
+        });
+        eventBus.register(EventListener.of(TestEvent.class, event -> {
+
+        }));
 
         eventBus.register(
             EventListener
@@ -35,6 +37,8 @@ public class EventBusTest {
                 .handler(event -> System.out.println("Test3"))
                 .build()
         );
+
+        eventBus.call(new TestEvent("value"));
     }
 
 }

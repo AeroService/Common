@@ -14,5 +14,6 @@
  * limitations under the License.
  */
 
-public class TestEvent {
+package de.natrox.eventbus;public record TestEvent(String value) {
+
 }

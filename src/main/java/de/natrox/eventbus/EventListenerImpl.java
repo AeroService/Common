@@ -16,6 +16,7 @@
 
 package de.natrox.eventbus;
 
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -38,20 +39,51 @@ final class EventListenerImpl<T> implements EventListener<T> {
 
     @Override
     public @NotNull Class<T> eventType() {
-        return type;
+        return this.type;
     }
 
     @Override
     public void handle(@NotNull T event) {
-        if(!this.conditions.isEmpty()) {
-            for(var condition : conditions) {
-                if(!condition.test(event)) {
+        if (!this.conditions.isEmpty()) {
+            for (var condition : this.conditions) {
+                if (!condition.test(event))
                     return;
-                }
             }
         }
 
-        if(this.handler != null)
-            this.handler.accept(event);
+        if (this.handler == null)
+            return;
+        this.handler.accept(event);
+    }
+
+    static final class BuilderImpl<T> implements EventListener.Builder<T> {
+
+        private final Class<T> type;
+        private final List<Predicate<T>> conditions;
+        private Consumer<T> handler;
+
+        public BuilderImpl(Class<T> type) {
+            this.type = type;
+            this.conditions = new ArrayList<>();
+        }
+
+        @Override
+        public EventListener.@NotNull Builder<T> condition(@NotNull Predicate<T> condition) {
+            Check.notNull(condition, "condition");
+            this.conditions.add(condition);
+            return this;
+        }
+
+        @Override
+        public EventListener.@NotNull Builder<T> handler(@NotNull Consumer<T> handler) {
+            Check.notNull(handler, "handler");
+            this.handler = handler;
+            return this;
+        }
+
+        @Override
+        public EventListener<T> build() {
+            return new EventListenerImpl<>(this.type, new ArrayList<>(this.conditions), this.handler);
+        }
     }
 }
