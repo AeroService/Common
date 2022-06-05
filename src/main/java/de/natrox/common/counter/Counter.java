@@ -55,7 +55,6 @@ public sealed interface Counter permits CounterImpl {
      */
     void start();
 
-
     /**
      * Pauses the {@link Counter} if its {@link CounterStatus} is RUNNING
      * Sets the status to PAUSED
@@ -67,7 +66,6 @@ public sealed interface Counter permits CounterImpl {
      * Sets the status to RUNNING
      */
     void resume();
-
 
     /**
      * Stops the {@link Counter} if its {@link CounterStatus} not IDLING
@@ -84,7 +82,6 @@ public sealed interface Counter permits CounterImpl {
      * @return true if, and only if the {@link Counter} its {@link CounterStatus} is RUNNING
      */
     boolean isRunning();
-
 
     /**
      * @return the current {@link CounterStatus}
