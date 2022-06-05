@@ -14,7 +14,7 @@ public class SupplierTest {
     @Test
     void throwableSupplierTest() {
         ThrowableSupplier<String, IllegalAccessException> supplier = this::supplyString;
-        assertThrows(IllegalAccessException.class, supplier::get);
+        assertThrows(IllegalArgumentException.class, supplier::get);
     }
 
     @Test
