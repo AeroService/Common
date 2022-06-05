@@ -109,7 +109,7 @@ public sealed interface Counter permits CounterImpl {
     /**
      * @return the amount of counted numbers after start
      */
-    long tickedTime();
+    long tickedCount();
 
     /**
      * @return the amount of counted numbers after start
