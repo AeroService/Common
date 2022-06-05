@@ -26,6 +26,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+/**
+ * Represents a clocked Counter, for example a countdown
+ */
 public sealed interface Counter permits CounterImpl {
 
     Scheduler DEFAULT_SCHEDULER = Scheduler.create();
@@ -125,6 +128,9 @@ public sealed interface Counter permits CounterImpl {
      */
     @NotNull TimeUnit tickUnit();
 
+    /**
+     * Represents a Builder for a {@link Counter}
+     */
     sealed interface Builder permits CounterImpl.BuilderImpl {
 
         /**

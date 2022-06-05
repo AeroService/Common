@@ -1,5 +1,8 @@
 package de.natrox.common.counter;
 
+/**
+ * Represents the different statuses for a {@link Counter}
+ */
 public enum CounterStatus {
 
     /**
