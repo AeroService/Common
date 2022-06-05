@@ -88,6 +88,7 @@ final class CounterImpl implements Counter {
         this.status = CounterStatus.RUNNING;
 
         this.handleStart();
+        this.tick();
     }
 
     @Override
@@ -122,7 +123,7 @@ final class CounterImpl implements Counter {
     }
 
     @Override
-    public long tickedTime() {
+    public long tickedCount() {
         return (this.startCount - this.currentCount) * -this.step;
     }
 
