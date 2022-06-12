@@ -20,10 +20,10 @@ public class SupplierTest {
     @Test
     void catchingSupplierTest() {
         CatchingSupplier<String> supplier = new CatchingSupplier<>(this::supplyString);
-        assertDoesNotThrow(supplier::get);
+        assertThrows(IllegalArgumentException.class, supplier::get);
     }
 
-    public String supplyString() {
+    public String supplyString() throws IllegalArgumentException {
         throw new IllegalArgumentException();
     }
 }
