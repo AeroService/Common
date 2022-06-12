@@ -61,5 +61,4 @@ public class SchedulerTest {
         latch.await();
         task.cancel();
     }
-
 }
