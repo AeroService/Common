@@ -82,6 +82,6 @@ public class TripleTest {
     public void setThirdTest() {
         Triple<String, String, String> triple = Triple.empty();
         triple.setThird("third");
-        assertEquals(triple.second(), "third");
+        assertEquals(triple.third(), "third");
     }
 }
