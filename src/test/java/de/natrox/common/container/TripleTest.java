@@ -32,13 +32,13 @@ public class TripleTest {
     @Test
     public void equalsTest2() {
         Triple<?, ?, ?> triple = Triple.empty();
-        assertEquals(triple, Triple.empty());
+        assertEquals(Triple.empty(), triple);
     }
 
     @Test
     public void equalsTest3() {
         Triple<String, String, String> triple = Triple.of("first", "second", "third");
-        assertEquals(triple, Triple.of("first", "second", "third"));
+        assertEquals(Triple.of("first", "second", "third"), triple);
     }
 
     @Test
@@ -49,39 +49,39 @@ public class TripleTest {
     @Test
     public void equalsTest5() {
         Triple<String, String, Triple<?, ?, ?>> triple = Triple.of("first", "second", Triple.empty());
-        assertNotEquals(triple, Triple.of("first", "second", "third"));
+        assertNotEquals(Triple.of("first", "second", "third"), triple);
     }
 
     @Test
     public void equalsTest6() {
         Triple<Triple<?, ?, ?>, String, String> triple = Triple.of(Triple.empty(), "second", "third");
-        assertNotEquals(triple, Triple.empty());
+        assertNotEquals(Triple.empty(), triple);
     }
 
     @Test
     public void equalsTest7() {
         Triple<?, String, String> triple = Triple.of(null, "second", "third");
-        assertNotEquals(triple, Triple.empty());
+        assertNotEquals(Triple.empty(), triple);
     }
 
     @Test
     public void setFirstTest() {
         Triple<String, String, String> triple = Triple.empty();
         triple.setFirst("first");
-        assertEquals(triple.first(), "first");
+        assertEquals("first", triple.first());
     }
 
     @Test
     public void setSecondTest() {
         Triple<String, String, String> triple = Triple.empty();
         triple.setSecond("second");
-        assertEquals(triple.second(), "second");
+        assertEquals("second", triple.second());
     }
 
     @Test
     public void setThirdTest() {
         Triple<String, String, String> triple = Triple.empty();
         triple.setThird("third");
-        assertEquals(triple.third(), "third");
+        assertEquals("third", triple.third());
     }
 }

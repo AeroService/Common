@@ -26,19 +26,19 @@ public class PairTest {
     @Test
     public void equalsTest() {
         Pair<String, String> pair = Pair.of("first", "second");
-        assertNotEquals(pair, Pair.empty());
+        assertNotEquals(Pair.empty(), pair);
     }
 
     @Test
     public void equalsTest2() {
         Pair<?, ?> pair = Pair.empty();
-        assertEquals(pair, Pair.empty());
+        assertEquals(Pair.empty(), pair);
     }
 
     @Test
     public void equalsTest3() {
         Pair<String, String> pair = Pair.of("first", "second");
-        assertEquals(pair, Pair.of("first", "second"));
+        assertEquals(Pair.of("first", "second"), pair);
     }
 
     @Test
@@ -49,32 +49,32 @@ public class PairTest {
     @Test
     public void equalsTest5() {
         Pair<String, Pair<?, ?>> pair = Pair.of("first", Pair.empty());
-        assertNotEquals(pair, Pair.of("first", "second"));
+        assertNotEquals(Pair.of("first", "second"), pair);
     }
 
     @Test
     public void equalsTest6() {
         Pair<Pair<?, ?>, String> pair = Pair.of(Pair.empty(), "second");
-        assertNotEquals(pair, Pair.empty());
+        assertNotEquals(Pair.empty(), pair);
     }
 
     @Test
     public void equalsTest7() {
         Pair<?, String> pair = Pair.of(null, "second");
-        assertNotEquals(pair, Pair.empty());
+        assertNotEquals(Pair.empty(), pair);
     }
 
     @Test
     public void setFirstTest() {
         Pair<String, String> pair = Pair.empty();
         pair.setFirst("first");
-        assertEquals(pair.first(), "first");
+        assertEquals("first", pair.first());
     }
 
     @Test
     public void setSecondTest() {
         Pair<String, String> pair = Pair.empty();
         pair.setSecond("second");
-        assertEquals(pair.second(), "second");
+        assertEquals("second", pair.second());
     }
 }
