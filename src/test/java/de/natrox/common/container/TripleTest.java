@@ -24,62 +24,62 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 public class TripleTest {
 
     @Test
-    public void equalsTest() {
+    void equalsTest() {
         Triple<String, String, String> triple = Triple.of("first", "second", "third");
         assertNotEquals(triple, Triple.empty());
     }
 
     @Test
-    public void equalsTest2() {
+    void equalsTest2() {
         Triple<?, ?, ?> triple = Triple.empty();
         assertEquals(Triple.empty(), triple);
     }
 
     @Test
-    public void equalsTest3() {
+    void equalsTest3() {
         Triple<String, String, String> triple = Triple.of("first", "second", "third");
         assertEquals(Triple.of("first", "second", "third"), triple);
     }
 
     @Test
-    public void equalsTest4() {
+    void equalsTest4() {
         assertNotEquals("o", Triple.empty());
     }
 
     @Test
-    public void equalsTest5() {
+    void equalsTest5() {
         Triple<String, String, Triple<?, ?, ?>> triple = Triple.of("first", "second", Triple.empty());
         assertNotEquals(Triple.of("first", "second", "third"), triple);
     }
 
     @Test
-    public void equalsTest6() {
+    void equalsTest6() {
         Triple<Triple<?, ?, ?>, String, String> triple = Triple.of(Triple.empty(), "second", "third");
         assertNotEquals(Triple.empty(), triple);
     }
 
     @Test
-    public void equalsTest7() {
+    void equalsTest7() {
         Triple<?, String, String> triple = Triple.of(null, "second", "third");
         assertNotEquals(Triple.empty(), triple);
     }
 
     @Test
-    public void setFirstTest() {
+    void setFirstTest() {
         Triple<String, String, String> triple = Triple.empty();
         triple.setFirst("first");
         assertEquals("first", triple.first());
     }
 
     @Test
-    public void setSecondTest() {
+    void setSecondTest() {
         Triple<String, String, String> triple = Triple.empty();
         triple.setSecond("second");
         assertEquals("second", triple.second());
     }
 
     @Test
-    public void setThirdTest() {
+    void setThirdTest() {
         Triple<String, String, String> triple = Triple.empty();
         triple.setThird("third");
         assertEquals("third", triple.third());

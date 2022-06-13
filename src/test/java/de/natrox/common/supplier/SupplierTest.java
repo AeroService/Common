@@ -25,16 +25,16 @@ public class SupplierTest {
     @Test
     void throwableSupplierTest() {
         ThrowableSupplier<String, IllegalAccessException> supplier = this::supplyString;
-        assertThrows(IllegalArgumentException.class, supplier::get);
+        assertThrows(RuntimeException.class, supplier::get);
     }
 
     @Test
     void catchingSupplierTest() {
         CatchingSupplier<String> supplier = new CatchingSupplier<>(this::supplyString);
-        assertThrows(IllegalArgumentException.class, supplier::get);
+        assertThrows(RuntimeException.class, supplier::get);
     }
 
-    public String supplyString() throws IllegalArgumentException {
-        throw new IllegalArgumentException();
+    public String supplyString() throws RuntimeException {
+        throw new RuntimeException();
     }
 }

@@ -24,55 +24,55 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 public class PairTest {
 
     @Test
-    public void equalsTest() {
+    void equalsTest() {
         Pair<String, String> pair = Pair.of("first", "second");
         assertNotEquals(Pair.empty(), pair);
     }
 
     @Test
-    public void equalsTest2() {
+    void equalsTest2() {
         Pair<?, ?> pair = Pair.empty();
         assertEquals(Pair.empty(), pair);
     }
 
     @Test
-    public void equalsTest3() {
+    void equalsTest3() {
         Pair<String, String> pair = Pair.of("first", "second");
         assertEquals(Pair.of("first", "second"), pair);
     }
 
     @Test
-    public void equalsTest4() {
+    void equalsTest4() {
         assertNotEquals("o", Pair.empty());
     }
 
     @Test
-    public void equalsTest5() {
+    void equalsTest5() {
         Pair<String, Pair<?, ?>> pair = Pair.of("first", Pair.empty());
         assertNotEquals(Pair.of("first", "second"), pair);
     }
 
     @Test
-    public void equalsTest6() {
+    void equalsTest6() {
         Pair<Pair<?, ?>, String> pair = Pair.of(Pair.empty(), "second");
         assertNotEquals(Pair.empty(), pair);
     }
 
     @Test
-    public void equalsTest7() {
+    void equalsTest7() {
         Pair<?, String> pair = Pair.of(null, "second");
         assertNotEquals(Pair.empty(), pair);
     }
 
     @Test
-    public void setFirstTest() {
+    void setFirstTest() {
         Pair<String, String> pair = Pair.empty();
         pair.setFirst("first");
         assertEquals("first", pair.first());
     }
 
     @Test
-    public void setSecondTest() {
+    void setSecondTest() {
         Pair<String, String> pair = Pair.empty();
         pair.setSecond("second");
         assertEquals("second", pair.second());

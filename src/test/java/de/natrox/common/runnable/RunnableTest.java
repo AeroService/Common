@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RunnableTest {
 
     @Test
-    public void catchingTest() {
+    void catchingTest() {
         assertThrows(IllegalArgumentException.class, () -> new CatchingRunnable(null));
         assertDoesNotThrow(() -> new CatchingRunnable(this::empty));
 
@@ -43,7 +43,7 @@ public class RunnableTest {
         }
     }
 
-    public void empty() {
+    void empty() {
 
     }
 }

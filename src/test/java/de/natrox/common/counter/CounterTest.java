@@ -109,7 +109,7 @@ public class CounterTest {
     }
 
     @Test
-    public void handlerTest() throws InterruptedException {
+    void handlerTest() throws InterruptedException {
         AtomicInteger timesStarted = new AtomicInteger();
         AtomicInteger timesTicked = new AtomicInteger();
         AtomicInteger timesFinished = new AtomicInteger();
@@ -147,7 +147,7 @@ public class CounterTest {
     }
 
     @Test
-    public void tickTest() throws InterruptedException {
+    void tickTest() throws InterruptedException {
         AtomicInteger upTicked = new AtomicInteger();
         AtomicInteger downTicked = new AtomicInteger();
         Counter upTicker = Counter.builder()
