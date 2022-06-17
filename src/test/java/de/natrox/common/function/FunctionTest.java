@@ -39,7 +39,7 @@ class FunctionTest {
     }
 
     @Test
-    void throwableFunctionTest() throws Exception{
+    void throwableFunctionTest() throws Exception {
         {
             ThrowableFunction<String, Character, Exception> function = this::firstChar;
             assertEquals('f', function.apply("foo"));
@@ -52,35 +52,28 @@ class FunctionTest {
     }
 
     @Test
-    void throwableBiFunctionTest() {
-        try {
+    void throwableBiFunctionTest() throws Exception {
+        {
             ThrowableBiFunction<String, String, Character, Exception> function = this::firstChar;
             assertEquals('f', function.apply("foo", "fuu"));
             assertDoesNotThrow(() -> function.apply("foo", "fuu"));
-        } catch (Exception e) {
-            fail();
         }
-
-        try {
+        {
             ThrowableBiFunction<String, String, Character, Exception> function = this::exception;
             assertThrows(Exception.class, () -> function.apply("foo", "fuu"));
-        } catch (Exception e) {
-            fail();
         }
     }
 
     @Test
-    void catchingFunctionTest() {
+    void catchingFunctionTest() throws Exception {
         {
             CatchingFunction<String, Character> function = new CatchingFunction<>(this::firstChar);
             assertEquals('f', function.apply("foo"));
             assertDoesNotThrow(() -> function.apply("foo"));
         }
-        try {
+        {
             CatchingFunction<String, Character> function = new CatchingFunction<>(this::runtimeException);
             assertThrows(Exception.class, () -> function.apply("foo"));
-        } catch (Exception e) {
-            fail();
         }
     }
 
