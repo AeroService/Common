@@ -19,120 +19,153 @@ package de.natrox.common.counter;
 import org.junit.jupiter.api.Test;
 
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CounterTest {
+class CounterTest {
 
     @Test
-    public void startTest() {
-        Counter countdown = Counter.builder()
-            .tick(100, ChronoUnit.MILLIS)
-            .startCount(5)
-            .stopCount(1)
+    void isRunningTest() {
+        Counter counter = Counter.builder()
+            .tick(25, ChronoUnit.MILLIS)
+            .startCount(1)
+            .stopCount(5)
             .build();
-        assertFalse(countdown.isRunning(), "The countdown has not yet started");
-        countdown.start();
-        assertTrue(countdown.isRunning(), "The countdown has already started");
-        countdown.stop();
+        assertFalse(counter.isRunning());
+        counter.start();
+        assertTrue(counter.isRunning());
+        counter.pause();
+        assertFalse(counter.isRunning());
+        counter.resume();
+        assertTrue(counter.isRunning());
+        counter.stop();
+        assertFalse(counter.isRunning());
     }
 
     @Test
-    public void pauseTest() {
-        Counter countdown = Counter.builder()
-            .tick(100, ChronoUnit.MILLIS)
-            .startCount(5)
-            .stopCount(1)
+    void isPausedTest() {
+        Counter counter = Counter.builder()
+            .tick(25, ChronoUnit.MILLIS)
+            .startCount(1)
+            .stopCount(5)
             .build();
-        assertFalse(countdown.isPaused(), "The counter is not paused");
-        countdown.start();
-        assertFalse(countdown.isPaused(), "The counter is not paused");
-        countdown.pause();
-        assertTrue(countdown.isPaused(), "The counter is currently paused");
-        assertFalse(countdown.isRunning(), "The counter is currently paused");
-        countdown.resume();
-        assertFalse(countdown.isPaused(), "The counter is now resumed");
-        assertTrue(countdown.isRunning(), "The counter is now resumed");
+        assertFalse(counter.isPaused());
+        counter.start();
+        assertFalse(counter.isPaused());
+        counter.pause();
+        assertTrue(counter.isPaused());
+        counter.resume();
+        assertFalse(counter.isPaused());
+        counter.stop();
+        assertFalse(counter.isPaused());
     }
 
     @Test
-    public void stopTest() {
-        Counter countdown = Counter.builder()
-            .tick(100, ChronoUnit.MILLIS)
-            .startCount(5)
-            .stopCount(1)
+    void stateTest() {
+        Counter counter = Counter.builder()
+            .tick(25, ChronoUnit.MILLIS)
+            .startCount(1)
+            .stopCount(5)
             .build();
-        countdown.start();
-        assertTrue(countdown.isRunning(), "The counter has already started");
-        countdown.stop();
-        assertFalse(countdown.isRunning(), "The counter is now stopped");
+        assertEquals(CounterStatus.IDLING, counter.status());
+        counter.start();
+        assertEquals(CounterStatus.RUNNING, counter.status());
+        counter.pause();
+        assertEquals(CounterStatus.PAUSED, counter.status());
+        counter.resume();
+        assertEquals(CounterStatus.RUNNING, counter.status());
+        counter.stop();
+        assertEquals(CounterStatus.IDLING, counter.status());
     }
 
     @Test
-    public void handlerTest() throws InterruptedException {
-        AtomicBoolean started = new AtomicBoolean();
-        AtomicInteger ticks = new AtomicInteger();
-        AtomicBoolean finished = new AtomicBoolean();
-        AtomicBoolean canceled = new AtomicBoolean();
-        Counter countdown = Counter.builder()
-            .tick(100, ChronoUnit.MILLIS)
-            .startCount(5)
-            .stopCount(1)
-            .startHandler(counter -> started.set(true))
-            .tickHandler(counter -> ticks.incrementAndGet())
-            .finishHandler(counter -> finished.set(true))
-            .cancelHandler(counter -> canceled.set(true))
+    void countTest() {
+        Counter slowCounter = Counter.builder()
+            .tick(1, ChronoUnit.HOURS)
+            .startCount(2)
+            .stopCount(6)
+            .build();
+        slowCounter.start();
+        assertEquals(2, slowCounter.currentCount());
+        assertEquals(0, slowCounter.tickedCount());
+        slowCounter.currentCount(4);
+        assertEquals(4, slowCounter.currentCount());
+        assertEquals(2, slowCounter.tickedCount());
+    }
+
+    @Test
+    void presetVariablesTest() {
+        Counter counter = Counter.builder()
+            .tick(1, ChronoUnit.SECONDS)
+            .startCount(2)
+            .stopCount(-3)
+            .build();
+        assertEquals(1, counter.tickValue());
+        assertEquals(TimeUnit.SECONDS, counter.tickUnit());
+        assertEquals(2, counter.startCount());
+        assertEquals(-3, counter.stopCount());
+    }
+
+    @Test
+    void handlerTest() throws InterruptedException {
+        AtomicInteger timesStarted = new AtomicInteger();
+        AtomicInteger timesTicked = new AtomicInteger();
+        AtomicInteger timesFinished = new AtomicInteger();
+        AtomicInteger timesCanceled = new AtomicInteger();
+        Counter counter = Counter.builder()
+            .tick(50, ChronoUnit.MILLIS)
+            .startCount(1)
+            .stopCount(10)
+            .startHandler(c -> timesStarted.incrementAndGet())
+            .tickHandler(c -> timesTicked.incrementAndGet())
+            .finishHandler(c -> timesFinished.incrementAndGet())
+            .cancelHandler(c -> timesCanceled.incrementAndGet())
             .build();
 
-        assertEquals(ticks.get(), 0, "The counter has not yet ticked");
+        assertEquals(0, timesStarted.get());
+        assertEquals(0, timesTicked.get());
+        assertEquals(0, timesFinished.get());
+        assertEquals(0, timesCanceled.get());
 
-        assertFalse(started.get(), "The counter has not yet started");
-        countdown.start();
-        assertTrue(started.get(), "The counter has now started");
+        counter.start();
+        assertEquals(1, timesStarted.get());
+        Thread.sleep(525);
+        assertEquals(11, timesTicked.get());
+        assertEquals(1, timesFinished.get());
+        assertEquals(0, timesCanceled.get());
 
-        Thread.sleep(1500);
-        assertEquals(6, ticks.get(), "The counter has already ticked exactly 6 times");
-        assertTrue(finished.get());
+        counter.stop();
+        assertEquals(0, timesCanceled.get());
 
-        assertFalse(canceled.get(), "The counter was yet not canceled");
-        countdown.stop();
-        assertFalse(canceled.get(), "The counter was yet not canceled");
-
-        countdown.start();
-        Thread.sleep(1000);
-        assertTrue(finished.get(), "The counter has finished yet");
-        finished.set(false);
-        countdown.start();
+        counter.start();
         Thread.sleep(50);
-        assertFalse(finished.get(), "The counter has not finished yet");
-        Thread.sleep(950);
-        assertTrue(finished.get(), "The counter is now finished");
+        assertEquals(1, timesFinished.get());
+        counter.stop();
+        assertEquals(1, timesCanceled.get());
     }
 
     @Test
-    public void tickTest() throws InterruptedException {
-        AtomicLong upTicked = new AtomicLong();
-        AtomicLong downTicked = new AtomicLong();
+    void tickTest() throws InterruptedException {
+        AtomicInteger upTicked = new AtomicInteger();
+        AtomicInteger downTicked = new AtomicInteger();
         Counter upTicker = Counter.builder()
-            .tick(100, ChronoUnit.MILLIS)
-            .startCount(5)
+            .tick(10, ChronoUnit.MILLIS)
+            .startCount(50)
             .stopCount(1)
             .tickHandler(counter -> upTicked.incrementAndGet())
             .build();
         Counter downTicker = Counter.builder()
-            .tick(100, ChronoUnit.MILLIS)
+            .tick(10, ChronoUnit.MILLIS)
             .startCount(1)
-            .stopCount(5)
+            .stopCount(50)
             .tickHandler(counter -> downTicked.incrementAndGet())
             .build();
         upTicker.start();
-        Thread.sleep(1000);
         downTicker.start();
-        Thread.sleep(1000);
-        assertEquals(upTicked.get(), downTicked.get(), "Number of executed Ticks not equal to expected");
-        assertEquals(downTicked.get(), 6, "Number of executed Ticks not equal to expected");
+        Thread.sleep(550);
+        assertEquals(51, upTicked.get());
+        assertEquals(51, downTicked.get());
     }
 }

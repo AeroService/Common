@@ -14,23 +14,27 @@
  * limitations under the License.
  */
 
-package de.natrox.common.batch;
+package de.natrox.common.supplier;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class TaskBatchTest {
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-    private TaskBatch.Factory taskBatchFactory;
+class SupplierTest {
 
-    @BeforeAll
-    public void setup() {
-        taskBatchFactory = new SimpleTaskBatchFactory();
+    @Test
+    void throwableSupplierTest() {
+        ThrowableSupplier<String, IllegalAccessException> supplier = this::supplyString;
+        assertThrows(RuntimeException.class, supplier::get);
     }
 
     @Test
-    public void test() {
-        //TODO:
+    void catchingSupplierTest() {
+        CatchingSupplier<String> supplier = new CatchingSupplier<>(this::supplyString);
+        assertThrows(RuntimeException.class, supplier::get);
     }
 
+    String supplyString() throws RuntimeException {
+        throw new RuntimeException();
+    }
 }

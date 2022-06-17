@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SchedulerTest {
+class SchedulerTest {
 
     @Test
     void buildTaskTest() throws Exception {
@@ -61,5 +61,4 @@ public class SchedulerTest {
         latch.await();
         task.cancel();
     }
-
 }
