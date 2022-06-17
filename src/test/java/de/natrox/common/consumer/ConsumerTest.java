@@ -27,18 +27,18 @@ class ConsumerTest {
 
     @Test
     void triConsumerTest() {
-        AtomicLong l = new AtomicLong();
-        TriConsumer<Short, Integer, Long> consumer = (aShort, aInt, aLong) -> l.set(aShort + aInt + aLong);
+        AtomicLong indicator = new AtomicLong();
+        TriConsumer<Short, Integer, Long> consumer = (first, second, third) -> indicator.set(first + second + third);
         consumer.accept((short) 3, 20, 100L);
-        assertEquals(123, l.get());
+        assertEquals(123, indicator.get());
     }
 
     @Test
     void quadConsumerTest() {
-        AtomicLong l = new AtomicLong();
-        QuadConsumer<Byte, Short, Integer, Long> consumer = (aByte, aShort, aInt, aLong) -> l.set(aByte + aShort + aInt + aLong);
+        AtomicLong indicator = new AtomicLong();
+        QuadConsumer<Byte, Short, Integer, Long> consumer = (first, second, third, fourth) -> indicator.set(first + second + third + fourth);
         consumer.accept((byte) 4, (short) 30, 200, 1000L);
-        assertEquals(1234, l.get());
+        assertEquals(1234, indicator.get());
     }
 
     @Test
