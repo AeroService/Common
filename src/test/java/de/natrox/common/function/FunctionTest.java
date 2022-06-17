@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FunctionTest {
 
     @Test
-    public void triFunctionTest() {
+    void triFunctionTest() {
         TriFunction<Byte, Short, Float, String> function = this::concat;
         assertEquals("121234.5", function.apply((byte) 12, (short) 123, 4.5F));
         assertEquals('4', function.andThen(this::firstChar).apply((byte) 4, (short) 1, 0.2F));
@@ -31,7 +31,7 @@ class FunctionTest {
     }
 
     @Test
-    public void quadFunctionTest() {
+    void quadFunctionTest() {
         QuadFunction<Long, Integer, Float, Character, String> function = this::concat;
         assertEquals("123456789101234.5F", function.apply(12345678910L, 123, 4.5F, 'F'));
         assertEquals('4', function.andThen(this::firstChar).apply(4L, 1, 0.2F, 'C'));
@@ -39,7 +39,7 @@ class FunctionTest {
     }
 
     @Test
-    public void throwableFunctionTest() throws Exception{
+    void throwableFunctionTest() throws Exception{
         {
             ThrowableFunction<String, Character, Exception> function = this::firstChar;
             assertEquals('f', function.apply("foo"));
@@ -52,7 +52,7 @@ class FunctionTest {
     }
 
     @Test
-    public void throwableBiFunctionTest() {
+    void throwableBiFunctionTest() {
         try {
             ThrowableBiFunction<String, String, Character, Exception> function = this::firstChar;
             assertEquals('f', function.apply("foo", "fuu"));
@@ -70,7 +70,7 @@ class FunctionTest {
     }
 
     @Test
-    public void catchingFunctionTest() {
+    void catchingFunctionTest() {
         {
             CatchingFunction<String, Character> function = new CatchingFunction<>(this::firstChar);
             assertEquals('f', function.apply("foo"));
@@ -84,19 +84,19 @@ class FunctionTest {
         }
     }
 
-    public char runtimeException(String... a) {
+    char runtimeException(String... a) {
         throw new RuntimeException();
     }
 
-    public char exception(String... a) throws Exception {
+    char exception(String... a) throws Exception {
         throw new Exception();
     }
 
-    public char firstChar(String a, Object... objects) {
+    char firstChar(String a, Object... objects) {
         return a.charAt(0);
     }
 
-    public String concat(Object... objects) {
+    String concat(Object... objects) {
         StringBuilder builder = new StringBuilder();
         for(Object object : objects)
             builder.append(object.toString());

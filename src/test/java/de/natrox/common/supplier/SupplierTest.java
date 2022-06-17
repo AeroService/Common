@@ -34,7 +34,7 @@ class SupplierTest {
         assertThrows(RuntimeException.class, supplier::get);
     }
 
-    public String supplyString() throws RuntimeException {
+    String supplyString() throws RuntimeException {
         throw new RuntimeException();
     }
 }
