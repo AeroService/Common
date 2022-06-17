@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FunctionTest {
+class FunctionTest {
 
     @Test
     public void triFunctionTest() {
@@ -39,20 +39,15 @@ public class FunctionTest {
     }
 
     @Test
-    public void throwableFunctionTest() {
-        try {
+    public void throwableFunctionTest() throws Exception{
+        {
             ThrowableFunction<String, Character, Exception> function = this::firstChar;
             assertEquals('f', function.apply("foo"));
             assertDoesNotThrow(() -> function.apply("foo"));
-        } catch (Exception e) {
-            fail();
         }
-
-        try {
+        {
             ThrowableFunction<String, Character, Exception> function = this::exception;
             assertThrows(Exception.class, () -> function.apply("foo"));
-        } catch (Exception e) {
-            fail();
         }
     }
 
@@ -103,7 +98,7 @@ public class FunctionTest {
 
     public String concat(Object... objects) {
         StringBuilder builder = new StringBuilder();
-        for (Object object : objects)
+        for(Object object : objects)
             builder.append(object.toString());
         return builder.toString();
     }

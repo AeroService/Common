@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CounterTest {
+class CounterTest {
 
     @Test
     void isRunningTest() {

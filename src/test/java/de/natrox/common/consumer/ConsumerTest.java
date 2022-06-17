@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ConsumerTest {
+class ConsumerTest {
 
     @Test
     void triConsumerTest() {
