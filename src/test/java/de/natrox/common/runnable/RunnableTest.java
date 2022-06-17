@@ -27,7 +27,7 @@ class RunnableTest {
     @Test
     void catchingTest() {
         assertThrows(IllegalArgumentException.class, () -> new CatchingRunnable(null));
-        assertDoesNotThrow(() -> new CatchingRunnable(this::empty));
+        assertDoesNotThrow(() -> new CatchingRunnable(() -> {}));
 
         {
             AtomicInteger number = new AtomicInteger();
@@ -41,9 +41,5 @@ class RunnableTest {
             });
             assertThrows(RuntimeException.class, catchingRunnable::run);
         }
-    }
-
-    void empty() {
-
     }
 }
