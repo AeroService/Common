@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 public interface TaskExecutor {
 
+    boolean isMainThread();
+
     void executeInMain(@NotNull Runnable runnable);
 
     void executeAsync(@NotNull Runnable runnable);

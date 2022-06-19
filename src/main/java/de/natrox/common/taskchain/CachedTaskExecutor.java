@@ -21,6 +21,11 @@ final class CachedTaskExecutor implements TaskExecutor {
     }
 
     @Override
+    public boolean isMainThread() {
+        return Thread.currentThread().getId() == 1;
+    }
+
+    @Override
     public void executeInMain(@NotNull Runnable runnable) {
         runnable.run();
     }
