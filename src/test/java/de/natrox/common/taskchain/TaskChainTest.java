@@ -12,17 +12,17 @@ class TaskChainTest {
 
         TaskChain taskChain = new TaskChainImpl(executor)
             .sync(() -> {
-
+                System.out.println("1");
             })
             .async(() -> {
-
+                System.out.println("2");
             })
             .delay(5, TimeUnit.SECONDS)
             .sync(() -> {
-
+                System.out.println("3");
             });
 
-        taskChain.run();
+        taskChain.run(() -> System.out.println("Done"));
     }
 
 }
