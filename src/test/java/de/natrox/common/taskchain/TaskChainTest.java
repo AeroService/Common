@@ -8,7 +8,9 @@ class TaskChainTest {
 
     @Test
     void test() {
-        new TaskChainImpl()
+        TaskExecutor executor = new CachedTaskExecutor();
+
+        TaskChain taskChain = new TaskChainImpl(executor)
             .sync(() -> {
 
             })
@@ -18,8 +20,9 @@ class TaskChainTest {
             .delay(5, TimeUnit.SECONDS)
             .sync(() -> {
 
-            })
-            .run();
+            });
+
+        taskChain.run();
     }
 
 }
