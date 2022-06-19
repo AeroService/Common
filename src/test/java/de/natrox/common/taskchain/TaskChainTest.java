@@ -23,6 +23,10 @@ class TaskChainTest {
             });
 
         taskChain.run(() -> System.out.println("Done"));
+
+        while (true) {
+
+        }
     }
 
 }

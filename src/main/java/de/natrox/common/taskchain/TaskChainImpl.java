@@ -46,7 +46,7 @@ final class TaskChainImpl implements TaskChain {
     @Override
     public @NotNull TaskChain delay(@Range(from = 0, to = Long.MAX_VALUE) long duration, @NotNull TimeUnit timeUnit) {
         Check.notNull(timeUnit, "timeUnit");
-        return this;
+        return this.current((Task.CallbackTask) callback -> this.taskExecutor.executeWithDelay(callback, duration, timeUnit));
     }
 
     private TaskChain add(@NotNull TaskContainer task) {
@@ -144,8 +144,12 @@ final class TaskChainImpl implements TaskChain {
         }
 
         private void run() {
-            this.task.run();
-            this.next();
+            if (this.task instanceof Task.CallbackTask callbackTask) {
+                callbackTask.run(this::next);
+            } else {
+                this.task.run();
+                this.next();
+            }
         }
 
         private void next() {
