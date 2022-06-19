@@ -20,15 +20,15 @@ final class TaskChainImpl implements TaskChain {
     }
 
     @Override
-    public @NotNull TaskChain sync(@NotNull Runnable runnable) {
-        Check.notNull(runnable, "runnable");
-        return this.add(new TaskContainer(this, ExecutionType.SYNC));
+    public @NotNull TaskChain sync(@NotNull Task task) {
+        Check.notNull(task, "task");
+        return this.add(new TaskContainer(this, ExecutionType.SYNC, task));
     }
 
     @Override
-    public @NotNull TaskChain async(@NotNull Runnable runnable) {
-        Check.notNull(runnable, "runnable");
-        return this.add(new TaskContainer(this, ExecutionType.ASYNC));
+    public @NotNull TaskChain async(@NotNull Task task) {
+        Check.notNull(task, "task");
+        return this.add(new TaskContainer(this, ExecutionType.ASYNC, task));
     }
 
     @Override
@@ -72,10 +72,14 @@ final class TaskChainImpl implements TaskChain {
 
         private final TaskChainImpl taskChain;
         private final ExecutionType executionType;
+        private final Task task;
 
-        private TaskContainer(TaskChainImpl taskChain, ExecutionType executionType) {
+        private boolean executed = false;
+
+        private TaskContainer(TaskChainImpl taskChain, ExecutionType executionType, Task task) {
             this.taskChain = taskChain;
             this.executionType = executionType;
+            this.task = task;
         }
 
         private void run() {

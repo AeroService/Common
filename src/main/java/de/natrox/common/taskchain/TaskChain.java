@@ -17,18 +17,18 @@ public sealed interface TaskChain permits TaskChainImpl {
     /**
      * Execute the task on the main thread
      *
-     * @param runnable the task to execute
+     * @param task the task to execute
      * @return this TaskBatch, for chaining
      */
-    @NotNull TaskChain sync(@NotNull Runnable runnable);
+    @NotNull TaskChain sync(@NotNull Task task);
 
     /**
      * Execute the task on a extra thread
      *
-     * @param runnable the task to execute
+     * @param task the task to execute
      * @return this TaskBatch, for chaining
      */
-    @NotNull TaskChain async(@NotNull Runnable runnable);
+    @NotNull TaskChain async(@NotNull Task task);
 
     /**
      * Adds a delay to the batch execution.
