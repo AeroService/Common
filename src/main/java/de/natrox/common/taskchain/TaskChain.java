@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Range;
 import java.time.Duration;
 import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * Represents a chain of tasks
@@ -126,15 +127,24 @@ public sealed interface TaskChain permits TaskChainImpl {
     /**
      * Finished adding tasks, begins executing them with a done notifier
      *
+     * @param callback the {@link Consumer} to handle when the batch has finished completion
+     */
+    void run(@Nullable Consumer<Boolean> callback);
+
+    /**
+     * Finished adding tasks, begins executing them with a done notifier
+     *
      * @param callback the {@link Runnable} to handle when the batch has finished completion
      */
-    void run(@Nullable Runnable callback);
+    default void run(@Nullable Runnable callback) {
+        this.run(callback != null ? result -> callback.run() : null);
+    }
 
     /**
      * Finished adding tasks, begins executing them.
      */
     default void run() {
-        this.run(null);
+        this.run((Consumer<Boolean>) null);
     }
 
     interface Factory {

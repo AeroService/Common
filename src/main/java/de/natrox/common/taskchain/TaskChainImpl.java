@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 final class TaskChainImpl implements TaskChain {
 
@@ -19,7 +20,7 @@ final class TaskChainImpl implements TaskChain {
     private boolean executed = false;
     private boolean done = false;
 
-    private Runnable doneCallback;
+    private Consumer<Boolean> doneCallback;
     private TaskContainer currentContainer;
 
     private TaskChainImpl(TaskExecutor taskExecutor) {
@@ -98,7 +99,7 @@ final class TaskChainImpl implements TaskChain {
     }
 
     @Override
-    public void run(@Nullable Runnable callback) {
+    public void run(@Nullable Consumer<Boolean> callback) {
         this.doneCallback = callback;
 
         synchronized (this) {
@@ -121,7 +122,7 @@ final class TaskChainImpl implements TaskChain {
         }
 
         if (this.currentContainer == null) {
-            this.done();
+            this.done(true);
             return;
         }
 
@@ -149,13 +150,13 @@ final class TaskChainImpl implements TaskChain {
         }
     }
 
-    private void done() {
+    private void done(boolean finished) {
         this.done = true;
         if (this.doneCallback == null) {
             return;
         }
 
-        this.doneCallback.run();
+        this.doneCallback.accept(finished);
     }
 
     private enum ExecutionType {
@@ -201,7 +202,7 @@ final class TaskChainImpl implements TaskChain {
         private void next() {
             synchronized (this) {
                 if (this.executed) {
-                    this.taskChain.done();
+                    this.taskChain.done(false);
                     throw new IllegalStateException("This task has already been executed");
                 }
                 this.executed = true;
