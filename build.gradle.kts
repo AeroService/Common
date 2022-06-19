@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2020-2022 NatroxMC
  *
@@ -13,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 plugins {
     id("java")
     id("maven-publish")
@@ -49,6 +49,7 @@ tasks.withType<JavaCompile> {
     // options
     options.encoding = "UTF-8"
     options.isIncremental = true
+
 }
 
 tasks.withType<Jar> {
