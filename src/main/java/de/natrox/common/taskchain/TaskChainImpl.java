@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 final class TaskChainImpl implements TaskChain {
 
-    private final Queue<Task> taskQueue = new ConcurrentLinkedQueue<>();
+    private final Queue<TaskContainer> taskQueue = new ConcurrentLinkedQueue<>();
 
     private boolean executed = false;
 
@@ -22,13 +22,13 @@ final class TaskChainImpl implements TaskChain {
     @Override
     public @NotNull TaskChain sync(@NotNull Runnable runnable) {
         Check.notNull(runnable, "runnable");
-        return this;
+        return this.add(new TaskContainer(this, ExecutionType.SYNC));
     }
 
     @Override
     public @NotNull TaskChain async(@NotNull Runnable runnable) {
         Check.notNull(runnable, "runnable");
-        return this;
+        return this.add(new TaskContainer(this, ExecutionType.ASYNC));
     }
 
     @Override
@@ -37,7 +37,7 @@ final class TaskChainImpl implements TaskChain {
         return this;
     }
 
-    private TaskChain add(@NotNull Task task) {
+    private TaskChain add(@NotNull TaskContainer task) {
         synchronized (this) {
             if (this.executed) {
                 throw new IllegalStateException("TaskChain was already executed");
@@ -61,12 +61,21 @@ final class TaskChainImpl implements TaskChain {
 
     }
 
-    private static class Task {
+    private enum ExecutionType {
+
+        ASYNC,
+        SYNC
+
+    }
+
+    private static class TaskContainer {
 
         private final TaskChainImpl taskChain;
+        private final ExecutionType executionType;
 
-        private Task(TaskChainImpl taskChain) {
+        private TaskContainer(TaskChainImpl taskChain, ExecutionType executionType) {
             this.taskChain = taskChain;
+            this.executionType = executionType;
         }
 
         private void run() {
