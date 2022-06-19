@@ -11,12 +11,13 @@ import java.util.concurrent.TimeUnit;
 
 final class TaskChainImpl implements TaskChain {
 
+    private final TaskExecutor taskExecutor;
     private final Queue<TaskContainer> taskQueue = new ConcurrentLinkedQueue<>();
 
     private boolean executed = false;
 
-    TaskChainImpl() {
-
+    TaskChainImpl(TaskExecutor taskExecutor) {
+        this.taskExecutor = taskExecutor;
     }
 
     @Override
