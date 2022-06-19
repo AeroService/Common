@@ -9,9 +9,10 @@ class TaskChainTest {
 
     @Test
     void test() {
-        TaskExecutor executor = CachedTaskExecutor.create();
+        TaskChain.Factory factory = TaskChain.createFactory(CachedTaskExecutor.create());
 
-        TaskChain taskChain = new TaskChainImpl(executor)
+        TaskChain taskChain = factory
+            .create()
             .sync(() -> {
                 System.out.println("1");
             })

@@ -22,7 +22,7 @@ final class TaskChainImpl implements TaskChain {
     private Runnable doneCallback;
     private TaskContainer currentContainer;
 
-    TaskChainImpl(TaskExecutor taskExecutor) {
+    private TaskChainImpl(TaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;
     }
 
@@ -211,5 +211,20 @@ final class TaskChainImpl implements TaskChain {
             this.taskChain.runNextTask();
         }
 
+    }
+
+    @SuppressWarnings("ClassCanBeRecord")
+    static class FactoryImpl implements TaskChain.Factory {
+
+        private final TaskExecutor taskExecutor;
+
+        FactoryImpl(TaskExecutor taskExecutor) {
+            this.taskExecutor = taskExecutor;
+        }
+
+        @Override
+        public @NotNull TaskChain create() {
+            return new TaskChainImpl(this.taskExecutor);
+        }
     }
 }

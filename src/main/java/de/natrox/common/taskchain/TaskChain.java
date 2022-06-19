@@ -14,6 +14,11 @@ import java.util.concurrent.TimeUnit;
  */
 public sealed interface TaskChain permits TaskChainImpl {
 
+    static TaskChain.@NotNull Factory createFactory(@NotNull TaskExecutor taskExecutor) {
+        Check.notNull(taskExecutor, "taskExecutor");
+        return new TaskChainImpl.FactoryImpl(taskExecutor);
+    }
+
     /**
      * Execute the task on the main thread
      *
@@ -130,6 +135,12 @@ public sealed interface TaskChain permits TaskChainImpl {
      */
     default void run() {
         this.run(null);
+    }
+
+    interface Factory {
+
+        @NotNull TaskChain create();
+
     }
 
 }
