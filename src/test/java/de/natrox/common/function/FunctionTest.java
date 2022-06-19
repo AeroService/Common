@@ -91,7 +91,7 @@ class FunctionTest {
 
     String concat(Object... objects) {
         StringBuilder builder = new StringBuilder();
-        for(Object object : objects)
+        for (Object object : objects)
             builder.append(object.toString());
         return builder.toString();
     }
