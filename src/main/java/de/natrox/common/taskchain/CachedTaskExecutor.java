@@ -51,4 +51,15 @@ public final class CachedTaskExecutor implements TaskExecutor {
             }
         });
     }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @Override
+    public void shutdown() {
+        try {
+            this.executorService.shutdown();
+            this.executorService.awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

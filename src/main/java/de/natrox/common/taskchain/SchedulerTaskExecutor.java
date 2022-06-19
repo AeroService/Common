@@ -44,4 +44,13 @@ public final class SchedulerTaskExecutor implements TaskExecutor {
     public void executeWithDelay(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit) {
         this.scheduler.buildTask(runnable).delay(delay, timeUnit).schedule();
     }
+
+    @Override
+    public void shutdown() {
+        try {
+            this.scheduler.shutdown();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

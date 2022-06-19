@@ -213,10 +213,10 @@ final class TaskChainImpl implements TaskChain {
 
     }
 
-    @SuppressWarnings("ClassCanBeRecord")
     static class FactoryImpl implements TaskChain.Factory {
 
         private final TaskExecutor taskExecutor;
+        private boolean shutdown = false;
 
         FactoryImpl(TaskExecutor taskExecutor) {
             this.taskExecutor = taskExecutor;
@@ -224,7 +224,20 @@ final class TaskChainImpl implements TaskChain {
 
         @Override
         public @NotNull TaskChain create() {
+            synchronized (this) {
+                if(this.shutdown) {
+                    throw new IllegalStateException("This factory has already been closed");
+                }
+            }
             return new TaskChainImpl(this.taskExecutor);
+        }
+
+        @Override
+        public void shutdown() {
+            synchronized (this) {
+                this.shutdown = true;
+            }
+            this.taskExecutor.shutdown();
         }
     }
 }

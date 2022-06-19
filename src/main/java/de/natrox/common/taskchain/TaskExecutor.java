@@ -39,4 +39,6 @@ public interface TaskExecutor {
      */
     void executeWithDelay(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit);
 
+    void shutdown();
+
 }
