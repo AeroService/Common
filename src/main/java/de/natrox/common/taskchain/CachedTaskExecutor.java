@@ -17,6 +17,7 @@ final class CachedTaskExecutor implements TaskExecutor {
     private Thread createThread(Runnable runnable) {
         Thread thread = new Thread(runnable);
         thread.setName("Task Chain - #" + thread.getId());
+        thread.setDaemon(true);
         return thread;
     }
 
@@ -40,6 +41,7 @@ final class CachedTaskExecutor implements TaskExecutor {
         this.executorService.submit(() -> {
             try {
                 Thread.sleep(timeUnit.toMillis(delay));
+                runnable.run();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

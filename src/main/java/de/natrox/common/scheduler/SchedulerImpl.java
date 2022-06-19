@@ -42,12 +42,14 @@ final class SchedulerImpl implements Scheduler {
     private Thread createThread(Runnable runnable) {
         Thread thread = new Thread(runnable);
         thread.setName("Task Scheduler - #" + thread.getId());
+        thread.setDaemon(true);
         return thread;
     }
 
     private Thread createTimerThread(Runnable runnable) {
         Thread thread = new Thread(runnable);
         thread.setName("Task Scheduler Timer");
+        thread.setDaemon(true);
         return thread;
     }
 
