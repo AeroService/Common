@@ -14,4 +14,20 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+package de.natrox.common.builder;
+
+/**
+ * Represent a builder class.
+ *
+ * @param <T> the type of the object to be built
+ */
+public interface IBuilder<T> {
+
+    /**
+     * Returns the result of the build process.
+     *
+     * @return the built object
+     */
+    T build();
+
+}

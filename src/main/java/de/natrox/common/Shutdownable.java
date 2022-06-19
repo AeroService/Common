@@ -14,4 +14,17 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+package de.natrox.common;
+
+/**
+ * Represents a class that can be shut down.
+ */
+@FunctionalInterface
+public interface Shutdownable {
+
+    /**
+     * Shutdowns this instance.
+     */
+    void shutdown();
+
+}

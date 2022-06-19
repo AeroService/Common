@@ -1,0 +1,46 @@
+name: "Build"
+
+on:
+    push:
+        branches: [ "**" ]
+        tags-ignore: [ "**" ]
+    pull_request:
+
+concurrency:
+    group: build-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        name: Build
+
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v3
+
+            -   name: Get branch name
+                id: branch-name
+                uses: tj-actions/branch-names@v5.2
+
+            -   name: Validate gradle wrapper
+                uses: gradle/wrapper-validation-action@v1
+
+            -   name: Setup java
+                uses: actions/setup-java@v3
+                with:
+                    distribution: 'temurin'
+                    java-version: 17
+                    check-latest: true
+                    cache: 'gradle'
+
+            -   name: Run build lifecycle
+                run: ./gradlew build test shadowJar --no-daemon --stacktrace
+
+            -   name: Set version type in GitHub environment
+                run: |
+                    if [ "$(./gradlew properties | awk '/^version:/ { print $2; }' | grep '\-SNAPSHOT')" ]; then
+                      echo "STATUS=snapshot" >> $GITHUB_ENV
+                    else
+                      echo "STATUS=release" >> $GITHUB_ENV
+                    fi

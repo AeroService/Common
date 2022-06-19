@@ -14,4 +14,25 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+package de.natrox.common;
+
+/**
+ * Represents a class that can be loaded.
+ */
+public interface Loadable {
+
+    /**
+     * Loads this instance
+     */
+    void load();
+
+    /**
+     * Returns whether this instance is loaded or not.
+     *
+     * @return true if the instance is loaded and false if not
+     */
+    default boolean isLoaded() {
+        return false;
+    }
+
+}

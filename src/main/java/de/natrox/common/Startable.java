@@ -14,4 +14,17 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+package de.natrox.common;
+
+/**
+ * Represents a class that can be started.
+ */
+@FunctionalInterface
+public interface Startable {
+
+    /**
+     * Starts this instance.
+     */
+    void start();
+
+}
