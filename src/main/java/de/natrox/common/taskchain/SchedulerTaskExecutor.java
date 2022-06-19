@@ -1,16 +1,28 @@
 package de.natrox.common.taskchain;
 
 import de.natrox.common.scheduler.Scheduler;
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
-final class SchedulerTaskExecutor implements TaskExecutor {
+@SuppressWarnings("ClassCanBeRecord")
+public final class SchedulerTaskExecutor implements TaskExecutor {
 
+    private final static Scheduler DEFAULT_SCHEDULER = Scheduler.create();
     private final Scheduler scheduler;
 
-    SchedulerTaskExecutor(Scheduler scheduler) {
+    private SchedulerTaskExecutor(Scheduler scheduler) {
         this.scheduler = scheduler;
+    }
+
+    public static @NotNull TaskExecutor create(@NotNull Scheduler scheduler) {
+        Check.notNull(scheduler, "scheduler");
+        return new SchedulerTaskExecutor(scheduler);
+    }
+
+    public static @NotNull TaskExecutor create() {
+        return create(DEFAULT_SCHEDULER);
     }
 
     @Override

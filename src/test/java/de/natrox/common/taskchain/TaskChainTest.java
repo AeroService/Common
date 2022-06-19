@@ -9,7 +9,7 @@ class TaskChainTest {
 
     @Test
     void test() {
-        TaskExecutor executor = new CachedTaskExecutor();
+        TaskExecutor executor = CachedTaskExecutor.create();
 
         TaskChain taskChain = new TaskChainImpl(executor)
             .sync(() -> {

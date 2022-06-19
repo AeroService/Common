@@ -6,12 +6,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-final class CachedTaskExecutor implements TaskExecutor {
+public final class CachedTaskExecutor implements TaskExecutor {
 
     private final ExecutorService executorService;
 
-    CachedTaskExecutor() {
+    private CachedTaskExecutor() {
         this.executorService = Executors.newCachedThreadPool(this::createThread);
+    }
+
+    public static @NotNull TaskExecutor create() {
+        return new CachedTaskExecutor();
     }
 
     private Thread createThread(Runnable runnable) {
