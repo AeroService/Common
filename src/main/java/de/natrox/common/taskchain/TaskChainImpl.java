@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.Queue;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -44,9 +45,45 @@ final class TaskChainImpl implements TaskChain {
     }
 
     @Override
+    public @NotNull TaskChain syncFuture(Task.@NotNull FutureTask futureTask) {
+        Check.notNull(futureTask, "futureTask");
+        return this.add(new TaskContainer(this, ExecutionType.SYNC, futureTask));
+    }
+
+    @Override
+    public @NotNull TaskChain asyncFuture(Task.@NotNull FutureTask futureTask) {
+        Check.notNull(futureTask, "futureTask");
+        return this.add(new TaskContainer(this, ExecutionType.ASYNC, futureTask));
+    }
+
+    @Override
+    public @NotNull TaskChain currentFuture(Task.@NotNull FutureTask futureTask) {
+        Check.notNull(futureTask, "futureTask");
+        return this.add(new TaskContainer(this, ExecutionType.CURRENT, futureTask));
+    }
+
+    @Override
+    public @NotNull TaskChain syncCallback(Task.@NotNull CallbackTask callbackTask) {
+        Check.notNull(callbackTask, "callbackTask");
+        return this.add(new TaskContainer(this, ExecutionType.SYNC, callbackTask));
+    }
+
+    @Override
+    public @NotNull TaskChain asyncCallback(Task.@NotNull CallbackTask callbackTask) {
+        Check.notNull(callbackTask, "callbackTask");
+        return this.add(new TaskContainer(this, ExecutionType.ASYNC, callbackTask));
+    }
+
+    @Override
+    public @NotNull TaskChain currentCallback(Task.@NotNull CallbackTask callbackTask) {
+        Check.notNull(callbackTask, "callbackTask");
+        return this.add(new TaskContainer(this, ExecutionType.CURRENT, callbackTask));
+    }
+
+    @Override
     public @NotNull TaskChain delay(@Range(from = 0, to = Long.MAX_VALUE) long duration, @NotNull TimeUnit timeUnit) {
         Check.notNull(timeUnit, "timeUnit");
-        return this.current((Task.CallbackTask) callback -> this.taskExecutor.executeWithDelay(callback, duration, timeUnit));
+        return this.currentCallback(callback -> this.taskExecutor.executeWithDelay(callback, duration, timeUnit));
     }
 
     private TaskChain add(@NotNull TaskContainer task) {
@@ -144,7 +181,16 @@ final class TaskChainImpl implements TaskChain {
         }
 
         private void run() {
-            if (this.task instanceof Task.CallbackTask callbackTask) {
+            if(this.task instanceof Task.FutureTask futureTask) {
+                CompletableFuture<?> future = futureTask.runFuture();
+                future.whenComplete((r, throwable) -> {
+                    if (throwable != null) {
+                        //TODO:
+                    } else {
+                        this.next();
+                    }
+                });
+            } else if (this.task instanceof Task.CallbackTask callbackTask) {
                 callbackTask.run(this::next);
             } else {
                 this.task.run();

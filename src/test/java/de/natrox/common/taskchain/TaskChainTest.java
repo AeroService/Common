@@ -2,6 +2,7 @@ package de.natrox.common.taskchain;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 class TaskChainTest {
@@ -17,6 +18,11 @@ class TaskChainTest {
             .async(() -> {
                 System.out.println("2");
             })
+            .syncCallback(callback -> {
+                System.out.println("Callback");
+                callback.run();
+            })
+            .syncFuture(() -> CompletableFuture.runAsync(() -> System.out.println("Future")))
             .delay(5, TimeUnit.SECONDS)
             .sync(() -> {
                 System.out.println("3");

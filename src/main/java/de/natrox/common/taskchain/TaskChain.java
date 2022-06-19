@@ -37,7 +37,55 @@ public sealed interface TaskChain permits TaskChainImpl {
      * @return this TaskChain, for chaining
      */
     @NotNull TaskChain current(@NotNull Task task);
-    
+
+    /**
+     * Execute the task on the main thread
+     *
+     * @param futureTask the task to execute
+     * @return this TaskChain, for chaining
+     */
+    @NotNull TaskChain syncFuture(Task.@NotNull FutureTask futureTask);
+
+    /**
+     * Execute the task on an extra thread
+     *
+     * @param futureTask the task to execute
+     * @return this TaskChain, for chaining
+     */
+    @NotNull TaskChain asyncFuture(Task.@NotNull FutureTask futureTask);
+
+    /**
+     * Execute the task on the current thread
+     *
+     * @param futureTask the task to execute
+     * @return this TaskChain, for chaining
+     */
+    @NotNull TaskChain currentFuture(Task.@NotNull FutureTask futureTask);
+
+    /**
+     * Execute the task on the main thread
+     *
+     * @param callbackTask the task to execute
+     * @return this TaskChain, for chaining
+     */
+    @NotNull TaskChain syncCallback(Task.@NotNull CallbackTask callbackTask);
+
+    /**
+     * Execute the task on an extra thread
+     *
+     * @param callbackTask the task to execute
+     * @return this TaskChain, for chaining
+     */
+    @NotNull TaskChain asyncCallback(Task.@NotNull CallbackTask callbackTask);
+
+    /**
+     * Execute the task on the current thread
+     *
+     * @param callbackTask the task to execute
+     * @return this TaskChain, for chaining
+     */
+    @NotNull TaskChain currentCallback(Task.@NotNull CallbackTask callbackTask);
+
     /**
      * Adds a delay to the batch execution.
      *
