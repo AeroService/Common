@@ -5,9 +5,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
 final class TaskChainImpl implements TaskChain {
+
+    private final Queue<Task> taskQueue = new ConcurrentLinkedQueue<>();
+
+    private boolean executed = false;
 
     TaskChainImpl() {
 
@@ -28,6 +34,17 @@ final class TaskChainImpl implements TaskChain {
     @Override
     public @NotNull TaskChain delay(@Range(from = 0, to = Long.MAX_VALUE) long duration, @NotNull TimeUnit timeUnit) {
         Check.notNull(timeUnit, "timeUnit");
+        return this;
+    }
+
+    private TaskChain add(@NotNull Task task) {
+        synchronized (this) {
+            if (this.executed) {
+                throw new IllegalStateException("TaskChain was already executed");
+            }
+        }
+
+        this.taskQueue.add(task);
         return this;
     }
 
