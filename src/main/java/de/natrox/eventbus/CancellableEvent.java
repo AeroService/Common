@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 NatroxMC team
+ * Copyright 2020-2022 NatroxMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +14,24 @@
  * limitations under the License.
  */
 
-rootProject.name = "EventBus"
+package de.natrox.eventbus;
 
+/**
+ * Represents an event which can be cancelled.
+ */
+public interface CancellableEvent {
+
+    /**
+     * Gets if the event should be cancelled or not.
+     *
+     * @return true if the event should be cancelled
+     */
+    boolean isCancelled();
+
+    /**
+     * Marks the event as cancelled or not.
+     *
+     * @param cancel true if the event should be cancelled, false otherwise
+     */
+    void setCancelled(boolean cancel);
+}

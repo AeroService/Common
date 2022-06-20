@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 NatroxMC team
+ * Copyright 2020-2022 NatroxMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +14,19 @@
  * limitations under the License.
  */
 
-rootProject.name = "EventBus"
+package de.natrox.eventbus;
 
+public abstract class AbstractCancellableEvent implements CancellableEvent {
+
+    private boolean cancelled = false;
+
+    @Override
+    public boolean isCancelled() {
+        return this.cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
+}
