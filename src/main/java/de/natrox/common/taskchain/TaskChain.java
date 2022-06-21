@@ -36,6 +36,13 @@ public sealed interface TaskChain permits TaskChainImpl {
         return new TaskChainImpl.FactoryImpl(taskExecutor);
     }
 
+    /**
+     * Stops the chain as soon as this step is reached. This is especially
+     * useful if you want to build the steps of the chain
+     * dynamically and stop the chain under certain conditions.
+     *
+     * @return this TaskChain, for chaining
+     */
     @NotNull TaskChain abort();
 
     /**
