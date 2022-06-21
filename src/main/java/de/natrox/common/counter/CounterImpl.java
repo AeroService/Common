@@ -28,6 +28,8 @@ import java.util.function.Consumer;
 
 final class CounterImpl implements Counter {
 
+    final static Scheduler DEFAULT_SCHEDULER = Scheduler.create();
+
     private final Scheduler scheduler;
 
     private final long startCount;

@@ -31,15 +31,13 @@ import java.util.function.Consumer;
  */
 public sealed interface Counter permits CounterImpl {
 
-    Scheduler DEFAULT_SCHEDULER = Scheduler.create();
-
     /**
      * Create a {@link Builder} for a {@link Counter} scheduling the tasks with the default{@link Scheduler}
      *
      * @return the Builder
      */
     static Counter.@NotNull Builder builder() {
-        return new CounterImpl.BuilderImpl(DEFAULT_SCHEDULER);
+        return new CounterImpl.BuilderImpl(CounterImpl.DEFAULT_SCHEDULER);
     }
 
     /**
