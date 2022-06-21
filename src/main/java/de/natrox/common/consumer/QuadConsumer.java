@@ -21,9 +21,9 @@ import de.natrox.common.validate.Check;
 import java.util.function.Consumer;
 
 /**
- * Represents an operation that accepts two input arguments and returns no result.  This is the quad-arity
- * specialization of {@link Consumer}. Unlike most other functional interfaces, {@code TriConsumer} is expected to
- * operate via side-effects.
+ * Represents an operation that accepts four input arguments and returns no result. This is the quad-arity
+ * specialization of {@link Consumer}. Unlike most other functional interfaces, {@code QuadConsumer} is expected to
+ * operate via side effects.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
  * whose functional method is {@link #accept(Object, Object, Object, Object)}.
