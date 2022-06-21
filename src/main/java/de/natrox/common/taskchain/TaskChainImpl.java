@@ -16,6 +16,7 @@
 
 package de.natrox.common.taskchain;
 
+import de.natrox.common.taskchain.exception.AbortException;
 import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +42,20 @@ final class TaskChainImpl implements TaskChain {
 
     private TaskChainImpl(TaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;
+    }
+
+    @Override
+    public @NotNull TaskChain abort() {
+        if (this.executed) {
+            this.throwAbortException();
+            return this;
+        }
+
+        return this.current(this::throwAbortException);
+    }
+
+    private void throwAbortException() {
+        throw new AbortException();
     }
 
     @Override
@@ -175,6 +190,11 @@ final class TaskChainImpl implements TaskChain {
         this.doneCallback.accept(finished);
     }
 
+    private void abortExecuted() {
+        this.taskQueue.clear();
+        this.done(false);
+    }
+
     private enum ExecutionType {
 
         ASYNC,
@@ -190,6 +210,7 @@ final class TaskChainImpl implements TaskChain {
         private final Task task;
 
         private boolean executed = false;
+        private boolean aborted = false;
 
         private TaskContainer(TaskChainImpl taskChain, ExecutionType executionType, Task task) {
             this.taskChain = taskChain;
@@ -198,21 +219,30 @@ final class TaskChainImpl implements TaskChain {
         }
 
         private void run() {
-            if(this.task instanceof Task.FutureTask futureTask) {
-                CompletableFuture<?> future = futureTask.runFuture();
-                future.whenComplete((r, throwable) -> {
-                    if (throwable != null) {
-                        //TODO:
-                    } else {
-                        this.next();
-                    }
-                });
-            } else if (this.task instanceof Task.CallbackTask callbackTask) {
-                callbackTask.run(this::next);
-            } else {
-                this.task.run();
-                this.next();
+            try {
+                if (this.task instanceof Task.FutureTask futureTask) {
+                    CompletableFuture<?> future = futureTask.runFuture();
+                    future.whenComplete((r, throwable) -> {
+                        if (throwable != null) {
+                            this.abort();
+                        } else {
+                            this.next();
+                        }
+                    });
+                } else if (this.task instanceof Task.CallbackTask callbackTask) {
+                    callbackTask.run(this::next);
+                } else {
+                    this.task.run();
+                    this.next();
+                }
+            }catch (Throwable throwable) {
+                this.abort();
             }
+        }
+
+        private synchronized void abort() {
+            this.aborted = true;
+            this.taskChain.abortExecuted();
         }
 
         private void next() {
@@ -242,7 +272,7 @@ final class TaskChainImpl implements TaskChain {
         @Override
         public @NotNull TaskChain create() {
             synchronized (this) {
-                if(this.shutdown) {
+                if (this.shutdown) {
                     throw new IllegalStateException("This factory has already been closed");
                 }
             }

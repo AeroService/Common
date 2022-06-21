@@ -36,6 +36,8 @@ public sealed interface TaskChain permits TaskChainImpl {
         return new TaskChainImpl.FactoryImpl(taskExecutor);
     }
 
+    @NotNull TaskChain abort();
+
     /**
      * Execute the task on the main thread
      *
