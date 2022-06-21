@@ -35,6 +35,7 @@ final class CounterImpl implements Counter {
     private final long startCount;
     private final long stopCount;
     private final long tick;
+    private final int step;
     private final TimeUnit tickUnit;
 
     private final Consumer<Counter> startHandler;
@@ -42,7 +43,6 @@ final class CounterImpl implements Counter {
     private final Consumer<Counter> finishHandler;
     private final Consumer<Counter> cancelHandler;
 
-    private final int step;
     private long currentCount;
     private Task task;
     private CounterStatus status;
@@ -60,7 +60,7 @@ final class CounterImpl implements Counter {
     ) {
         Check.notNull(scheduler, "scheduler");
         Check.notNull(tickUnit, "tickUnit");
-        Check.argCondition(tick <= 0, "tick must be positive");
+        Check.argCondition(tick <= 0, "tick");
 
         this.startHandler = startHandler;
         this.tickHandler = tickHandler;
@@ -78,7 +78,7 @@ final class CounterImpl implements Counter {
     @Override
     public void start() {
         if (this.task != null)
-            throw new IllegalStateException("The counter is already running");
+            throw new IllegalStateException("This counter is already running");
 
         this.currentCount = this.startCount - step;
 
