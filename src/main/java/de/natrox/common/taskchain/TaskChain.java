@@ -176,8 +176,6 @@ public sealed interface TaskChain permits TaskChainImpl {
 
         @NotNull TaskChain create();
 
-        void shutdown();
-
     }
 
 }
