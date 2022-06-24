@@ -59,6 +59,11 @@ final class SchedulerImpl implements Scheduler {
         return new TaskImpl.BuilderImpl(this, runnable);
     }
 
+    @Override
+    public boolean isShutdown() {
+        return this.taskService.isShutdown() || this.timerExecutionService.isShutdown();
+    }
+
     public boolean shutdown() throws InterruptedException {
         Collection<Task> terminating;
         synchronized (this.tasks) {
