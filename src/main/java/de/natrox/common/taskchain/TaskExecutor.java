@@ -55,6 +55,11 @@ public interface TaskExecutor {
      */
     void executeWithDelay(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit);
 
+    /**
+     * Returns whether this task executor is shut down or not.
+     *
+     * @return true, if this task executor is shutdown and false if not
+     */
     boolean isShutdown();
 
     /**

@@ -31,6 +31,12 @@ import java.util.function.Consumer;
  */
 public sealed interface TaskChain permits TaskChainImpl {
 
+    /**
+     * Creates a new task chain factory.
+     *
+     * @param taskExecutor the {@link TaskExecutor} which should execute the tasks of the task chain
+     * @return the created task chain factory
+     */
     static TaskChain.@NotNull Factory createFactory(@NotNull TaskExecutor taskExecutor) {
         Check.notNull(taskExecutor, "taskExecutor");
         return new TaskChainImpl.FactoryImpl(taskExecutor);
@@ -174,6 +180,11 @@ public sealed interface TaskChain permits TaskChainImpl {
 
     interface Factory {
 
+        /**
+         * Creates a new task chain.
+         *
+         * @return the created task chain
+         */
         @NotNull TaskChain create();
 
     }
