@@ -272,6 +272,10 @@ final class TaskChainImpl implements TaskChain {
         @Override
         public @NotNull TaskChain create() {
             synchronized (this) {
+                if(this.taskExecutor.isShutdown()) {
+                    this.shutdown = true;
+                }
+
                 if (this.shutdown) {
                     throw new IllegalStateException("This factory has already been closed");
                 }

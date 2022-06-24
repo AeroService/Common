@@ -62,6 +62,12 @@ public final class SchedulerTaskExecutor implements TaskExecutor {
     }
 
     @Override
+    public boolean isShutdown() {
+        //TODO:
+        return false;
+    }
+
+    @Override
     public void shutdown() {
         try {
             this.scheduler.shutdown();

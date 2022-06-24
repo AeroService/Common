@@ -71,6 +71,11 @@ public final class CachedTaskExecutor implements TaskExecutor {
         this.timerExecutionService.schedule(runnable, delay, timeUnit);
     }
 
+    @Override
+    public boolean isShutdown() {
+        return this.executorService.isShutdown() || this.timerExecutionService.isShutdown();
+    }
+
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     public void shutdown() {
