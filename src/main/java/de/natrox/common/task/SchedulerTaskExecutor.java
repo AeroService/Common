@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.natrox.common.taskchain;
+package de.natrox.common.task;
 
 import de.natrox.common.scheduler.Scheduler;
 import de.natrox.common.validate.Check;
@@ -47,18 +47,60 @@ public final class SchedulerTaskExecutor implements TaskExecutor {
     }
 
     @Override
-    public void executeInMain(@NotNull Runnable runnable) {
-        runnable.run();
+    public @NotNull Task executeInMain(@NotNull Runnable runnable) {
+        AbstractTask task = new AbstractTask() {
+            @Override
+            public void run() {
+                runnable.run();
+            }
+
+            @Override
+            public void cancel() {
+
+            }
+        };
+        task.run();
+
+        return task;
     }
 
     @Override
-    public void executeAsync(@NotNull Runnable runnable) {
-        this.scheduler.buildTask(runnable).schedule();
+    public @NotNull Task executeAsync(@NotNull Runnable runnable) {
+        AbstractTask task = new AbstractTask.SchedulerTask() {
+            @Override
+            de.natrox.common.scheduler.Task runScheduler() {
+                return scheduler.buildTask(runnable).schedule();
+            }
+        };
+        task.run();
+
+        return task;
     }
 
     @Override
-    public void executeWithDelay(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit) {
-        this.scheduler.buildTask(runnable).delay(delay, timeUnit).schedule();
+    public @NotNull Task executeWithDelay(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit) {
+        AbstractTask task = new AbstractTask.SchedulerTask() {
+            @Override
+            de.natrox.common.scheduler.Task runScheduler() {
+                return scheduler.buildTask(runnable).delay(delay, timeUnit).schedule();
+            }
+        };
+        task.run();
+
+        return task;
+    }
+
+    @Override
+    public @NotNull Task executeInRepeat(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit) {
+        AbstractTask task = new AbstractTask.SchedulerTask() {
+            @Override
+            de.natrox.common.scheduler.Task runScheduler() {
+                return scheduler.buildTask(runnable).repeat(delay, timeUnit).schedule();
+            }
+        };
+        task.run();
+
+        return task;
     }
 
     @Override

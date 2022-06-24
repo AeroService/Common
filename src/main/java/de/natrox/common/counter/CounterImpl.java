@@ -18,7 +18,8 @@ package de.natrox.common.counter;
 
 import de.natrox.common.runnable.CatchingRunnable;
 import de.natrox.common.scheduler.Scheduler;
-import de.natrox.common.scheduler.Task;
+import de.natrox.common.task.Task;
+import de.natrox.common.task.TaskExecutor;
 import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,9 +29,7 @@ import java.util.function.Consumer;
 
 final class CounterImpl implements Counter {
 
-    final static Scheduler DEFAULT_SCHEDULER = Scheduler.create();
-
-    private final Scheduler scheduler;
+    private final TaskExecutor taskExecutor;
 
     private final long startCount;
     private final long stopCount;
@@ -48,7 +47,7 @@ final class CounterImpl implements Counter {
     private CounterStatus status;
 
     CounterImpl(
-        Scheduler scheduler,
+        TaskExecutor taskExecutor,
         long startCount,
         long stopCount,
         long tick,
@@ -58,7 +57,7 @@ final class CounterImpl implements Counter {
         Consumer<Counter> finishHandler,
         Consumer<Counter> cancelHandler
     ) {
-        Check.notNull(scheduler, "scheduler");
+        Check.notNull(taskExecutor, "taskExecutor");
         Check.notNull(tickUnit, "tickUnit");
         Check.argCondition(tick <= 0, "tick");
 
@@ -70,7 +69,7 @@ final class CounterImpl implements Counter {
         this.stopCount = stopCount;
         this.tick = tick;
         this.tickUnit = tickUnit;
-        this.scheduler = scheduler;
+        this.taskExecutor = taskExecutor;
         this.status = CounterStatus.IDLING;
         this.step = stopCount > startCount ? 1 : -1;
     }
@@ -82,10 +81,7 @@ final class CounterImpl implements Counter {
 
         this.currentCount = this.startCount - step;
 
-        this.task = this.scheduler
-            .buildTask(new CatchingRunnable(this::tick))
-            .repeat(this.tick, this.tickUnit)
-            .schedule();
+        this.task = this.taskExecutor.executeInRepeat(new CatchingRunnable(this::tick), this.tick, this.tickUnit);
 
         this.status = CounterStatus.RUNNING;
 
@@ -215,7 +211,7 @@ final class CounterImpl implements Counter {
 
     static final class BuilderImpl implements Counter.Builder {
 
-        private final Scheduler scheduler;
+        private final TaskExecutor taskExecutor;
 
         private long startCount;
         private long stopCount;
@@ -227,8 +223,8 @@ final class CounterImpl implements Counter {
         private Consumer<Counter> finishHandler;
         private Consumer<Counter> cancelHandler;
 
-        BuilderImpl(Scheduler scheduler) {
-            this.scheduler = scheduler;
+        BuilderImpl(TaskExecutor taskExecutor) {
+            this.taskExecutor = taskExecutor;
         }
 
         @Override
@@ -279,7 +275,7 @@ final class CounterImpl implements Counter {
         @Override
         public @NotNull Counter build() {
             return new CounterImpl(
-                this.scheduler,
+                this.taskExecutor,
                 this.startCount,
                 this.stopCount,
                 this.tick,

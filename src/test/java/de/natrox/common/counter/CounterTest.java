@@ -16,6 +16,8 @@
 
 package de.natrox.common.counter;
 
+import de.natrox.common.task.CachedTaskExecutor;
+import de.natrox.common.task.TaskExecutor;
 import org.junit.jupiter.api.Test;
 
 import java.time.temporal.ChronoUnit;
@@ -28,7 +30,8 @@ class CounterTest {
 
     @Test
     void isRunningTest() {
-        Counter counter = Counter.builder()
+        TaskExecutor executor = CachedTaskExecutor.create();
+        Counter counter = Counter.builder(executor)
             .tick(25, ChronoUnit.MILLIS)
             .startCount(1)
             .stopCount(5)
@@ -46,7 +49,8 @@ class CounterTest {
 
     @Test
     void isPausedTest() {
-        Counter counter = Counter.builder()
+        TaskExecutor executor = CachedTaskExecutor.create();
+        Counter counter = Counter.builder(executor)
             .tick(25, ChronoUnit.MILLIS)
             .startCount(1)
             .stopCount(5)
@@ -64,7 +68,8 @@ class CounterTest {
 
     @Test
     void stateTest() {
-        Counter counter = Counter.builder()
+        TaskExecutor executor = CachedTaskExecutor.create();
+        Counter counter = Counter.builder(executor)
             .tick(25, ChronoUnit.MILLIS)
             .startCount(1)
             .stopCount(5)
@@ -82,7 +87,8 @@ class CounterTest {
 
     @Test
     void countTest() {
-        Counter slowCounter = Counter.builder()
+        TaskExecutor executor = CachedTaskExecutor.create();
+        Counter slowCounter = Counter.builder(executor)
             .tick(1, ChronoUnit.HOURS)
             .startCount(2)
             .stopCount(6)
@@ -97,7 +103,8 @@ class CounterTest {
 
     @Test
     void presetVariablesTest() {
-        Counter counter = Counter.builder()
+        TaskExecutor executor = CachedTaskExecutor.create();
+        Counter counter = Counter.builder(executor)
             .tick(1, ChronoUnit.SECONDS)
             .startCount(2)
             .stopCount(-3)
@@ -114,7 +121,8 @@ class CounterTest {
         AtomicInteger timesTicked = new AtomicInteger();
         AtomicInteger timesFinished = new AtomicInteger();
         AtomicInteger timesCanceled = new AtomicInteger();
-        Counter counter = Counter.builder()
+        TaskExecutor executor = CachedTaskExecutor.create();
+        Counter counter = Counter.builder(executor)
             .tick(50, ChronoUnit.MILLIS)
             .startCount(1)
             .stopCount(10)
@@ -150,13 +158,14 @@ class CounterTest {
     void tickTest() throws InterruptedException {
         AtomicInteger upTicked = new AtomicInteger();
         AtomicInteger downTicked = new AtomicInteger();
-        Counter upTicker = Counter.builder()
+        TaskExecutor executor = CachedTaskExecutor.create();
+        Counter upTicker = Counter.builder(executor)
             .tick(10, ChronoUnit.MILLIS)
             .startCount(50)
             .stopCount(1)
             .tickHandler(counter -> upTicked.incrementAndGet())
             .build();
-        Counter downTicker = Counter.builder()
+        Counter downTicker = Counter.builder(executor)
             .tick(10, ChronoUnit.MILLIS)
             .startCount(1)
             .stopCount(50)

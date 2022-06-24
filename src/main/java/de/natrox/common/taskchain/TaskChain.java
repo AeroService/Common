@@ -16,6 +16,7 @@
 
 package de.natrox.common.taskchain;
 
+import de.natrox.common.task.TaskExecutor;
 import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

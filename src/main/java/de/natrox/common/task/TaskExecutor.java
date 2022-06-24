@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package de.natrox.common.taskchain;
+package de.natrox.common.task;
 
+import de.natrox.common.taskchain.TaskChain;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
@@ -36,15 +37,17 @@ public interface TaskExecutor {
      * Schedule a runnable to run on the main thread.
      *
      * @param runnable the runnable to run
+     * @return the {@link Task}
      */
-    void executeInMain(@NotNull Runnable runnable);
+    @NotNull Task executeInMain(@NotNull Runnable runnable);
 
     /**
      * Run the runnable in a new thread.
      *
      * @param runnable the runnable to run
+     * @return the {@link Task}
      */
-    void executeAsync(@NotNull Runnable runnable);
+    @NotNull Task executeAsync(@NotNull Runnable runnable);
 
     /**
      * Schedule a runnable with delay.
@@ -52,8 +55,19 @@ public interface TaskExecutor {
      * @param runnable the runnable to run
      * @param delay the time to delay by
      * @param timeUnit the unit of time for {@code time}
+     * @return the {@link Task}
      */
-    void executeWithDelay(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit);
+    @NotNull Task executeWithDelay(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit);
+
+    /**
+     * Schedule a runnable in repetition.
+     *
+     * @param runnable the runnable to run
+     * @param delay the time to delay the next run
+     * @param timeUnit the unit of time for {@code time}
+     * @return the {@link Task}
+     */
+    @NotNull Task executeInRepeat(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit);
 
     /**
      * Returns whether this task executor is shut down or not.
