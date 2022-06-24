@@ -18,38 +18,59 @@ package de.natrox.common.taskchain;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class TaskChainTest {
 
     @Test
-    void test() {
+    void factoryTest() {
         TaskChain.Factory factory = TaskChain.createFactory(CachedTaskExecutor.create());
+        TaskChain taskChain = factory.create();
+        assertNotNull(taskChain);
+    }
 
-        TaskChain taskChain = factory
-            .create()
-            .sync(() -> {
-                System.out.println("1");
-            })
-            .async(() -> {
-                System.out.println("2");
-            })
-            .syncCallback(callback -> {
-                System.out.println("Callback");
-                callback.run();
-            })
-            .syncFuture(() -> CompletableFuture.runAsync(() -> System.out.println("Future")))
-            .delay(5, TimeUnit.SECONDS)
-            .sync(() -> {
-                System.out.println("3");
-            });
+    @Test
+    void multipleRunTest() {
+        TaskChain.Factory factory = TaskChain.createFactory(CachedTaskExecutor.create());
+        TaskChain taskChain = factory.create();
 
-        taskChain.run(() -> System.out.println("Done"));
+        assertDoesNotThrow(() -> taskChain.run());
+        assertThrows(IllegalStateException.class, taskChain::run);
+    }
 
-        while (true) {
+    @Test
+    void delayTest() throws InterruptedException {
+        TaskChain.Factory factory = TaskChain.createFactory(CachedTaskExecutor.create());
+        CountDownLatch latch = new CountDownLatch(2);
 
-        }
+        TaskChain taskChain = factory.create()
+            .sync(latch::countDown)
+            .delay(10, TimeUnit.MILLISECONDS)
+            .sync(latch::countDown);
+
+        taskChain.run();
+
+        Thread.sleep(5);
+        assertEquals(1, latch.getCount());
+
+        latch.await();
+        assertEquals(0, latch.getCount());
+    }
+
+    @Test
+    void callbackTest() throws InterruptedException {
+        TaskChain.Factory factory = TaskChain.createFactory(CachedTaskExecutor.create());
+        TaskChain taskChain = factory.create();
+
+        CountDownLatch latch = new CountDownLatch(1);
+
+        taskChain.run(latch::countDown);
+        latch.await();
+
+        assertEquals(0, latch.getCount());
     }
 
 }
