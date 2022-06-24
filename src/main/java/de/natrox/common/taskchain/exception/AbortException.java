@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-package de.natrox.common.batch;
+package de.natrox.common.taskchain.exception;
 
-public final class SimpleTaskBatchFactory implements TaskBatch.Factory {
-
-    @Override
-    public TaskBatch createTaskBatch() {
-        return new SimpleTaskBatch(new SimpleTaskBatchExecutor());
-    }
-
+public class AbortException extends RuntimeException {
 }

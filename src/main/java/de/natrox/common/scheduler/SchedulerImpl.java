@@ -42,12 +42,14 @@ final class SchedulerImpl implements Scheduler {
     private Thread createThread(Runnable runnable) {
         Thread thread = new Thread(runnable);
         thread.setName("Task Scheduler - #" + thread.getId());
+        thread.setDaemon(true);
         return thread;
     }
 
     private Thread createTimerThread(Runnable runnable) {
         Thread thread = new Thread(runnable);
         thread.setName("Task Scheduler Timer");
+        thread.setDaemon(true);
         return thread;
     }
 
@@ -55,6 +57,11 @@ final class SchedulerImpl implements Scheduler {
     public @NotNull Task.Builder buildTask(@NotNull Runnable runnable) {
         Check.notNull(runnable, "runnable");
         return new TaskImpl.BuilderImpl(this, runnable);
+    }
+
+    @Override
+    public boolean isShutdown() {
+        return this.taskService.isShutdown() || this.timerExecutionService.isShutdown();
     }
 
     public boolean shutdown() throws InterruptedException {

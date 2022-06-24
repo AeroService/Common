@@ -36,6 +36,13 @@ public sealed interface Scheduler permits SchedulerImpl {
     @NotNull Task.Builder buildTask(@NotNull Runnable task);
 
     /**
+     * Returns whether this scheduler is shut down or not.
+     *
+     * @return true, if this scheduler is shut down and false if not
+     */
+    boolean isShutdown();
+
+    /**
      * Shutdowns the scheduler and cancel all running tasks.
      *
      * @return true if this executor terminated and false if 10 seconds elapsed before termination
