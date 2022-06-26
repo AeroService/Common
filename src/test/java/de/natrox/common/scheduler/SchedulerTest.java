@@ -16,6 +16,8 @@
 
 package de.natrox.common.scheduler;
 
+import de.natrox.common.task.CachedTaskExecutor;
+import de.natrox.common.task.TaskExecutor;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -28,7 +30,8 @@ class SchedulerTest {
 
     @Test
     void buildTaskTest() throws Exception {
-        Scheduler scheduler = Scheduler.create();
+        TaskExecutor taskExecutor = CachedTaskExecutor.create();
+        Scheduler scheduler = Scheduler.create(taskExecutor);
         CountDownLatch latch = new CountDownLatch(1);
         Task task = scheduler
             .buildTask(latch::countDown)
@@ -39,7 +42,8 @@ class SchedulerTest {
 
     @Test
     void cancelTest() throws Exception {
-        Scheduler scheduler = Scheduler.create();
+        TaskExecutor taskExecutor = CachedTaskExecutor.create();
+        Scheduler scheduler = Scheduler.create(taskExecutor);
         AtomicInteger i = new AtomicInteger(3);
         Task task = scheduler.buildTask(i::decrementAndGet)
             .delay(100, TimeUnit.SECONDS)
@@ -52,7 +56,8 @@ class SchedulerTest {
 
     @Test
     void repeatTaskTest() throws Exception {
-        Scheduler scheduler = Scheduler.create();
+        TaskExecutor taskExecutor = CachedTaskExecutor.create();
+        Scheduler scheduler = Scheduler.create(taskExecutor);
         CountDownLatch latch = new CountDownLatch(3);
         Task task = scheduler.buildTask(latch::countDown)
             .delay(100, TimeUnit.MILLISECONDS)

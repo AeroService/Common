@@ -81,7 +81,7 @@ final class CounterImpl implements Counter {
 
         this.currentCount = this.startCount - step;
 
-        this.task = this.taskExecutor.executeInRepeat(new CatchingRunnable(this::tick), this.tick, this.tickUnit);
+        this.task = this.taskExecutor.executeInRepeat(new CatchingRunnable(this::tick), this.tick, this.tick, this.tickUnit);
 
         this.status = CounterStatus.RUNNING;
 

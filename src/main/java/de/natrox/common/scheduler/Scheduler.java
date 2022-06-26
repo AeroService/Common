@@ -16,6 +16,8 @@
 
 package de.natrox.common.scheduler;
 
+import de.natrox.common.task.TaskExecutor;
+import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -23,8 +25,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public sealed interface Scheduler permits SchedulerImpl {
 
-    static @NotNull Scheduler create() {
-        return new SchedulerImpl();
+    static @NotNull Scheduler create(@NotNull TaskExecutor taskExecutor) {
+        Check.notNull(taskExecutor, "taskExecutor");
+        return new SchedulerImpl(taskExecutor);
     }
 
     /**

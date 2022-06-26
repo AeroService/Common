@@ -29,7 +29,7 @@ final class TaskImpl implements Runnable, Task {
     private final Runnable runnable;
     private final long delay;
     private final long repeat;
-    private @Nullable ScheduledFuture<?> future;
+    private @Nullable de.natrox.common.task.Task task;
     private volatile @Nullable Thread currentTaskThread;
 
     TaskImpl(SchedulerImpl scheduler, Runnable runnable, long delay, long repeat) {
@@ -41,13 +41,13 @@ final class TaskImpl implements Runnable, Task {
 
     void schedule() {
         if (this.repeat == 0) {
-            this.future = this.scheduler
-                .timerExecutionService()
-                .schedule(this, this.delay, TimeUnit.MILLISECONDS);
+            this.task = this.scheduler
+                .taskExecutor()
+                .executeWithDelay(this, this.delay, TimeUnit.MILLISECONDS);
         } else {
-            this.future = this.scheduler
-                .timerExecutionService()
-                .scheduleAtFixedRate(this, this.delay, this.repeat, TimeUnit.MILLISECONDS);
+            this.task = this.scheduler
+                .taskExecutor()
+                .executeInRepeat(this, this.delay, this.repeat, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -58,15 +58,15 @@ final class TaskImpl implements Runnable, Task {
 
     @Override
     public @NotNull TaskStatus status() {
-        if (this.future == null) {
+        if (this.task == null) {
             return TaskStatus.SCHEDULED;
         }
 
-        if (this.future.isCancelled()) {
+        if (this.task.isCancelled()) {
             return TaskStatus.CANCELLED;
         }
 
-        if (this.future.isDone()) {
+        if (this.task.isDone()) {
             return TaskStatus.FINISHED;
         }
 
@@ -75,10 +75,10 @@ final class TaskImpl implements Runnable, Task {
 
     @Override
     public void cancel() {
-        if (this.future == null)
+        if (this.task == null)
             return;
 
-        this.future.cancel(false);
+        this.task.cancel();
 
         Thread cur = this.currentTaskThread;
         if (cur != null) {
@@ -90,7 +90,7 @@ final class TaskImpl implements Runnable, Task {
 
     @Override
     public void run() {
-        this.scheduler.taskService().execute(this::execute);
+        this.scheduler.taskExecutor().executeAsync(this::execute);
     }
 
     private void execute() {

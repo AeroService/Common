@@ -67,7 +67,7 @@ public interface TaskExecutor {
      * @param timeUnit the unit of time for {@code time}
      * @return the {@link Task}
      */
-    @NotNull Task executeInRepeat(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit);
+    @NotNull Task executeInRepeat(@NotNull Runnable runnable, long initialDelay, long delay, @NotNull TimeUnit timeUnit);
 
     /**
      * Returns whether this task executor is shut down or not.
@@ -79,6 +79,6 @@ public interface TaskExecutor {
     /**
      * Shutdowns the executor.
      */
-    void shutdown();
+    boolean shutdown();
 
 }

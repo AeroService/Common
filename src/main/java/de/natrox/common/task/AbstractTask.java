@@ -31,6 +31,16 @@ abstract non-sealed class AbstractTask implements Task {
         abstract Future<?> runFuture();
 
         @Override
+        public boolean isCancelled() {
+            return this.future != null && this.future.isCancelled();
+        }
+
+        @Override
+        public boolean isDone() {
+            return this.future != null && this.future.isDone();
+        }
+
+        @Override
         public void run() {
             this.future = this.runFuture();
         }

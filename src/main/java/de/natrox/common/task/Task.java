@@ -23,4 +23,8 @@ public sealed interface Task permits AbstractTask {
      */
     void cancel();
 
+    boolean isCancelled();
+
+    boolean isDone();
+
 }

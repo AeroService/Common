@@ -56,14 +56,27 @@ public final class CachedTaskExecutor implements TaskExecutor {
     @Override
     public @NotNull Task executeInMain(@NotNull Runnable runnable) {
         AbstractTask task = new AbstractTask() {
+            boolean done = false;
+
             @Override
             public void run() {
                 runnable.run();
+                this.done = true;
             }
 
             @Override
             public void cancel() {
 
+            }
+
+            @Override
+            public boolean isCancelled() {
+                return false;
+            }
+
+            @Override
+            public boolean isDone() {
+                return this.done;
             }
         };
         task.run();
@@ -98,11 +111,11 @@ public final class CachedTaskExecutor implements TaskExecutor {
     }
 
     @Override
-    public @NotNull Task executeInRepeat(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit) {
+    public @NotNull Task executeInRepeat(@NotNull Runnable runnable, long initialDelay, long delay, @NotNull TimeUnit timeUnit) {
         AbstractTask task = new AbstractTask.FutureTask() {
             @Override
             Future<?> runFuture() {
-                return timerExecutionService.scheduleAtFixedRate(runnable, delay, delay, timeUnit);
+                return timerExecutionService.scheduleAtFixedRate(runnable, initialDelay, delay, timeUnit);
             }
         };
         task.run();
@@ -115,13 +128,12 @@ public final class CachedTaskExecutor implements TaskExecutor {
         return this.executorService.isShutdown() || this.timerExecutionService.isShutdown();
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
-    public void shutdown() {
+    public boolean shutdown() {
         try {
             this.timerExecutionService.shutdownNow();
             this.executorService.shutdown();
-            this.executorService.awaitTermination(10, TimeUnit.SECONDS);
+            return this.executorService.awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
