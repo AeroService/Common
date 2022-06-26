@@ -25,6 +25,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public sealed interface Scheduler permits SchedulerImpl {
 
+    /**
+     * Creates a scheduler scheduling the tasks with the passed {@link TaskExecutor}.
+     *
+     * @param taskExecutor the {@link TaskExecutor}
+     * @return the created scheduler
+     */
     static @NotNull Scheduler create(@NotNull TaskExecutor taskExecutor) {
         Check.notNull(taskExecutor, "taskExecutor");
         return new SchedulerImpl(taskExecutor);
