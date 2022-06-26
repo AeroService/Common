@@ -53,7 +53,7 @@ public interface TaskExecutor {
      * Schedule a runnable with delay.
      *
      * @param runnable the runnable to run
-     * @param delay the time to delay by
+     * @param delay    the time to delay by
      * @param timeUnit the unit of time for {@code time}
      * @return the {@link Task}
      */
@@ -62,10 +62,10 @@ public interface TaskExecutor {
     /**
      * Schedule a runnable in repetition.
      *
-     * @param runnable the runnable to run
+     * @param runnable     the runnable to run
      * @param initialDelay the time to delay the first run
-     * @param delay the time to delay the next run
-     * @param timeUnit the unit of time for {@code time}
+     * @param delay        the time to delay the next run
+     * @param timeUnit     the unit of time for {@code time}
      * @return the {@link Task}
      */
     @NotNull Task executeInRepeat(@NotNull Runnable runnable, long initialDelay, long delay, @NotNull TimeUnit timeUnit);

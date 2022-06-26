@@ -16,11 +16,13 @@
 
 package de.natrox.common.task;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TaskExecutorTest {
 
@@ -36,9 +38,7 @@ class TaskExecutorTest {
         assertTrue(taskExecutor.isMainThread());
 
         AtomicBoolean result = new AtomicBoolean(true);
-        Thread thread = new Thread(() -> {
-            result.set(taskExecutor.isMainThread());
-        });
+        Thread thread = new Thread(() -> result.set(taskExecutor.isMainThread()));
 
         thread.start();
         Thread.sleep(50);

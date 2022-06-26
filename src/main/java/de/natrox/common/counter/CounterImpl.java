@@ -17,7 +17,6 @@
 package de.natrox.common.counter;
 
 import de.natrox.common.runnable.CatchingRunnable;
-import de.natrox.common.scheduler.Scheduler;
 import de.natrox.common.task.Task;
 import de.natrox.common.task.TaskExecutor;
 import de.natrox.common.validate.Check;

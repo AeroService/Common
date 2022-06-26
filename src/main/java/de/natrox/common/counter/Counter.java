@@ -16,7 +16,6 @@
 
 package de.natrox.common.counter;
 
-import de.natrox.common.scheduler.Scheduler;
 import de.natrox.common.task.TaskExecutor;
 import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;

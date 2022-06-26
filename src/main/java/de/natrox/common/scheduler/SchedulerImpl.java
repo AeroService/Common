@@ -24,10 +24,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 final class SchedulerImpl implements Scheduler {
 
@@ -49,7 +45,7 @@ final class SchedulerImpl implements Scheduler {
         return this.taskExecutor.isShutdown();
     }
 
-    public boolean shutdown() throws InterruptedException {
+    public boolean shutdown() {
         Collection<Task> terminating;
         synchronized (this.tasks) {
             terminating = Collections.unmodifiableSet(this.tasks);
