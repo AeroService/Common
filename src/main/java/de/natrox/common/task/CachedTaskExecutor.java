@@ -18,7 +18,10 @@ package de.natrox.common.task;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public final class CachedTaskExecutor implements TaskExecutor {
 
@@ -55,71 +58,26 @@ public final class CachedTaskExecutor implements TaskExecutor {
 
     @Override
     public @NotNull Task executeInMain(@NotNull Runnable runnable) {
-        AbstractTask task = new AbstractTask() {
-            boolean done = false;
-
-            @Override
-            public void run() {
-                runnable.run();
-                this.done = true;
-            }
-
-            @Override
-            public void cancel() {
-
-            }
-
-            @Override
-            public boolean isCancelled() {
-                return false;
-            }
-
-            @Override
-            public boolean isDone() {
-                return this.done;
-            }
-        };
-        task.run();
-
-        return task;
+        return this.execute(new TaskImpl.RunnableTaskImpl(runnable));
     }
 
     @Override
     public @NotNull Task executeAsync(@NotNull Runnable runnable) {
-        AbstractTask task = new AbstractTask.FutureTask() {
-            @Override
-            Future<?> runFuture() {
-                return executorService.submit(runnable);
-            }
-        };
-        task.run();
-
-        return task;
+        return this.execute(new TaskImpl.FutureTaskImpl(() -> this.executorService.submit(runnable)));
     }
 
     @Override
     public @NotNull Task executeWithDelay(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit) {
-        AbstractTask task = new AbstractTask.FutureTask() {
-            @Override
-            Future<?> runFuture() {
-                return timerExecutionService.schedule(runnable, delay, timeUnit);
-            }
-        };
-        task.run();
-
-        return task;
+        return this.execute(new TaskImpl.FutureTaskImpl(() -> this.timerExecutionService.schedule(runnable, delay, timeUnit)));
     }
 
     @Override
     public @NotNull Task executeInRepeat(@NotNull Runnable runnable, long initialDelay, long delay, @NotNull TimeUnit timeUnit) {
-        AbstractTask task = new AbstractTask.FutureTask() {
-            @Override
-            Future<?> runFuture() {
-                return timerExecutionService.scheduleAtFixedRate(runnable, initialDelay, delay, timeUnit);
-            }
-        };
-        task.run();
+        return this.execute(new TaskImpl.FutureTaskImpl(() -> this.timerExecutionService.scheduleAtFixedRate(runnable, initialDelay, delay, timeUnit)));
+    }
 
+    private @NotNull Task execute(TaskImpl.@NotNull AbstractTask task) {
+        task.run();
         return task;
     }
 

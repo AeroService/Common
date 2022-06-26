@@ -16,7 +16,7 @@
 
 package de.natrox.common.task;
 
-public sealed interface Task permits AbstractTask {
+public sealed interface Task permits TaskImpl.AbstractTask {
 
     /**
      * Cancels this task. If the task is already running, the thread in which it is running will be interrupted.
