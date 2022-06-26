@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.natrox.common.taskchain;
+package de.natrox.common.task;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -57,18 +57,28 @@ public final class CachedTaskExecutor implements TaskExecutor {
     }
 
     @Override
-    public void executeInMain(@NotNull Runnable runnable) {
-        runnable.run();
+    public @NotNull Task executeInMain(@NotNull Runnable runnable) {
+        return this.execute(new TaskImpl.RunnableTaskImpl(runnable));
     }
 
     @Override
-    public void executeAsync(@NotNull Runnable runnable) {
-        this.executorService.submit(runnable);
+    public @NotNull Task executeAsync(@NotNull Runnable runnable) {
+        return this.execute(new TaskImpl.FutureTaskImpl(() -> this.executorService.submit(runnable)));
     }
 
     @Override
-    public void executeWithDelay(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit) {
-        this.timerExecutionService.schedule(runnable, delay, timeUnit);
+    public @NotNull Task executeWithDelay(@NotNull Runnable runnable, long delay, @NotNull TimeUnit timeUnit) {
+        return this.execute(new TaskImpl.FutureTaskImpl(() -> this.timerExecutionService.schedule(runnable, delay, timeUnit)));
+    }
+
+    @Override
+    public @NotNull Task executeInRepeat(@NotNull Runnable runnable, long initialDelay, long delay, @NotNull TimeUnit timeUnit) {
+        return this.execute(new TaskImpl.FutureTaskImpl(() -> this.timerExecutionService.scheduleAtFixedRate(runnable, initialDelay, delay, timeUnit)));
+    }
+
+    private @NotNull Task execute(TaskImpl.@NotNull AbstractTask task) {
+        task.run();
+        return task;
     }
 
     @Override
@@ -76,13 +86,12 @@ public final class CachedTaskExecutor implements TaskExecutor {
         return this.executorService.isShutdown() || this.timerExecutionService.isShutdown();
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
-    public void shutdown() {
+    public boolean shutdown() {
         try {
             this.timerExecutionService.shutdownNow();
             this.executorService.shutdown();
-            this.executorService.awaitTermination(10, TimeUnit.SECONDS);
+            return this.executorService.awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

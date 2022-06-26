@@ -16,7 +16,7 @@
 
 package de.natrox.common.counter;
 
-import de.natrox.common.scheduler.Scheduler;
+import de.natrox.common.task.TaskExecutor;
 import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,22 +32,13 @@ import java.util.function.Consumer;
 public sealed interface Counter permits CounterImpl {
 
     /**
-     * Create a {@link Builder} for a {@link Counter} scheduling the tasks with the default{@link Scheduler}
+     * Create a {@link Builder} for a {@link Counter} scheduling the tasks with the passed {@link TaskExecutor}
      *
+     * @param taskExecutor the {@link TaskExecutor}
      * @return the Builder
      */
-    static Counter.@NotNull Builder builder() {
-        return new CounterImpl.BuilderImpl(CounterImpl.DEFAULT_SCHEDULER);
-    }
-
-    /**
-     * Create a {@link Builder} for a {@link Counter} scheduling the tasks with the passed {@link Scheduler}
-     *
-     * @param scheduler the {@link Scheduler}
-     * @return the Builder
-     */
-    static Counter.@NotNull Builder builder(@NotNull Scheduler scheduler) {
-        return new CounterImpl.BuilderImpl(scheduler);
+    static Counter.@NotNull Builder builder(@NotNull TaskExecutor taskExecutor) {
+        return new CounterImpl.BuilderImpl(taskExecutor);
     }
 
     /**

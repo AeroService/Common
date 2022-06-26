@@ -16,6 +16,7 @@
 
 package de.natrox.common.taskchain;
 
+import de.natrox.common.task.CachedTaskExecutor;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;

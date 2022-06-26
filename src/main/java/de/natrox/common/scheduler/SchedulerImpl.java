@@ -16,6 +16,7 @@
 
 package de.natrox.common.scheduler;
 
+import de.natrox.common.task.TaskExecutor;
 import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,34 +24,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 final class SchedulerImpl implements Scheduler {
 
-    private final ExecutorService taskService;
-    private final ScheduledExecutorService timerExecutionService;
+    private final TaskExecutor taskExecutor;
     private final Set<Task> tasks = new LinkedHashSet<>();
 
-    public SchedulerImpl() {
-        this.taskService = Executors.newCachedThreadPool(this::createThread);
-        this.timerExecutionService = Executors.newSingleThreadScheduledExecutor(this::createTimerThread);
-    }
-
-    private Thread createThread(Runnable runnable) {
-        Thread thread = new Thread(runnable);
-        thread.setName("Task Scheduler - #" + thread.getId());
-        thread.setDaemon(true);
-        return thread;
-    }
-
-    private Thread createTimerThread(Runnable runnable) {
-        Thread thread = new Thread(runnable);
-        thread.setName("Task Scheduler Timer");
-        thread.setDaemon(true);
-        return thread;
+    SchedulerImpl(TaskExecutor taskExecutor) {
+        this.taskExecutor = taskExecutor;
     }
 
     @Override
@@ -61,10 +42,10 @@ final class SchedulerImpl implements Scheduler {
 
     @Override
     public boolean isShutdown() {
-        return this.taskService.isShutdown() || this.timerExecutionService.isShutdown();
+        return this.taskExecutor.isShutdown();
     }
 
-    public boolean shutdown() throws InterruptedException {
+    public boolean shutdown() {
         Collection<Task> terminating;
         synchronized (this.tasks) {
             terminating = Collections.unmodifiableSet(this.tasks);
@@ -72,17 +53,11 @@ final class SchedulerImpl implements Scheduler {
         for (Task task : terminating) {
             task.cancel();
         }
-        this.timerExecutionService.shutdown();
-        this.taskService.shutdown();
-        return this.taskService.awaitTermination(10, TimeUnit.SECONDS);
+        return this.taskExecutor.shutdown();
     }
 
-    public ExecutorService taskService() {
-        return this.taskService;
-    }
-
-    public ScheduledExecutorService timerExecutionService() {
-        return this.timerExecutionService;
+    TaskExecutor taskExecutor() {
+        return this.taskExecutor;
     }
 
     public Set<Task> tasks() {
