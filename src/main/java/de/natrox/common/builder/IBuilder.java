@@ -19,7 +19,7 @@ package de.natrox.common.builder;
 import org.jetbrains.annotations.UnknownNullability;
 
 /**
- * Represent a builder class.
+ * Represents a class that can build another object.
  *
  * @param <T> the type of the object to be built
  */
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.UnknownNullability;
 public interface IBuilder<T> {
 
     /**
-     * Returns the result of the build process.
+     * Returns the object that should be built.
      *
      * @return the built object
      */
