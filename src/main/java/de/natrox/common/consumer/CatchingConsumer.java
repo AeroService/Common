@@ -22,7 +22,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 /**
- * Consumer that prints exceptions thrown
+ * Represents a {@link Consumer} that prints exceptions thrown.
+ *
+ * @param <T> the type of the first argument to the operation
+ *
+ * @see Consumer
  */
 public record CatchingConsumer<T>(Consumer<T> delegate) implements Consumer<T> {
 
