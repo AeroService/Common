@@ -53,22 +53,4 @@ abstract non-sealed class AbstractTask implements Task {
             this.future.cancel(false);
         }
     }
-
-    abstract static class SchedulerTask extends AbstractTask {
-
-        private de.natrox.common.scheduler.Task task;
-
-        abstract de.natrox.common.scheduler.Task runScheduler();
-
-        @Override
-        public void run() {
-            this.task = this.runScheduler();
-        }
-
-        @Override
-        public void cancel() {
-            this.task.cancel();
-        }
-    }
-
 }
