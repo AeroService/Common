@@ -83,8 +83,6 @@ final class TaskImpl implements Runnable, Task {
         if (cur != null) {
             cur.interrupt();
         }
-
-        //finish
     }
 
     @Override
@@ -94,21 +92,8 @@ final class TaskImpl implements Runnable, Task {
 
     private void execute() {
         this.currentTaskThread = Thread.currentThread();
-        try {
-            this.runnable.run();
-        } catch (Throwable e) {
-            //noinspection ConstantConditions
-            if (e instanceof InterruptedException) {
-                Thread.currentThread().interrupt();
-            } else {
-                //Log
-            }
-        } finally {
-            if (this.repeat == 0) {
-                //finish
-            }
-            this.currentTaskThread = null;
-        }
+        this.runnable.run();
+        this.currentTaskThread = null;
     }
 
     static final class BuilderImpl implements Task.Builder {
