@@ -94,10 +94,10 @@ class CounterTest {
             .stopCount(6)
             .build();
         slowCounter.start();
-        assertEquals(2, slowCounter.currentCount());
+        assertEquals(2, slowCounter.setCurrentCount());
         assertEquals(0, slowCounter.tickedCount());
-        slowCounter.currentCount(4);
-        assertEquals(4, slowCounter.currentCount());
+        slowCounter.setCurrentCount(4);
+        assertEquals(4, slowCounter.setCurrentCount());
         assertEquals(2, slowCounter.tickedCount());
     }
 
@@ -126,10 +126,10 @@ class CounterTest {
             .tick(50, ChronoUnit.MILLIS)
             .startCount(1)
             .stopCount(10)
-            .startHandler(c -> timesStarted.incrementAndGet())
-            .tickHandler(c -> timesTicked.incrementAndGet())
-            .finishHandler(c -> timesFinished.incrementAndGet())
-            .cancelHandler(c -> timesCanceled.incrementAndGet())
+            .startCallback(c -> timesStarted.incrementAndGet())
+            .tickCallback(c -> timesTicked.incrementAndGet())
+            .finishCallback(c -> timesFinished.incrementAndGet())
+            .cancelCallback(c -> timesCanceled.incrementAndGet())
             .build();
 
         assertEquals(0, timesStarted.get());
@@ -163,13 +163,13 @@ class CounterTest {
             .tick(10, ChronoUnit.MILLIS)
             .startCount(50)
             .stopCount(1)
-            .tickHandler(counter -> upTicked.incrementAndGet())
+            .tickCallback(counter -> upTicked.incrementAndGet())
             .build();
         Counter downTicker = Counter.builder(executor)
             .tick(10, ChronoUnit.MILLIS)
             .startCount(1)
             .stopCount(50)
-            .tickHandler(counter -> downTicked.incrementAndGet())
+            .tickCallback(counter -> downTicked.incrementAndGet())
             .build();
         upTicker.start();
         downTicker.start();
