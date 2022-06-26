@@ -23,8 +23,18 @@ public sealed interface Task permits TaskImpl.AbstractTask {
      */
     void cancel();
 
+    /**
+     * Returns whether the task is cancelled or not.
+     *
+     * @return true, if the task is cancelled and false if not
+     */
     boolean isCancelled();
 
+    /**
+     * Returns whether the task is done or not.
+     *
+     * @return true, if the task is done and false if not
+     */
     boolean isDone();
 
 }

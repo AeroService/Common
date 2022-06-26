@@ -63,6 +63,7 @@ public interface TaskExecutor {
      * Schedule a runnable in repetition.
      *
      * @param runnable the runnable to run
+     * @param initialDelay the time to delay the first run
      * @param delay the time to delay the next run
      * @param timeUnit the unit of time for {@code time}
      * @return the {@link Task}
