@@ -16,7 +16,7 @@
 
 package de.natrox.common.container;
 
-import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class can capture 2 references of 2 types and set or clear the data using first() and
@@ -45,7 +45,7 @@ public final class Pair<A, B> {
      * @param <Y> type of second value
      * @return the new created pair
      */
-    public static <X, Y> Pair<X, Y> of(X x, Y y) {
+    public static <X, Y> @NotNull Pair<X, Y> of(X x, Y y) {
         return new Pair<>(x, y);
     }
 
@@ -56,7 +56,7 @@ public final class Pair<A, B> {
      * @param <Y> type of second value
      * @return the new created pair
      */
-    public static <X, Y> Pair<X, Y> empty() {
+    public static <X, Y> @NotNull Pair<X, Y> empty() {
         return new Pair<>(null, null);
     }
 
@@ -76,26 +76,5 @@ public final class Pair<A, B> {
     public Pair<A, B> setSecond(B second) {
         this.second = second;
         return this;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (Pair<?, ?>) obj;
-        return Objects.equals(this.first, that.first) &&
-            Objects.equals(this.second, that.second);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(first, second);
-    }
-
-    @Override
-    public String toString() {
-        return "Pair[" +
-            "first=" + first + ", " +
-            "second=" + second + ']';
     }
 }

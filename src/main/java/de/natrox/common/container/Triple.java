@@ -16,7 +16,7 @@
 
 package de.natrox.common.container;
 
-import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class can capture 3 references of 3 types and set or clear the data using first() and
@@ -50,7 +50,7 @@ public final class Triple<A, B, C> {
      * @param <Z> type of third value
      * @return the new created triple
      */
-    public static <X, Y, Z> Triple<X, Y, Z> of(X x, Y y, Z z) {
+    public static <X, Y, Z> @NotNull Triple<X, Y, Z> of(X x, Y y, Z z) {
         return new Triple<>(x, y, z);
     }
 
@@ -62,7 +62,7 @@ public final class Triple<A, B, C> {
      * @param <Z> type of third value
      * @return the new created triple
      */
-    public static <X, Y, Z> Triple<X, Y, Z> empty() {
+    public static <X, Y, Z> @NotNull Triple<X, Y, Z> empty() {
         return new Triple<>(null, null, null);
     }
 
@@ -92,28 +92,4 @@ public final class Triple<A, B, C> {
         this.third = third;
         return this;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (Triple<?, ?, ?>) obj;
-        return Objects.equals(this.first, that.first) &&
-            Objects.equals(this.second, that.second) &&
-            Objects.equals(this.third, that.third);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(first, second, third);
-    }
-
-    @Override
-    public String toString() {
-        return "Triple[" +
-            "first=" + first + ", " +
-            "second=" + second + ", " +
-            "third=" + third + ']';
-    }
-
 }
