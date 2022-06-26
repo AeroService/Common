@@ -16,11 +16,14 @@
 
 package de.natrox.common.builder;
 
+import org.jetbrains.annotations.UnknownNullability;
+
 /**
  * Represent a builder class.
  *
  * @param <T> the type of the object to be built
  */
+@FunctionalInterface
 public interface IBuilder<T> {
 
     /**
@@ -28,6 +31,6 @@ public interface IBuilder<T> {
      *
      * @return the built object
      */
-    T build();
+    @UnknownNullability T build();
 
 }
