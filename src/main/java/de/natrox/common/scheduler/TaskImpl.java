@@ -26,14 +26,16 @@ final class TaskImpl implements Runnable, Task {
 
     private final SchedulerImpl scheduler;
     private final Runnable runnable;
+    private final Runnable doneCallback;
     private final long delay;
     private final long repeat;
     private @Nullable de.natrox.common.task.Task task;
     private volatile @Nullable Thread currentTaskThread;
 
-    TaskImpl(SchedulerImpl scheduler, Runnable runnable, long delay, long repeat) {
+    TaskImpl(SchedulerImpl scheduler, Runnable runnable, Runnable doneCallback, long delay, long repeat) {
         this.scheduler = scheduler;
         this.runnable = runnable;
+        this.doneCallback = doneCallback;
         this.delay = delay;
         this.repeat = repeat;
     }
@@ -84,7 +86,7 @@ final class TaskImpl implements Runnable, Task {
             cur.interrupt();
         }
 
-        //finish
+        this.done();
     }
 
     @Override
@@ -94,21 +96,13 @@ final class TaskImpl implements Runnable, Task {
 
     private void execute() {
         this.currentTaskThread = Thread.currentThread();
-        try {
-            this.runnable.run();
-        } catch (Throwable e) {
-            //noinspection ConstantConditions
-            if (e instanceof InterruptedException) {
-                Thread.currentThread().interrupt();
-            } else {
-                //Log
-            }
-        } finally {
-            if (this.repeat == 0) {
-                //finish
-            }
-            this.currentTaskThread = null;
-        }
+        this.runnable.run();
+        this.currentTaskThread = null;
+        this.done();
+    }
+
+    private void done() {
+        this.doneCallback.run();
     }
 
     static final class BuilderImpl implements Task.Builder {
@@ -150,8 +144,8 @@ final class TaskImpl implements Runnable, Task {
         }
 
         @Override
-        public @NotNull Task schedule() {
-            TaskImpl task = new TaskImpl(this.scheduler, this.runnable, this.delay, this.repeat);
+        public @NotNull Task schedule(@Nullable Runnable doneCallback) {
+            TaskImpl task = new TaskImpl(this.scheduler, this.runnable, doneCallback, this.delay, this.repeat);
             task.schedule();
             return task;
         }

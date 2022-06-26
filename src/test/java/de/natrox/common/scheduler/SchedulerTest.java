@@ -18,6 +18,7 @@ package de.natrox.common.scheduler;
 
 import de.natrox.common.task.CachedTaskExecutor;
 import de.natrox.common.task.TaskExecutor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -25,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class SchedulerTest {
 
@@ -65,5 +67,36 @@ class SchedulerTest {
             .schedule();
         latch.await();
         task.cancel();
+    }
+
+    @Test
+    void callbackTest() throws InterruptedException {
+        TaskExecutor taskExecutor = CachedTaskExecutor.create();
+        Scheduler scheduler = Scheduler.create(taskExecutor);
+        CountDownLatch latch = new CountDownLatch(1);
+
+        scheduler
+            .buildTask(() -> {
+
+            })
+            .schedule(latch::countDown);
+        latch.await();
+
+        assertEquals(0, latch.getCount());
+    }
+
+    @Test
+    void callbackCancelTest() throws InterruptedException {
+        TaskExecutor taskExecutor = CachedTaskExecutor.create();
+        Scheduler scheduler = Scheduler.create(taskExecutor);
+        CountDownLatch latch = new CountDownLatch(1);
+
+        scheduler
+            .buildTask(Assertions::fail)
+            .schedule(latch::countDown)
+            .cancel();
+        latch.await();
+
+        assertEquals(0, latch.getCount());
     }
 }

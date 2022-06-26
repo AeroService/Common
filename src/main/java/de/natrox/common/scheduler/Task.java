@@ -18,6 +18,7 @@ package de.natrox.common.scheduler;
 
 import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.time.temporal.TemporalUnit;
@@ -136,10 +137,20 @@ public sealed interface Task permits TaskImpl {
 
         /**
          * Schedules this task for execution.
+         * 
+         * @param doneCallback the {@link Runnable} to handle when the task has finished
+         * @return the scheduled task
+         */
+        @NotNull Task schedule(@Nullable Runnable doneCallback);
+
+        /**
+         * Schedules this task for execution.
          *
          * @return the scheduled task
          */
-        @NotNull Task schedule();
+        default @NotNull Task schedule() {
+            return this.schedule(null);
+        }
 
     }
 
