@@ -21,10 +21,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@Deprecated
 public final class FileUtil {
 
     //TODO: Renovate
 
+    @Deprecated
     public static boolean createDirectory(File path) {
         if (!path.exists()) {
             return path.mkdirs();
@@ -33,6 +35,7 @@ public final class FileUtil {
         return false;
     }
 
+    @Deprecated
     public static boolean createDirectory(Path path) {
         try {
             Files.createDirectories(path);
