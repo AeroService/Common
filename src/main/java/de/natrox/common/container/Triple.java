@@ -19,21 +19,22 @@ package de.natrox.common.container;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * This class can capture 3 references of 3 types and set or clear the data using first() and
- * second() and third(). It can be used to return multiple objects of a method, or to easily capture multiple
- * objects without creating their own class.
+ * Represents a class that can capture three references of three types and set or
+ * clear the data using {@link #setFirst(Object)}, {@link #setSecond(Object)} and {@link #setThird(Object)}.
+ * It can be used to return multiple objects of a method, or to easily
+ * capture multiple objects without creating their own class.
  *
- * @param <A> the first type, which you want to define
- * @param <B> the second type which you want to define
- * @param <C> the third type which you want to define
+ * @param <T> the type of the first reference
+ * @param <U> the type of the second reference
+ * @param <V> the type of the third reference
  */
-public final class Triple<A, B, C> {
+public final class Triple<T, U, V> {
 
-    private A first;
-    private B second;
-    private C third;
+    private T first;
+    private U second;
+    private V third;
 
-    private Triple(A first, B second, C third) {
+    private Triple(T first, U second, V third) {
         this.first = first;
         this.second = second;
         this.third = third;
@@ -42,53 +43,86 @@ public final class Triple<A, B, C> {
     /**
      * Creates a new triple.
      *
-     * @param x   first value
-     * @param y   second value
-     * @param z   third value
-     * @param <X> type of first value
-     * @param <Y> type of second value
-     * @param <Z> type of third value
-     * @return the new created triple
+     * @param first  the first reference
+     * @param second the second reference
+     * @param third  the third reference
+     * @param <T>    the type of the first reference
+     * @param <U>    the type of the second reference
+     * @param <V>    the type of the third reference
+     * @return the created triple
      */
-    public static <X, Y, Z> @NotNull Triple<X, Y, Z> of(X x, Y y, Z z) {
-        return new Triple<>(x, y, z);
+    public static <T, U, V> @NotNull Triple<T, U, V> of(T first, U second, V third) {
+        return new Triple<>(first, second, third);
     }
 
     /**
      * Creates a new empty triple.
      *
-     * @param <X> type of first value
-     * @param <Y> type of second value
-     * @param <Z> type of third value
-     * @return the new created triple
+     * @param <T> the type of the first reference
+     * @param <U> the type of the second reference
+     * @param <V> the type of the third reference
+     * @return the created triple
      */
-    public static <X, Y, Z> @NotNull Triple<X, Y, Z> empty() {
+    public static <T, U, V> @NotNull Triple<T, U, V> empty() {
         return new Triple<>(null, null, null);
     }
 
-    public A first() {
+    /**
+     * Returns the first reference.
+     *
+     * @return the first reference
+     */
+    public T first() {
         return first;
     }
 
-    public Triple<A, B, C> setFirst(A first) {
+    /**
+     * Sets the first reference.
+     *
+     * @param first the first reference
+     * @return this pair, for chaining
+     */
+    public Triple<T, U, V> setFirst(T first) {
         this.first = first;
         return this;
     }
 
-    public B second() {
+    /**
+     * Returns the second reference.
+     *
+     * @return the second reference
+     */
+    public U second() {
         return second;
     }
 
-    public Triple<A, B, C> setSecond(B second) {
+    /**
+     * Sets the second reference.
+     *
+     * @param second the second reference
+     * @return this pair, for chaining
+     */
+    public Triple<T, U, V> setSecond(U second) {
         this.second = second;
         return this;
     }
 
-    public C third() {
+    /**
+     * Returns the third reference.
+     *
+     * @return the third reference
+     */
+    public V third() {
         return third;
     }
 
-    public Triple<A, B, C> setThird(C third) {
+    /**
+     * Sets the third reference.
+     *
+     * @param third the third reference
+     * @return this pair, for chaining
+     */
+    public Triple<T, U, V> setThird(V third) {
         this.third = third;
         return this;
     }
