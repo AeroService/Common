@@ -116,7 +116,7 @@ class CounterTest {
     }
 
     @Test
-    void handlerTest() throws InterruptedException {
+    void callbackTest() throws InterruptedException {
         AtomicInteger timesStarted = new AtomicInteger();
         AtomicInteger timesTicked = new AtomicInteger();
         AtomicInteger timesFinished = new AtomicInteger();

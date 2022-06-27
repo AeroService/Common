@@ -22,14 +22,14 @@ package de.natrox.common;
 public interface Loadable {
 
     /**
-     * Loads this instance
+     * Loads this instance.
      */
     void load();
 
     /**
      * Returns whether this instance is loaded or not.
      *
-     * @return true if the instance is loaded and false if not
+     * @return true if the instance is loaded, false, if not
      */
     default boolean isLoaded() {
         return false;
