@@ -94,10 +94,10 @@ class CounterTest {
             .stopCount(6)
             .build();
         slowCounter.start();
-        assertEquals(2, slowCounter.setCurrentCount());
+        assertEquals(2, slowCounter.currentCount());
         assertEquals(0, slowCounter.tickedCount());
         slowCounter.setCurrentCount(4);
-        assertEquals(4, slowCounter.setCurrentCount());
+        assertEquals(4, slowCounter.currentCount());
         assertEquals(2, slowCounter.tickedCount());
     }
 

@@ -131,7 +131,7 @@ public sealed interface Counter permits CounterImpl {
      *
      * @return the tick amount
      */
-    long setCurrentCount();
+    long currentCount();
 
     /**
      * Sets the current count value to the specified value.

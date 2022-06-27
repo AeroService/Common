@@ -125,7 +125,7 @@ final class CounterImpl implements Counter {
     }
 
     @Override
-    public long setCurrentCount() {
+    public long currentCount() {
         return this.currentCount;
     }
 
