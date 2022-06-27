@@ -29,7 +29,7 @@ class EventBusTest {
     }
 
     @Test
-    void testCancellable() {
+    void cancellableTest() {
         EventBus eventBus = EventBus.create();
         AtomicBoolean result = new AtomicBoolean(false);
         EventListener<?> listener = EventListener
@@ -48,11 +48,41 @@ class EventBusTest {
         eventBus.call(new CancellableTest());
     }
 
+    @Test
+    void recursiveTest() {
+        EventBus eventBus = EventBus.create();
+        AtomicBoolean result1 = new AtomicBoolean(false);
+        AtomicBoolean result2 = new AtomicBoolean(false);
+        var listener1 = EventListener.of(Recursive1.class, event -> result1.set(true));
+        var listener2 = EventListener.of(Recursive2.class, event -> result2.set(true));
+        eventBus.register(listener1);
+        eventBus.register(listener2);
+        eventBus.call(new Recursive2());
+        assertTrue(result2.get(), "Recursive2 should have been called directly");
+        assertTrue(result1.get(), "Recursive1 should be called due to the fact that the Recursive2 event inherits from it");
+
+        // Remove the direct listener
+        result1.set(false);
+        result2.set(false);
+        eventBus.unregister(listener2);
+        eventBus.call(new Recursive2());
+        assertFalse(result2.get(), "There is no listener for Recursive2");
+        assertTrue(result1.get(), "Recursive1 should be called due to the fact that the Recursive2 event inherits from it");
+    }
+
     static class EventTest {
 
     }
 
     static class CancellableTest extends AbstractCancellableEvent {
+
+    }
+
+    static class Recursive1 {
+
+    }
+
+    static class Recursive2 extends Recursive1 {
 
     }
 
