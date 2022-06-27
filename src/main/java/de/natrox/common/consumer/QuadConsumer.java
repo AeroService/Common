@@ -32,7 +32,6 @@ import java.util.function.Consumer;
  * @param <U> the type of the second argument to the operation
  * @param <V> the type of the third argument to the operation
  * @param <W> the type of the fourth argument to the operation
- *
  * @see Consumer
  */
 @FunctionalInterface

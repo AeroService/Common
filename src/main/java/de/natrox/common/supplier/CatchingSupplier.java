@@ -25,7 +25,6 @@ import java.util.function.Supplier;
  * Represents a {@link Supplier} that prints exceptions thrown.
  *
  * @param <T> the type of the first argument to the operation
- *
  * @see Supplier
  */
 public record CatchingSupplier<T>(Supplier<T> delegate) implements Supplier<T> {
