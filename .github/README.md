@@ -30,70 +30,10 @@ Coming soon.
 - Coming soon
 
 # Usage
-The following explains in detail how to use the EventBus and what it does.
 
-# Add to your project
+## Add to your project
 - Gradle: (Not yet available)
 - Maven: (Not yet available)
-
-# EventBus
-**Step 1:** Instantiate an EventBus.
-
-Code example:
-```java
-EventBus eventBus = EventBus.create();
-```
-
-**Step 2:** Create an event class.
-
-Code example:
-```java
-public record TestEvent(String value) {
-
-}
-```
-
-**Step 3:** Register an listener.
-
-### Using an Consumer.
-
-Code example:
-```java
-eventBus.register(TestEvent.class, event -> {
-    // Code here
-});
-```
-
-### Using an EventListener.
-
-Code example:
-```java
-eventBus.register(
-    EventListener
-        .builder(TestEvent.class)
-        .condition(event -> true) // Optional
-        .handler(event -> {
-            // Code here
-        })
-        .build()
-);
-```
-
-### Using an EventListener and an Consumer.
-
-Code example:
-```java
-eventBus.register(EventListener.of(TestEvent.class, event -> {
-    // Code here
-}));
-```
-
-**Step 4:** Call an event.
-
-Code example:
-```java
-eventBus.call(new TestEvent("value"));
-```
 
 # Contributing
 See [the contributing file](CONTRIBUTING.md)!
