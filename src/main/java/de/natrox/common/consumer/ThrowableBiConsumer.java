@@ -18,50 +18,48 @@ package de.natrox.common.consumer;
 
 import de.natrox.common.validate.Check;
 
-import java.util.function.Consumer;
-
 /**
- * Represents an operation that accepts three input arguments and returns no
+ * Represents an operation that accepts two input arguments and returns no
  * result. Unlike most other functional interfaces, {@code Consumer} is expected
- * to operate via side-effects.
+ * to operate via side-effects. Function might throw a checked {@link Throwable}.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #accept(Object, Object, Object)}.
+ * whose functional method is {@link #accept(T, U)}.
  *
  * @param <T> the type of the first argument to the operation
- * @param <U> the type of the second argument to the operation
- * @param <V> the type of the third argument to the operation
- * @see Consumer
+ * @param <T> the type of the second argument to the operation
+ * @param <V> the type of the potentially thrown {@link Throwable}
  */
 @FunctionalInterface
-public interface TriConsumer<T, U, V> {
+public interface ThrowableBiConsumer<T, U, V extends Throwable> {
 
     /**
-     * Performs this operation on the given arguments.
+     * Performs this operation on the given arguments, potentially throwing an exception.
      *
-     * @param t the first input argument
+     * @param t the fist input argument
      * @param u the second input argument
-     * @param v the third input argument
+     * @throws V the potentially thrown {@link Throwable}
      */
-    void accept(T t, U u, V v);
+    void accept(T t, U u) throws V;
 
     /**
-     * Returns a composed {@code TriConsumer} that performs, in sequence, this
+     * Returns a composed {@code ThrowableBiConsumer} that performs, in sequence, this
      * operation followed by the {@code after} operation. If performing either
      * operation throws an exception, it is relayed to the caller of the
      * composed operation. If performing this operation throws an exception,
      * the {@code after} operation will not be performed.
      *
      * @param after the operation to perform after this operation
-     * @return a composed {@code TriConsumer} that performs in sequence this
+     * @return a composed {@code ThrowableBiConsumer} that performs in sequence this
      * operation followed by the {@code after} operation
      * @throws NullPointerException if {@code after} is null
      */
-    default TriConsumer<T, U, V> andThen(TriConsumer<? super T, ? super U, ? super V> after) {
+    default ThrowableBiConsumer<T, U, V> andThen(ThrowableBiConsumer<? super T, ? super U, ? extends V> after) {
         Check.notNull(after, "after");
-        return (t1, t2, t3) -> {
-            this.accept(t1, t2, t3);
-            after.accept(t1, t2, t3);
+        return (t, u) -> {
+            this.accept(t, u);
+            after.accept(t, u);
         };
     }
+
 }

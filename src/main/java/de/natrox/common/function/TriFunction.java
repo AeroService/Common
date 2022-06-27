@@ -17,49 +17,49 @@
 package de.natrox.common.function;
 
 import de.natrox.common.validate.Check;
-import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.function.Function;
 
 /**
- * Represents a function that accepts three arguments and produces a result. This is the three-arity specialization of
- * {@link Function}.
+ * Represents a function that accepts three arguments and produces a result.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
  * whose functional method is {@link #apply(Object, Object, Object)}.
  *
- * @param <T1> the type of the first argument to the function
- * @param <T2> the type of the second argument to the function
- * @param <T3> the type of the third argument to the function
- * @param <R>  the type of the result of the function
+ * @param <T> the type of the first input to the function
+ * @param <U> the type of the second input to the function
+ * @param <V> the type of the third input to the function
+ * @param <R> the type of the result of the function
  * @see Function
  */
 @FunctionalInterface
-public interface TriFunction<T1, T2, T3, R> {
+public interface TriFunction<T, U, V, R> {
 
     /**
      * Applies this function to the given arguments.
      *
-     * @param t1 the first function argument
-     * @param t2 the second function argument
-     * @param t3 the third function argument
+     * @param t the first function argument
+     * @param u the second function argument
+     * @param v the third function argument
      * @return the function result
      */
-    R apply(@UnknownNullability T1 t1, @UnknownNullability T2 t2, @UnknownNullability T3 t3);
+    R apply(T t, U u, V v);
 
     /**
-     * Returns a composed function that first applies this function to its input, and then applies the {@code after}
-     * function to the result. If evaluation of either function throws an exception, it is relayed to the caller of the
-     * composed function.
+     * Returns a composed {@code TriFunction} that first applies this function to
+     * its input, and then applies the {@code after} function to the result.
+     * If evaluation of either function throws an exception, it is relayed to
+     * the caller of the composed function.
      *
-     * @param <V>   the type of output of the {@code after} function, and of the composed function
+     * @param <X>   the type of output of the {@code after} function, and of the
+     *              composed function
      * @param after the function to apply after this function is applied
-     * @return a composed function that first applies this function and then applies the {@code after} function
+     * @return a composed function that first applies this function and then
+     * applies the {@code after} function
      * @throws NullPointerException if after is null
      */
-    default <V> TriFunction<T1, T2, T3, V> andThen(Function<? super R, ? extends V> after) {
+    default <X> TriFunction<T, U, V, X> andThen(Function<? super R, ? extends X> after) {
         Check.notNull(after, "after");
-        return (T1 t1, T2 t2, T3 t3) -> after.apply(apply(t1, t2, t3));
+        return (T t, U u, V v) -> after.apply(apply(t, u, v));
     }
-
 }

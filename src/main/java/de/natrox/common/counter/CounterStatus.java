@@ -17,22 +17,20 @@
 package de.natrox.common.counter;
 
 /**
- * Represents the different statuses for a {@link Counter}
+ * Represents the different statuses for a {@link Counter}.
  */
 public enum CounterStatus {
 
     /**
-     * The {@link Counter} is currently not running, it can be started at any given time.
+     * The singleton instance for the status while the counter is not running.
      */
     IDLING,
     /**
-     * The {@link Counter} is currently running and performing actions.
-     * It can be interrupted or paused at any time.
+     * The singleton instance for the status while the counter is running and performing actions.
      */
     RUNNING,
     /**
-     * The {@link Counter} is currently paused, it is not performing any actions.
-     * It can be resumed at any time.
+     * The singleton instance for the status while the counter is paused and not performing any actions.
      */
     PAUSED
 }

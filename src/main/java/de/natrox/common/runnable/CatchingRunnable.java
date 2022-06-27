@@ -20,7 +20,9 @@ import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Runnable that prints exceptions thrown
+ * Represents a {@link Runnable} that prints exceptions thrown.
+ *
+ * @see Runnable
  */
 public record CatchingRunnable(Runnable delegate) implements Runnable {
 

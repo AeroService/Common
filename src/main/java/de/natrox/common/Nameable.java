@@ -27,7 +27,7 @@ public interface Nameable {
     /**
      * Returns the name of this instance.
      *
-     * @return the name of this instance.
+     * @return the name
      */
     @NotNull String name();
 

@@ -22,7 +22,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 /**
- * Function that prints exceptions thrown
+ * Represents a {@link Function} that prints exceptions thrown.
+ *
+ * @param <T> the type of the first argument to the operation
+ * @see Function
  */
 public record CatchingFunction<T, R>(Function<T, R> delegate) implements Function<T, R> {
 

@@ -16,6 +16,9 @@
 
 package de.natrox.common.task;
 
+/**
+ * Represents a task that is scheduled to run.
+ */
 public sealed interface Task permits TaskImpl.AbstractTask {
 
     /**

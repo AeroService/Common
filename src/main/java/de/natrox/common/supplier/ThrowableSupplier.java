@@ -16,27 +16,31 @@
 
 package de.natrox.common.supplier;
 
-import org.jetbrains.annotations.UnknownNullability;
+import java.util.function.Supplier;
 
 /**
- * Represents a function that accepts zero arguments and returns some value.
- * Function might throw a checked exception instance.
+ * Represents a supplier of results.
+ * Function might throw a checked {@link Throwable}.
+ *
+ * <p>There is no requirement that a new or distinct result be returned each
+ * time the supplier is invoked.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
  * whose functional method is {@link #get()}.
  *
- * @param <O> the type of argument supplied
- * @param <T> the type of the potentially thrown {@link Throwable}
+ * @param <T> the type of results supplied by this supplier
+ * @param <U> the type of the potentially thrown {@link Throwable}
+ * @see Supplier
  */
 @FunctionalInterface
-public interface ThrowableSupplier<O, T extends Throwable> {
+public interface ThrowableSupplier<T, U extends Throwable> {
 
     /**
-     * Returns a result, potentially throwing an exception.
+     * Gets a result.
      *
      * @return a result
-     * @throws T the potentially thrown {@link Throwable}
+     * @throws U the potentially thrown {@link Throwable}
      */
-    @UnknownNullability O get() throws T;
+    T get() throws U;
 
 }

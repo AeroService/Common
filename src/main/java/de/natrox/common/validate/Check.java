@@ -24,7 +24,7 @@ import java.text.MessageFormat;
 import java.util.Objects;
 
 /**
- * Convenient class to check for common exceptions.
+ * Represents a convenient class to check for common exceptions.
  */
 public final class Check {
 
