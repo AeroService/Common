@@ -1,44 +1,59 @@
-/*
- * Copyright 2020-2022 NatroxMC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package de.natrox.eventbus;
 
-package de.natrox.eventbus;import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Test;
 
-public class EventBusTest {
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static de.natrox.common.validate.Check.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class EventBusTest {
 
     @Test
-    public void test() {
+    void callTest() {
         EventBus eventBus = EventBus.create();
 
-        eventBus.register(TestEvent.class, event -> {
+        AtomicBoolean result = new AtomicBoolean(false);
+        EventListener<?> listener = EventListener.of(EventTest.class, eventTest -> result.set(true));
+        eventBus.register(listener);
+        assertFalse(result.get(), "The event should not be called before the call");
+        eventBus.call(new EventTest());
+        assertTrue(result.get(), "The event should be called after the call");
 
-        });
-        eventBus.register(EventListener.of(TestEvent.class, event -> {
+        // Test removal
+        result.set(false);
+        eventBus.unregister(listener);
+        eventBus.call(new EventTest());
+        assertFalse(result.get(), "The event should not be called after the removal");
+    }
 
-        }));
+    @Test
+    void testCancellable() {
+        EventBus eventBus = EventBus.create();
+        AtomicBoolean result = new AtomicBoolean(false);
+        EventListener<?> listener = EventListener
+            .builder(CancellableTest.class)
+            .handler(event -> {
+                event.setCancelled(true);
+                result.set(true);
+                assertTrue(event.isCancelled(), "The event should be cancelled");
+            }).build();
+        eventBus.register(listener);
+        eventBus.call(new CancellableTest());
+        assertTrue(result.get(), "The event should be called after the call");
 
-        eventBus.register(
-            EventListener
-                .builder(TestEvent.class)
-                .condition(event -> true)
-                .condition(event -> true)
-                .handler(event -> System.out.println("Test3"))
-                .build()
-        );
+        // Test cancelling
+        eventBus.register(CancellableTest.class, event -> fail("The event must have been cancelled"));
+        eventBus.call(new CancellableTest());
+    }
 
-        eventBus.call(new TestEvent("value"));
+    static class EventTest {
+
+    }
+
+    static class CancellableTest extends AbstractCancellableEvent {
+
     }
 
 }
