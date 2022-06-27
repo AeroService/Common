@@ -22,7 +22,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 /**
- * Supplier that prints exceptions thrown
+ * Represents a {@link Runnable} that prints exceptions thrown.
+ *
+ * @param <T> the type of the first argument to the operation
+ *
+ * @see Runnable
  */
 public record CatchingSupplier<T>(Supplier<T> delegate) implements Supplier<T> {
 
