@@ -22,23 +22,6 @@ public class QuadFunctionTest {
     @Test
     void nullTest() {
         QuadFunction<Integer, Integer, Integer, Integer,  Integer> quadFunction = this::doMath;
-
-        /* Every possibility with null and int */
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(5, 1, 7, 2));
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(null, 1, 7, 2));
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(5, null, 7, 2));
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(null, null, 7, 2));
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(5, 1, null, 2));
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(null, 1, null, 2));
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(5, null, null, 2));
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(null, null, null, 2));
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(5, 1, 7, null));
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(null, 1, 7, null));
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(5, null, 7, null));
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(null, null, 7, null));
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(5, 1, null, null));
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(null, 1, null, null));
-        assertThrows(NullPointerException.class, () -> quadFunction.apply(5, null, null, null));
         assertThrows(NullPointerException.class, () -> quadFunction.apply(null, null, null, null));
     }
 

@@ -24,14 +24,6 @@ class TriFunctionTest {
     @Test
     void nullTest() {
         TriFunction<Integer, Integer, Integer, Integer> triFunction = this::doMath;
-
-        /* Every possibility with null and int */
-        assertThrows(NullPointerException.class, () -> triFunction.apply(null, 1, 7));
-        assertThrows(NullPointerException.class, () -> triFunction.apply(5, null, 7));
-        assertThrows(NullPointerException.class, () -> triFunction.apply(5, 1, null));
-        assertThrows(NullPointerException.class, () -> triFunction.apply(null, null, 7));
-        assertThrows(NullPointerException.class, () -> triFunction.apply(null, 1, null));
-        assertThrows(NullPointerException.class, () -> triFunction.apply(5, null, null));
         assertThrows(NullPointerException.class, () -> triFunction.apply(null, null, null));
     }
 
