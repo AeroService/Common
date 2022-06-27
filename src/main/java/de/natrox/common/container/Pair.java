@@ -18,6 +18,8 @@ package de.natrox.common.container;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * This class can capture 2 references of 2 types and set or clear the data using first() and
  * second(). It can be used to return multiple objects of a method, or to easily capture multiple
@@ -85,6 +87,6 @@ public final class Pair<A, B> {
         if (!obj.getClass().equals(this.getClass()))
             return false;
         Pair<?, ?> that = (Pair<?, ?>) obj;
-        return this.first() == that.first() && this.second() == that.second();
+        return Objects.equals(this.first(), that.first()) && Objects.equals(this.second(), that.second());
     }
 }
