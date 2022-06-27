@@ -102,6 +102,8 @@ public final class Triple<A, B, C> {
         if (!obj.getClass().equals(this.getClass()))
             return false;
         Triple<?, ?, ?> that = (Triple<?, ?, ?>) obj;
-        return Objects.equals(this.first(), that.first()) && Objects.equals(this.second(), that.second()) && Objects.equals(this.third(), that.third());
+        return Objects.deepEquals(this.first(), that.first())
+            && Objects.deepEquals(this.second(), that.second())
+            && Objects.deepEquals(this.third(), that.third());
     }
 }

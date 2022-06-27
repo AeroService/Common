@@ -87,6 +87,7 @@ public final class Pair<A, B> {
         if (!obj.getClass().equals(this.getClass()))
             return false;
         Pair<?, ?> that = (Pair<?, ?>) obj;
-        return Objects.equals(this.first(), that.first()) && Objects.equals(this.second(), that.second());
+        return Objects.deepEquals(this.first(), that.first())
+            && Objects.deepEquals(this.second(), that.second());
     }
 }
