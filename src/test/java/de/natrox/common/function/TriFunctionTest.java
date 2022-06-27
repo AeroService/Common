@@ -1,22 +1,19 @@
 package de.natrox.common.function;
 
-import org.jetbrains.annotations.UnknownNullability;
 import org.junit.jupiter.api.Test;
-
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TriFunctionTest {
 
     @Test
-    void applyTest1()  {
+    void applyTest1() {
         TriFunction<Integer, Integer, Integer, Integer> triFunction = this::doMath;
         assertEquals(28, triFunction.apply(5, 1, 7));
     }
 
     @Test
-    void applyTest2()  {
+    void applyTest2() {
         TriFunction<Integer, Long, Double, String> triFunction = this::concat;
         assertEquals("12345678.9", triFunction.apply(12, 34567L, 8.9D));
     }
@@ -28,7 +25,7 @@ class TriFunctionTest {
     }
 
     int doMath(int a, int b, int c) {
-        return a + 2*b + 3*c;
+        return a + 2 * b + 3 * c;
     }
 
     String concat(Object a, Object b, Object c) {
