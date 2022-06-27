@@ -37,7 +37,7 @@ import java.util.function.Function;
 public interface QuadFunction<T, U, V, W, R> {
 
     /**
-     * Applies this function to the given argument.
+     * Applies this function to the given arguments.
      *
      * @param t the first function argument
      * @param u the second function argument
