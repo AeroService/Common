@@ -25,7 +25,7 @@ import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Represents a task that is scheduled to run.
+ * Represents a task that is scheduled to run on a {@link Scheduler}.
  */
 public sealed interface Task permits TaskImpl {
 

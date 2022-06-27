@@ -16,20 +16,19 @@
 
 package de.natrox.common.task;
 
-import de.natrox.common.taskchain.TaskChain;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * Represents an executor for tasks of {@link TaskChain}.
+ * Represents an executor for {@link Task}s.
  */
 public interface TaskExecutor {
 
     /**
      * Returns whether the current thread is the main thread or not.
      *
-     * @return true, if the current thread is the main thread and false if not
+     * @return true, if the current thread is the main thread, false, if not
      */
     boolean isMainThread();
 
@@ -73,7 +72,7 @@ public interface TaskExecutor {
     /**
      * Returns whether this task executor is shut down or not.
      *
-     * @return true, if this task executor is shutdown and false if not
+     * @return true, if this task executor is shutdown, false, if not
      */
     boolean isShutdown();
 
