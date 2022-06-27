@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * Represents a function that accepts three arguments and produces a result.
+ * Represents a function that accepts two arguments and produces a result.
  * Function might throw a checked {@link Throwable}.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
@@ -36,7 +36,7 @@ import java.util.function.Function;
 public interface ThrowableBiFunction<T, U, R, V extends Throwable> {
 
     /**
-     * Applies this function to the given argument.
+     * Applies this function to the given arguments.
      *
      * @param t the first function argument
      * @param u the second function argument

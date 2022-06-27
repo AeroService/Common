@@ -17,29 +17,28 @@
 package de.natrox.common.consumer;
 
 import de.natrox.common.validate.Check;
-import org.jetbrains.annotations.UnknownNullability;
 
 /**
- * Represents an operation that accepts four input arguments and returns no
+ * Represents an operation that accepts one input argument and returns no
  * result. Unlike most other functional interfaces, {@code Consumer} is expected
  * to operate via side-effects. Function might throw a checked {@link Throwable}.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
  * whose functional method is {@link #accept(T)}.
  *
- * @param <T> the type of the first argument to the operation
+ * @param <T> the type of the argument to the operation
  * @param <U> the type of the potentially thrown {@link Throwable}
  */
 @FunctionalInterface
 public interface ThrowableConsumer<T, U extends Throwable> {
 
     /**
-     * Performs this operation on the given arguments, potentially throwing an exception.
+     * Performs this operation on the given argument, potentially throwing an exception.
      *
      * @param t the input argument
      * @throws U the potentially thrown {@link Throwable}
      */
-    void accept(@UnknownNullability T t) throws U;
+    void accept(T t) throws U;
 
     /**
      * Returns a composed {@code ThrowableConsumer} that performs, in sequence, this

@@ -36,7 +36,7 @@ import java.util.function.Function;
 public interface TriFunction<T, U, V, R> {
 
     /**
-     * Applies this function to the given argument.
+     * Applies this function to the given arguments.
      *
      * @param t the first function argument
      * @param u the second function argument
