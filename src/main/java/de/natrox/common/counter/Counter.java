@@ -120,16 +120,16 @@ public sealed interface Counter permits CounterImpl {
     @NotNull TimeUnit tickUnit();
 
     /**
-     * //TODO: ????
+     * Returns the value of the ticks this counter has done since the last start.
      *
-     * @return
+     * @return the tick amount
      */
     long tickedCount();
 
     /**
-     * Returns the value of the ticks this counter has done since the last start.
+     * Returns the current count value of this counter.
      *
-     * @return the tick amount
+     * @return the current count
      */
     long currentCount();
 

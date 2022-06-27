@@ -197,12 +197,12 @@ final class CounterImpl implements Counter {
         if (this.status != CounterStatus.RUNNING)
             return;
 
-        if (this.currentCount * this.step <= this.stopCount * this.step) {
+        if (this.currentCount * this.step < this.stopCount * this.step) {
             this.currentCount += this.step;
             this.handleTick();
         }
 
-        if ((this.currentCount - this.step) * this.step >= this.stopCount * this.step) {
+        if (this.currentCount * this.step >= this.stopCount * this.step) {
             this.handleFinish();
             this.cancel(null);
         }
