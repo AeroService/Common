@@ -28,14 +28,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
- * Represents a chain of tasks
+ * Represents a chain of {@link Task}s.
  */
 public sealed interface TaskChain permits TaskChainImpl {
 
     /**
-     * Creates a new task chain factory.
+     * Creates a new {@link TaskChain.Factory}, that can create new a task chain, that schedules the tasks with the specified {@link TaskExecutor}.
      *
-     * @param taskExecutor the {@link TaskExecutor} which should execute the tasks of the task chain
+     * @param taskExecutor the task executor that schedules the tasks
      * @return the created task chain factory
      */
     static TaskChain.@NotNull Factory createFactory(@NotNull TaskExecutor taskExecutor) {
@@ -48,7 +48,7 @@ public sealed interface TaskChain permits TaskChainImpl {
      * useful if you want to build the steps of the chain
      * dynamically and stop the chain under certain conditions.
      *
-     * @return this TaskChain, for chaining
+     * @return this task chain, for chaining
      */
     @NotNull TaskChain abort();
 
@@ -56,7 +56,7 @@ public sealed interface TaskChain permits TaskChainImpl {
      * Execute the task on the main thread
      *
      * @param task the task to execute
-     * @return this TaskChain, for chaining
+     * @return this task chain, for chaining
      */
     @NotNull TaskChain sync(@NotNull Task task);
 
@@ -64,7 +64,7 @@ public sealed interface TaskChain permits TaskChainImpl {
      * Execute the task on an extra thread
      *
      * @param task the task to execute
-     * @return this TaskChain, for chaining
+     * @return this task chain, for chaining
      */
     @NotNull TaskChain async(@NotNull Task task);
 
@@ -72,7 +72,7 @@ public sealed interface TaskChain permits TaskChainImpl {
      * Execute the task on the current thread
      *
      * @param task the task to execute
-     * @return this TaskChain, for chaining
+     * @return this task chain, for chaining
      */
     @NotNull TaskChain current(@NotNull Task task);
 
@@ -80,7 +80,7 @@ public sealed interface TaskChain permits TaskChainImpl {
      * Execute the task on the main thread
      *
      * @param futureTask the task to execute
-     * @return this TaskChain, for chaining
+     * @return this task chain, for chaining
      */
     @NotNull TaskChain syncFuture(Task.@NotNull FutureTask futureTask);
 
@@ -88,7 +88,7 @@ public sealed interface TaskChain permits TaskChainImpl {
      * Execute the task on an extra thread
      *
      * @param futureTask the task to execute
-     * @return this TaskChain, for chaining
+     * @return this task chain, for chaining
      */
     @NotNull TaskChain asyncFuture(Task.@NotNull FutureTask futureTask);
 
@@ -96,7 +96,7 @@ public sealed interface TaskChain permits TaskChainImpl {
      * Execute the task on the current thread
      *
      * @param futureTask the task to execute
-     * @return this TaskChain, for chaining
+     * @return this task chain, for chaining
      */
     @NotNull TaskChain currentFuture(Task.@NotNull FutureTask futureTask);
 
@@ -104,7 +104,7 @@ public sealed interface TaskChain permits TaskChainImpl {
      * Execute the task on the main thread
      *
      * @param callbackTask the task to execute
-     * @return this TaskChain, for chaining
+     * @return this task chain, for chaining
      */
     @NotNull TaskChain syncCallback(Task.@NotNull CallbackTask callbackTask);
 
@@ -112,7 +112,7 @@ public sealed interface TaskChain permits TaskChainImpl {
      * Execute the task on an extra thread
      *
      * @param callbackTask the task to execute
-     * @return this TaskChain, for chaining
+     * @return this task chain, for chaining
      */
     @NotNull TaskChain asyncCallback(Task.@NotNull CallbackTask callbackTask);
 
@@ -120,24 +120,24 @@ public sealed interface TaskChain permits TaskChainImpl {
      * Execute the task on the current thread
      *
      * @param callbackTask the task to execute
-     * @return this TaskChain, for chaining
+     * @return this task chain, for chaining
      */
     @NotNull TaskChain currentCallback(Task.@NotNull CallbackTask callbackTask);
 
     /**
      * Adds a delay to the batch execution.
      *
-     * @param duration the duration of the delay before next task
-     * @param timeUnit the {@link TimeUnit} in which the duration is specified
-     * @return this TaskChain, for chaining
+     * @param duration the time to delay by
+     * @param timeUnit the unit of time for {@code time}
+     * @return this task chain, for chaining
      */
     @NotNull TaskChain delay(@Range(from = 0, to = Long.MAX_VALUE) long duration, @NotNull TimeUnit timeUnit);
 
     /**
      * Adds a delay to the batch execution.
      *
-     * @param duration the {@link Duration} of the delay before next task
-     * @return this TaskChain, for chaining
+     * @param duration the duration of the delay
+     * @return this task chain, for chaining
      */
     default @NotNull TaskChain delay(@NotNull Duration duration) {
         Check.notNull(duration, "duration");
@@ -147,9 +147,9 @@ public sealed interface TaskChain permits TaskChainImpl {
     /**
      * Adds a delay to the batch execution.
      *
-     * @param duration     the duration of the delay before next task
-     * @param temporalUnit the {@link TemporalUnit} in which the duration is specified
-     * @return this TaskChain, for chaining
+     * @param duration     the time to delay by
+     * @param temporalUnit the unit of time for {@code time}
+     * @return this task chain, for chaining
      */
     default @NotNull TaskChain delay(@Range(from = 0, to = Long.MAX_VALUE) long duration, @NotNull TemporalUnit temporalUnit) {
         Check.notNull(temporalUnit, "temporalUnit");
@@ -157,16 +157,16 @@ public sealed interface TaskChain permits TaskChainImpl {
     }
 
     /**
-     * Finished adding tasks, begins executing them with a done notifier
+     * Finished adding tasks, begins executing them and calls a callback when the task has finished.
      *
-     * @param callback the {@link Consumer} to handle when the batch has finished completion
+     * @param callback the callback
      */
     void run(@Nullable Consumer<Boolean> callback);
 
     /**
-     * Finished adding tasks, begins executing them with a done notifier
+     * Finished adding tasks, begins executing them and calls a callback when the task has finished.
      *
-     * @param callback the {@link Runnable} to handle when the batch has finished completion
+     * @param callback the callback
      */
     default void run(@Nullable Runnable callback) {
         this.run(callback != null ? result -> callback.run() : null);
@@ -179,6 +179,9 @@ public sealed interface TaskChain permits TaskChainImpl {
         this.run((Consumer<Boolean>) null);
     }
 
+    /**
+     * Represents a factory for {@link TaskChain}s.
+     */
     interface Factory {
 
         /**
