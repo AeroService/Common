@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 public sealed interface Scheduler permits SchedulerImpl {
 
     /**
-     * Creates a scheduler, that schedules the tasks with the specified {@link TaskExecutor}.
+     * Creates a scheduler that schedules the tasks with the specified {@link TaskExecutor}.
      *
      * @param taskExecutor the task executor that schedules the tasks
      * @return the created scheduler
