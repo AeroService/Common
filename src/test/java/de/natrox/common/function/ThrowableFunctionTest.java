@@ -9,12 +9,12 @@ public class ThrowableFunctionTest {
     @Test
     void defaultApplyTest() {
         {
-            ThrowableFunction<String, Character, RuntimeException> function = this::firstChar;
+            ThrowableFunction<String, Character, IllegalArgumentException> function = this::firstChar;
             assertEquals('f', function.apply("foo"));
             assertEquals('b', function.apply("boo"));
         }
         {
-            ThrowableFunction<Double, Double, RuntimeException> function = this::inverse;
+            ThrowableFunction<Double, Double, StringIndexOutOfBoundsException> function = this::inverse;
             assertEquals(1D/2, function.apply(2D));
             assertEquals(2D, function.apply(1D/2));
         }
@@ -29,11 +29,11 @@ public class ThrowableFunctionTest {
     @Test
     void exceptionApplyTest() {
         {
-            ThrowableFunction<String, Character, RuntimeException> function = this::firstChar;
+            ThrowableFunction<String, Character, StringIndexOutOfBoundsException> function = this::firstChar;
             assertThrows(StringIndexOutOfBoundsException.class, ()  -> function.apply(""));
         }
         {
-            ThrowableFunction<Double, Double, RuntimeException> function = this::inverse;
+            ThrowableFunction<Double, Double, IllegalArgumentException> function = this::inverse;
             assertThrows(IllegalArgumentException.class, ()  -> function.apply(0D));
         }
         {
