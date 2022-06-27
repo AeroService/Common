@@ -42,18 +42,28 @@ class ConsumerTest {
     }
 
     @Test
-    void throwableSupplierTest() {
-        ThrowableConsumer<String, RuntimeException> consumer = this::stringConsumer;
+    void throwableConsumerTest() {
+        ThrowableConsumer<String, RuntimeException> consumer = this::throwRuntimeException;
         assertThrows(RuntimeException.class, () -> consumer.accept("foo"));
     }
 
     @Test
-    void catchingSupplierTest() {
-        CatchingConsumer<String> consumer = new CatchingConsumer<>(this::stringConsumer);
+    void throwableBiConsumerTest() {
+        ThrowableBiConsumer<String, String, RuntimeException> consumer = this::throwRuntimeException;
+        assertThrows(RuntimeException.class, () -> consumer.accept("foo", "foo"));
+    }
+
+    @Test
+    void catchingConsumerTest() {
+        CatchingConsumer<String> consumer = new CatchingConsumer<>(this::throwRuntimeException);
         assertThrows(RuntimeException.class, () -> consumer.accept("foo"));
     }
 
-    void stringConsumer(String s) throws RuntimeException {
+    void throwRuntimeException(String s) {
+        throw new RuntimeException();
+    }
+
+    void throwRuntimeException(String s, String s2) {
         throw new RuntimeException();
     }
 }
