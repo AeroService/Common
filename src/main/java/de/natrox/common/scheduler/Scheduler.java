@@ -26,9 +26,9 @@ import org.jetbrains.annotations.NotNull;
 public sealed interface Scheduler permits SchedulerImpl {
 
     /**
-     * Creates a scheduler scheduling the tasks with the passed {@link TaskExecutor}.
+     * Creates a scheduler, that schedules the tasks with the specified {@link TaskExecutor}.
      *
-     * @param taskExecutor the {@link TaskExecutor}
+     * @param taskExecutor the task executor that schedules the tasks
      * @return the created scheduler
      */
     static @NotNull Scheduler create(@NotNull TaskExecutor taskExecutor) {
@@ -37,24 +37,24 @@ public sealed interface Scheduler permits SchedulerImpl {
     }
 
     /**
-     * Initializes a new {@link Task.Builder} for creating a task.
+     * Creates a new {@link Task.Builder} for creating a task.
      *
-     * @param task the task to run when scheduled
-     * @return the task builder
+     * @param task the runnable to run
+     * @return the created task builder
      */
     @NotNull Task.Builder buildTask(@NotNull Runnable task);
 
     /**
      * Returns whether this scheduler is shut down or not.
      *
-     * @return true, if this scheduler is shut down and false if not
+     * @return true, if this scheduler is shut down, false, if not
      */
     boolean isShutdown();
 
     /**
      * Shutdowns the scheduler and cancel all running tasks.
      *
-     * @return true if this executor terminated and false if 10 seconds elapsed before termination
+     * @return true, if this executor terminated, false, if 10 seconds elapsed before termination
      * @throws InterruptedException if interrupted while waiting
      */
     boolean shutdown() throws InterruptedException;

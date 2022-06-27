@@ -32,14 +32,14 @@ public sealed interface Task permits TaskImpl {
     /**
      * Returns the scheduler on which the task is running.
      *
-     * @return the scheduler on which the task is running.
+     * @return the scheduler
      */
     @NotNull Scheduler owner();
 
     /**
      * Returns the current status of this task.
      *
-     * @return the current status of this task
+     * @return the status
      */
     @NotNull TaskStatus status();
 
@@ -50,12 +50,12 @@ public sealed interface Task permits TaskImpl {
     void cancel();
 
     /**
-     * Represents a fluent interface to schedule tasks.
+     * Represents a builder for a {@link Task}.
      */
     sealed interface Builder permits TaskImpl.BuilderImpl {
 
         /**
-         * Specifies that the task should delay its execution by the specified amount of time.
+         * Sets the delay for execution to the specified amount of time.
          *
          * @param time     the time to delay by
          * @param timeUnit the unit of time for {@code time}
@@ -64,7 +64,7 @@ public sealed interface Task permits TaskImpl {
         @NotNull Builder delay(long time, @NotNull TimeUnit timeUnit);
 
         /**
-         * Specifies that the task should delay its execution by the specified amount of time.
+         * Sets the delay for execution to the specified amount of time.
          *
          * @param duration the duration of the delay
          * @return this builder, for chaining
@@ -75,7 +75,7 @@ public sealed interface Task permits TaskImpl {
         }
 
         /**
-         * Specifies that the task should delay its execution by the specified amount of time.
+         * Sets the delay for execution to the specified amount of time.
          *
          * @param time         the time to delay by
          * @param temporalUnit the unit of time for {@code time}
@@ -87,7 +87,7 @@ public sealed interface Task permits TaskImpl {
         }
 
         /**
-         * Specifies that the task should continue running after waiting for the specified amount, until
+         * Sets that the task should continue running after waiting for the specified amount, until
          * it is cancelled.
          *
          * @param time     the time to delay by
@@ -97,7 +97,7 @@ public sealed interface Task permits TaskImpl {
         @NotNull Builder repeat(long time, @NotNull TimeUnit timeUnit);
 
         /**
-         * Specifies that the task should continue running after waiting for the specified amount, until
+         * Sets that the task should continue running after waiting for the specified amount, until
          * it is cancelled.
          *
          * @param duration the duration of the delay
@@ -109,7 +109,7 @@ public sealed interface Task permits TaskImpl {
         }
 
         /**
-         * Specifies that the task should continue running after waiting for the specified amount, until
+         * Sets that the task should continue running after waiting for the specified amount, until
          * it is cancelled.
          *
          * @param time         the time to delay by
@@ -136,22 +136,20 @@ public sealed interface Task permits TaskImpl {
         @NotNull Builder clearRepeat();
 
         /**
-         * Schedules this task for execution.
-         * 
-         * @param doneCallback the {@link Runnable} to handle when the task has finished
+         * Builds and schedules the task for execution and calls a callback when the task has finished.
+         *
+         * @param doneCallback the callback
          * @return the scheduled task
          */
         @NotNull Task schedule(@Nullable Runnable doneCallback);
 
         /**
-         * Schedules this task for execution.
+         * Builds and schedules the task for execution.
          *
          * @return the scheduled task
          */
         default @NotNull Task schedule() {
             return this.schedule(null);
         }
-
     }
-
 }

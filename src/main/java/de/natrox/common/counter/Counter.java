@@ -33,7 +33,7 @@ import java.util.function.Consumer;
 public sealed interface Counter permits CounterImpl {
 
     /**
-     * Create a {@link Builder} for a counter, that schedules the tasks with the specified {@link TaskExecutor}
+     * Create a {@link Builder} for a counter, that schedules the tasks with the specified {@link TaskExecutor}.
      *
      * @param taskExecutor the task executor that schedules the tasks
      * @return the created builder
@@ -162,19 +162,19 @@ public sealed interface Counter permits CounterImpl {
         @NotNull Builder stopCount(@Range(from = Long.MIN_VALUE, to = Long.MAX_VALUE) long stopCount);
 
         /**
-         * Sets the value of the delay between two ticks.
+         * Sets the delay between two ticks.
          *
-         * @param tick     the tick value
-         * @param tickUnit the time unit in which the tick value is specified
+         * @param tick     the time to delay by
+         * @param tickUnit the unit of time for {@code time}
          * @return this builder, for chaining
          */
         @NotNull Builder tick(@Range(from = 0, to = Long.MAX_VALUE) long tick, @NotNull TimeUnit tickUnit);
 
         /**
-         * Sets the value of the delay between two ticks.
+         * Sets the delay between two ticks.
          *
-         * @param tick     the tick value
-         * @param tickUnit the chrono unit in which the tick value is specified
+         * @param tick     the time to delay by
+         * @param tickUnit the unit of time for {@code time}
          * @return this builder, for chaining
          */
         default @NotNull Builder tick(@Range(from = 0, to = Long.MAX_VALUE) long tick, @NotNull ChronoUnit tickUnit) {

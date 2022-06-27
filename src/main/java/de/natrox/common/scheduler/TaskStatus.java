@@ -16,12 +16,22 @@
 
 package de.natrox.common.scheduler;
 
+/**
+ * Represents the different statuses for a {@link Task} of {@link Scheduler}.
+ */
 public enum TaskStatus {
 
-    //TODO: Add java doc
-
+    /**
+     * The singleton instance for the status while the task is scheduled and is currently running.
+     */
     SCHEDULED,
+    /**
+     * The singleton instance for the status when the task was cancelled with {@link Task#cancel()}.
+     */
     CANCELLED,
+    /**
+     * The singleton instance for the status when task has run to completion. This is applicable only for tasks without a repeat.
+     */
     FINISHED
 
 }
