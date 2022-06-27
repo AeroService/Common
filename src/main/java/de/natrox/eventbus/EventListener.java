@@ -33,7 +33,6 @@ import java.util.function.Predicate;
  */
 public interface EventListener<T> {
 
-
     /**
      * Created a new {@link Builder} for an event listener.
      *
