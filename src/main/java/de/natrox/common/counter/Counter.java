@@ -16,6 +16,7 @@
 
 package de.natrox.common.counter;
 
+import de.natrox.common.builder.IBuilder;
 import de.natrox.common.task.TaskExecutor;
 import de.natrox.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
@@ -27,132 +28,154 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
- * Represents a clocked Counter, for example a countdown
+ * Represents a clocked Counter, for example a countdown.
  */
 public sealed interface Counter permits CounterImpl {
 
     /**
-     * Create a {@link Builder} for a {@link Counter} scheduling the tasks with the passed {@link TaskExecutor}
+     * Create a {@link Builder} for a counter, that schedules the tasks with the specified {@link TaskExecutor}.
      *
-     * @param taskExecutor the {@link TaskExecutor}
-     * @return the Builder
+     * @param taskExecutor the task executor that schedules the tasks
+     * @return the created builder
      */
     static Counter.@NotNull Builder builder(@NotNull TaskExecutor taskExecutor) {
+        Check.notNull(taskExecutor, "taskExecutor");
         return new CounterImpl.BuilderImpl(taskExecutor);
     }
 
     /**
-     * Starts the {@link Counter} if its {@link CounterStatus} is IDLING
-     * Sets the status to RUNNING
+     * Starts this counter if its status is {@link CounterStatus#IDLING}
+     * and sets the status to {@link CounterStatus#RUNNING}.
      */
     void start();
 
     /**
-     * Pauses the {@link Counter} if its {@link CounterStatus} is RUNNING
-     * Sets the status to PAUSED
+     * Pauses this counter if its status is {@link CounterStatus#RUNNING}
+     * and sets the status to {@link CounterStatus#PAUSED}.
      */
     void pause();
 
     /**
-     * Resumes the {@link Counter} if its {@link CounterStatus} is PAUSED
-     * Sets the status to RUNNING
+     * Resumes this counter if its status is {@link CounterStatus#PAUSED}
+     * and sets the status to {@link CounterStatus#RUNNING}.
      */
     void resume();
 
     /**
-     * Stops the {@link Counter} if its {@link CounterStatus} not IDLING
-     * Sets the status to IDLING
+     * Stops this counter if its status not {@link CounterStatus#IDLING}
+     * and sets the status to {@link CounterStatus#IDLING}.
      */
     void stop();
 
     /**
-     * @return true if, and only if the {@link Counter} its {@link CounterStatus} is PAUSED
+     * Returns whether this counter is paused or not, respectively
+     * if the status of this counter is {@link CounterStatus#PAUSED}.
+     *
+     * @return true, if this counter is paused, false, if not
      */
     boolean isPaused();
 
     /**
-     * @return true if, and only if the {@link Counter} its {@link CounterStatus} is RUNNING
+     * Returns whether this counter is running or not, respectively
+     * if the status of this counter is {@link CounterStatus#RUNNING}.
+     *
+     * @return true, if this counter is running, false, if not
      */
     boolean isRunning();
 
     /**
-     * @return the current {@link CounterStatus}
+     * Returns the current {@link CounterStatus}.
+     *
+     * @return the counter status
      */
     @NotNull CounterStatus status();
 
     /**
-     * @return the number with witch the {@link Counter} starts
+     * Returns the value at which this counter starts.
+     *
+     * @return the start value
      */
     long startCount();
 
     /**
-     * @return the number with witch the {@link Counter} stops
+     * Returns the value at which this counter stops.
+     *
+     * @return the stop value
      */
     long stopCount();
 
     /**
-     * @return the value of a single tick
+     * Returns the value of a single tick.
+     *
+     * @return the tick value
      */
     long tickValue();
 
     /**
-     * @return the amount of counted numbers after start
-     */
-    long tickedCount();
-
-    /**
-     * @return the amount of counted numbers after start
-     */
-    long currentCount();
-
-    /**
-     * Sets the current number the specified value
+     * Returns the {@link TimeUnit} in which the value of a single tick is specified.
      *
-     * @param currentCount the new current number
-     */
-    void currentCount(long currentCount);
-
-    /**
-     * @return the {@link TimeUnit} to multiply with the tickValue to get the delay between two ticks
+     * @return the time unit
+     * @see #tickValue()
      */
     @NotNull TimeUnit tickUnit();
 
     /**
-     * Represents a Builder for a {@link Counter}
+     * Returns the value of the ticks this counter has done since the last start.
+     *
+     * @return the tick amount
      */
-    sealed interface Builder permits CounterImpl.BuilderImpl {
+    long tickedCount();
+
+    /**
+     * Returns the current count value of this counter.
+     *
+     * @return the current count
+     */
+    long currentCount();
+
+    /**
+     * Sets the current count value to the specified value.
+     *
+     * @param count the value to set
+     */
+    void setCurrentCount(long count);
+
+    /**
+     * Represents a builder for a {@link Counter}.
+     */
+    sealed interface Builder extends IBuilder<Counter> permits CounterImpl.BuilderImpl {
 
         /**
-         * Sets the startCount to the specified value
+         * Sets the value at which the counter should start.
          *
-         * @param startCount the startCount
-         * @return the {@link Builder}
+         * @param startCount the start value
+         * @return this builder, for chaining
          */
-        @NotNull Builder startCount(long startCount);
+        @NotNull Builder startCount(@Range(from = Long.MIN_VALUE, to = Long.MAX_VALUE) long startCount);
 
         /**
-         * Sets the stopCount to the specified value
+         * Sets the value at which this counter should stop.
          *
-         * @param stopCount the stopCount
-         * @return the {@link Builder}
+         * @param stopCount the stop value
+         * @return this builder, for chaining
          */
-        @NotNull Builder stopCount(long stopCount);
+        @NotNull Builder stopCount(@Range(from = Long.MIN_VALUE, to = Long.MAX_VALUE) long stopCount);
 
         /**
-         * Sets the delay between two ticks
+         * Sets the delay between two ticks.
          *
-         * @param tick     the amount of tickUnits needed to the next tick
-         * @param tickUnit the matching type to the tick parameter
-         * @return the {@link Builder}
+         * @param tick     the time to delay by
+         * @param tickUnit the unit of time for {@code time}
+         * @return this builder, for chaining
          */
         @NotNull Builder tick(@Range(from = 0, to = Long.MAX_VALUE) long tick, @NotNull TimeUnit tickUnit);
 
         /**
-         * Sets the delay between two ticks
+         * Sets the delay between two ticks.
          *
-         * @param tick     the amount of tickUnits needed to the next tick
-         * @param tickUnit the matching type to the tick parameter
-         * @return the {@link Builder}
+         * @param tick     the time to delay by
+         * @param tickUnit the unit of time for {@code time}
+         * @return this builder, for chaining
          */
         default @NotNull Builder tick(@Range(from = 0, to = Long.MAX_VALUE) long tick, @NotNull ChronoUnit tickUnit) {
             Check.argCondition(tick <= 0, "tick must be positive");
@@ -161,46 +184,43 @@ public sealed interface Counter permits CounterImpl {
         }
 
         /**
-         * Sets the startHandler
-         * Gets executed if the {@link Counter} is started
+         * Sets a callback which gets called when the counter is started.
          *
-         * @param startHandler a consumer consuming the counter
-         * @return the {@link Builder}
+         * @param startCallback the callback
+         * @return this builder, for chaining
          */
-        @NotNull Builder startHandler(@Nullable Consumer<Counter> startHandler);
+        @NotNull Builder startCallback(@Nullable Consumer<Counter> startCallback);
 
         /**
-         * Sets the tickHandler
-         * Gets executed if the {@link Counter} ticked
+         * Sets a callback which gets called when the counter ticks.
          *
-         * @param tickHandler a consumer consuming the counter
-         * @return the {@link Builder}
+         * @param tickCallback the callback
+         * @return this builder, for chaining
          */
-        @NotNull Builder tickHandler(@Nullable Consumer<Counter> tickHandler);
+        @NotNull Builder tickCallback(@Nullable Consumer<Counter> tickCallback);
 
         /**
-         * Sets the finishHandler
-         * Gets executed if the {@link Counter} finished counting
+         * Sets a callback which gets called when the counter is finished.
          *
-         * @param finishHandler a consumer consuming the counter
-         * @return the {@link Builder}
+         * @param finishCallback the callback
+         * @return this builder, for chaining
          */
-        @NotNull Builder finishHandler(@Nullable Consumer<Counter> finishHandler);
+        @NotNull Builder finishCallback(@Nullable Consumer<Counter> finishCallback);
 
         /**
-         * Sets the cancelHandler
-         * Gets executed if the {@link Counter} is canceled
+         * Sets a callback which gets called when the counter is cancelled.
          *
-         * @param cancelHandler a consumer consuming the counter
-         * @return the {@link Builder}
+         * @param cancelCallback the callback
+         * @return this builder, for chaining
          */
-        @NotNull Builder cancelHandler(@Nullable Consumer<Counter> cancelHandler);
+        @NotNull Builder cancelCallback(@Nullable Consumer<Counter> cancelCallback);
 
         /**
-         * Builds the {@link Counter}
+         * Returns the {@link Counter} that should be built.
          *
-         * @return the Counter
+         * @return the built counter
          */
+        @Override
         @NotNull Counter build();
 
     }

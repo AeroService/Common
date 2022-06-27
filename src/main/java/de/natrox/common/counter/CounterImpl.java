@@ -130,8 +130,8 @@ final class CounterImpl implements Counter {
     }
 
     @Override
-    public void currentCount(long currentCount) {
-        this.currentCount = currentCount;
+    public void setCurrentCount(long count) {
+        this.currentCount = count;
     }
 
     @Override
@@ -197,12 +197,12 @@ final class CounterImpl implements Counter {
         if (this.status != CounterStatus.RUNNING)
             return;
 
-        if (this.currentCount * this.step <= this.stopCount * this.step) {
+        if (this.currentCount * this.step < this.stopCount * this.step) {
             this.currentCount += this.step;
             this.handleTick();
         }
 
-        if ((this.currentCount - this.step) * this.step >= this.stopCount * this.step) {
+        if (this.currentCount * this.step >= this.stopCount * this.step) {
             this.handleFinish();
             this.cancel(null);
         }
@@ -248,26 +248,26 @@ final class CounterImpl implements Counter {
         }
 
         @Override
-        public Counter.@NotNull Builder startHandler(@Nullable Consumer<Counter> startHandler) {
-            this.startHandler = startHandler;
+        public Counter.@NotNull Builder startCallback(@Nullable Consumer<Counter> startCallback) {
+            this.startHandler = startCallback;
             return this;
         }
 
         @Override
-        public Counter.@NotNull Builder tickHandler(@Nullable Consumer<Counter> tickHandler) {
-            this.tickHandler = tickHandler;
+        public Counter.@NotNull Builder tickCallback(@Nullable Consumer<Counter> tickCallback) {
+            this.tickHandler = tickCallback;
             return this;
         }
 
         @Override
-        public Counter.@NotNull Builder finishHandler(@Nullable Consumer<Counter> finishHandler) {
-            this.finishHandler = finishHandler;
+        public Counter.@NotNull Builder finishCallback(@Nullable Consumer<Counter> finishCallback) {
+            this.finishHandler = finishCallback;
             return this;
         }
 
         @Override
-        public Counter.@NotNull Builder cancelHandler(@Nullable Consumer<Counter> cancelHandler) {
-            this.cancelHandler = cancelHandler;
+        public Counter.@NotNull Builder cancelCallback(@Nullable Consumer<Counter> cancelCallback) {
+            this.cancelHandler = cancelCallback;
             return this;
         }
 

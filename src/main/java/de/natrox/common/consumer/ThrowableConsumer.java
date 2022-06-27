@@ -16,27 +16,48 @@
 
 package de.natrox.common.consumer;
 
-import org.jetbrains.annotations.UnknownNullability;
+import de.natrox.common.validate.Check;
 
 /**
- * Represents a function that accepts one argument and does not return any value;
- * Function might throw a checked exception instance.
+ * Represents an operation that accepts one input argument and returns no
+ * result. Unlike most other functional interfaces, {@code Consumer} is expected
+ * to operate via side-effects. Function might throw a checked {@link Throwable}.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
- * whose functional method is {@link #accept(E)}.
+ * whose functional method is {@link #accept(T)}.
  *
- * @param <E> the type of the first argument to the operation
- * @param <T> the type of the potentially thrown {@link Throwable}
+ * @param <T> the type of the argument to the operation
+ * @param <U> the type of the potentially thrown {@link Throwable}
  */
 @FunctionalInterface
-public interface ThrowableConsumer<E, T extends Throwable> {
+public interface ThrowableConsumer<T, U extends Throwable> {
 
     /**
-     * Consume the supplied argument, potentially throwing an exception.
+     * Performs this operation on the given argument, potentially throwing an exception.
      *
-     * @param element the input argument
-     * @throws T the potentially thrown {@link Throwable}
+     * @param t the input argument
+     * @throws U the potentially thrown {@link Throwable}
      */
-    void accept(@UnknownNullability E element) throws T;
+    void accept(T t) throws U;
+
+    /**
+     * Returns a composed {@code ThrowableConsumer} that performs, in sequence, this
+     * operation followed by the {@code after} operation. If performing either
+     * operation throws an exception, it is relayed to the caller of the
+     * composed operation. If performing this operation throws an exception,
+     * the {@code after} operation will not be performed.
+     *
+     * @param after the operation to perform after this operation
+     * @return a composed {@code ThrowableConsumer} that performs in sequence this
+     * operation followed by the {@code after} operation
+     * @throws NullPointerException if {@code after} is null
+     */
+    default ThrowableConsumer<T, U> andThen(ThrowableConsumer<? super T, ? extends U> after) {
+        Check.notNull(after, "after");
+        return (t) -> {
+            this.accept(t);
+            after.accept(t);
+        };
+    }
 
 }

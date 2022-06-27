@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /**
- * Holds some utility methods to work with uuids.
+ * Represents utility class that holds some methods to work with uuids.
  */
 public final class UuidUtil {
 
@@ -34,8 +34,8 @@ public final class UuidUtil {
     /**
      * Returns the {@link UUID} of a string.
      *
-     * @param name the string for the generation of the {@link UUID}
-     * @return the {@link UUID} of the specified string
+     * @param name the string for the generation
+     * @return the uuid
      */
     public static @NotNull UUID fromName(@NotNull String name) {
         Check.notNull(name, "name");

@@ -21,19 +21,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 /**
- * This class can capture 2 references of 2 types and set or clear the data using first() and
- * second(). It can be used to return multiple objects of a method, or to easily capture multiple
- * objects without creating their own class.
+ * Represents a class that can capture two references of two types and set or
+ * clear the data using {@link #setFirst(Object)} and {@link #setSecond(Object)}.
+ * It can be used to return multiple objects of a method, or to easily
+ * capture multiple objects without creating their own class.
  *
- * @param <A> the first type, which you want to define
- * @param <B> the second type which you want to define
+ * @param <T> the type of the first reference
+ * @param <U> the type of the second reference
  */
-public final class Pair<A, B> {
+public final class Pair<T, U> {
 
-    private A first;
-    private B second;
+    private T first;
+    private U second;
 
-    private Pair(A first, B second) {
+    private Pair(T first, U second) {
         this.first = first;
         this.second = second;
     }
@@ -41,41 +42,63 @@ public final class Pair<A, B> {
     /**
      * Creates a new pair.
      *
-     * @param x   first value
-     * @param y   second value
-     * @param <X> type of first value
-     * @param <Y> type of second value
-     * @return the new created pair
+     * @param first  the first reference
+     * @param second the second reference
+     * @param <T>    the type of the first reference
+     * @param <U>    the type of the second reference
+     * @return the created pair
      */
-    public static <X, Y> @NotNull Pair<X, Y> of(X x, Y y) {
-        return new Pair<>(x, y);
+    public static <T, U> @NotNull Pair<T, U> of(T first, U second) {
+        return new Pair<>(first, second);
     }
 
     /**
      * Creates a new empty pair.
      *
-     * @param <X> type of first value
-     * @param <Y> type of second value
+     * @param <T> the type of the first reference
+     * @param <U> the type of the second reference
      * @return the new created pair
      */
-    public static <X, Y> @NotNull Pair<X, Y> empty() {
+    public static <T, U> @NotNull Pair<T, U> empty() {
         return new Pair<>(null, null);
     }
 
-    public A first() {
+    /**
+     * Returns the first reference.
+     *
+     * @return the first reference
+     */
+    public T first() {
         return first;
     }
 
-    public Pair<A, B> setFirst(A first) {
+    /**
+     * Sets the first reference.
+     *
+     * @param first the first reference
+     * @return this pair, for chaining
+     */
+    public Pair<T, U> setFirst(T first) {
         this.first = first;
         return this;
     }
 
-    public B second() {
+    /**
+     * Returns the second reference.
+     *
+     * @return the second reference
+     */
+    public U second() {
         return second;
     }
 
-    public Pair<A, B> setSecond(B second) {
+    /**
+     * Sets the second reference.
+     *
+     * @param second the second reference
+     * @return this pair, for chaining
+     */
+    public Pair<T, U> setSecond(U second) {
         this.second = second;
         return this;
     }
