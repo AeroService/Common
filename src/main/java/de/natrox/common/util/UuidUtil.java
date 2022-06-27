@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /**
- * Represents utility class that hols some methods to work with uuids.
+ * Represents utility class that holds some methods to work with uuids.
  */
 public final class UuidUtil {
 

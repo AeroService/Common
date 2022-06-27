@@ -72,7 +72,7 @@ public interface TaskExecutor {
     /**
      * Returns whether this task executor is shut down or not.
      *
-     * @return true, if this task executor is shutdown, false, if not
+     * @return true, if this task executor is shut down, false, if not
      */
     boolean isShutdown();
 
