@@ -92,4 +92,14 @@ public final class Triple<A, B, C> {
         this.third = third;
         return this;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!obj.getClass().equals(this.getClass()))
+            return false;
+        Triple<?, ?, ?> that = (Triple<?, ?, ?>) obj;
+        return this.first() == that.first() && this.second() == that.second() && this.third() == that.third();
+    }
 }

@@ -77,4 +77,14 @@ public final class Pair<A, B> {
         this.second = second;
         return this;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!obj.getClass().equals(this.getClass()))
+            return false;
+        Pair<?, ?> that = (Pair<?, ?>) obj;
+        return this.first() == that.first() && this.second() == that.second();
+    }
 }
