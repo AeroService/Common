@@ -17,22 +17,17 @@
 package de.natrox.common.validate;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CheckTest {
 
     @Test
     void notNullTest() {
-        Object nullObject = null;
-        Object notNullObject = "foo";
+        assertThrows(NullPointerException.class, () -> Check.notNull(null, "nullObject"));
+        assertDoesNotThrow(() -> Check.notNull("foo", "nullObject"));
 
-        assertThrows(NullPointerException.class, () -> Check.notNull(nullObject, "nullObject"));
-        assertDoesNotThrow(() -> Check.notNull(notNullObject, "nullObject"));
-
-        assertThrows(NullPointerException.class, () -> Check.notNull(nullObject, "{0}Object", "null"));
-        assertDoesNotThrow(() -> Check.notNull(notNullObject, "{0}Object", "null"));
+        assertThrows(NullPointerException.class, () -> Check.notNull(null, "{0}Object", "null"));
+        assertDoesNotThrow(() -> Check.notNull("foo", "{0}Object", "null"));
     }
 
     @Test
