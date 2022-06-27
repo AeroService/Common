@@ -8,20 +8,20 @@ class TriFunctionTest {
 
     @Test
     void applyTest1() {
-        TriFunction<Integer, Integer, Integer, Integer> triFunction = this::doMath;
-        assertEquals(28, triFunction.apply(5, 1, 7));
+        TriFunction<Integer, Integer, Integer, Integer> function = this::doMath;
+        assertEquals(28, function.apply(5, 1, 7));
     }
 
     @Test
     void applyTest2() {
-        TriFunction<Integer, Long, Double, String> triFunction = this::concat;
-        assertEquals("12345678.9", triFunction.apply(12, 34567L, 8.9D));
+        TriFunction<Integer, Long, Double, String> function = this::concat;
+        assertEquals("12345678.9", function.apply(12, 34567L, 8.9D));
     }
 
     @Test
     void nullTest() {
-        TriFunction<Integer, Integer, Integer, Integer> triFunction = this::doMath;
-        assertThrows(NullPointerException.class, () -> triFunction.apply(null, null, null));
+        TriFunction<Integer, Integer, Integer, Integer> function = this::doMath;
+        assertThrows(NullPointerException.class, () -> function.apply(null, null, null));
     }
 
     int doMath(int a, int b, int c) {
