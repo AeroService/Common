@@ -2,19 +2,18 @@ package de.natrox.common.consumer;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TriConsumerTest {
 
-    private static int mathResult;
+    private static int doMathResult;
     private static String concatResult;
 
     @Test
     void acceptTest1() {
         TriConsumer<Integer, Integer, Integer> consumer = this::doMath;
         consumer.accept(5, 1, 7);
-        assertEquals(28, mathResult);
+        assertEquals(28, doMathResult);
     }
 
     @Test
@@ -31,7 +30,7 @@ class TriConsumerTest {
     }
 
     void doMath(int a, int b, int c) {
-        mathResult = a + 2 * b + 3 * c;
+        doMathResult = a + 2 * b + 3 * c;
     }
 
     void concat(Object a, Object b, Object c) {

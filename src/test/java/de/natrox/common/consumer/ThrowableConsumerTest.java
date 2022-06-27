@@ -1,9 +1,6 @@
 package de.natrox.common.consumer;
 
-import de.natrox.common.function.ThrowableFunction;
 import org.junit.jupiter.api.Test;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
