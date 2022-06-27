@@ -18,6 +18,8 @@ package de.natrox.common.container;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * This class can capture 3 references of 3 types and set or clear the data using first() and
  * second() and third(). It can be used to return multiple objects of a method, or to easily capture multiple
@@ -100,6 +102,6 @@ public final class Triple<A, B, C> {
         if (!obj.getClass().equals(this.getClass()))
             return false;
         Triple<?, ?, ?> that = (Triple<?, ?, ?>) obj;
-        return this.first() == that.first() && this.second() == that.second() && this.third() == that.third();
+        return Objects.equals(this.first(), that.first()) && Objects.equals(this.second(), that.second()) && Objects.equals(this.third(), that.third());
     }
 }
