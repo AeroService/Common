@@ -14,18 +14,18 @@ class ThrowableConsumerTest {
     void defaultApplyTest1() {
         ThrowableConsumer<String, IllegalArgumentException> consumer = this::firstChar;
         consumer.accept("foo");
-        assertEquals('f', firstCharResult);
+        assertEquals('f', firstCharResult, "Consumer should give expected output 'f' as the first char of \"foo\".");
         consumer.accept("boo");
-        assertEquals('b', firstCharResult);
+        assertEquals('b', firstCharResult, "Consumer should give expected output 'b' as the first char of \"boo\".");
     }
 
     @Test
     void defaultApplyTest2() {
         ThrowableConsumer<Double, StringIndexOutOfBoundsException> consumer = this::inverse;
         consumer.accept(2D);
-        assertEquals(1D / 2, invertResult);
+        assertEquals(1D / 2, invertResult, "Consumer should give expected output .5 as the multiplicative inverse of 2.");
         consumer.accept(1D / 2);
-        assertEquals(2D, invertResult);
+        assertEquals(2D, invertResult, "Consumer should give expected output 2 as the multiplicative inverse of .5.");
     }
 
     @Test
@@ -33,7 +33,7 @@ class ThrowableConsumerTest {
         try {
             ThrowableConsumer<Integer, Exception> consumer = this::sqrt;
             consumer.accept(16);
-            assertEquals(4.0, sqrtResult);
+            assertEquals(4.0, sqrtResult, "Consumer should give expected output 4 as the square root of 16.");
         } catch (Exception e) {
             fail();
         }
@@ -42,19 +42,22 @@ class ThrowableConsumerTest {
     @Test
     void exceptionApplyTest1() {
         ThrowableConsumer<String, StringIndexOutOfBoundsException> consumer = this::firstChar;
-        assertThrows(StringIndexOutOfBoundsException.class, () -> consumer.accept(""));
+        assertThrows(StringIndexOutOfBoundsException.class, () ->
+            consumer.accept(""), "Consumer should throw an exception if the arguments do not meet the preset conditions.");
     }
 
     @Test
     void exceptionApplyTest2() {
         ThrowableConsumer<Double, IllegalArgumentException> consumer = this::inverse;
-        assertThrows(IllegalArgumentException.class, () -> consumer.accept(0D));
+        assertThrows(IllegalArgumentException.class, () ->
+            consumer.accept(0D), "Consumer should throw an exception if the arguments do not meet the preset conditions.");
     }
 
     @Test
     void exceptionApplyTest3() {
         ThrowableConsumer<Integer, Exception> consumer = this::sqrt;
-        assertThrows(Exception.class, () -> consumer.accept(-1));
+        assertThrows(Exception.class, () ->
+            consumer.accept(-1), "Consumer should throw an exception if the arguments do not meet the preset conditions.");
     }
 
     void firstChar(String s) {
