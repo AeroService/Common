@@ -12,7 +12,7 @@ class UuidUtilTest {
     void fromNameTest() {
         assertEquals(UuidUtil.fromName("foo"), UuidUtil.fromName("foo"));
         assertNotEquals(UuidUtil.fromName("foo"), UuidUtil.fromName("boo"));
-        assertThrows(NullPointerException.class, () -> UuidUtil.fromName(null));
+        assertThrows(IllegalArgumentException.class, () -> UuidUtil.fromName(null));
         assertDoesNotThrow(() -> UuidUtil.fromName(""));
     }
 }
