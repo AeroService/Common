@@ -13,33 +13,33 @@ class ThrowableBiConsumerTest {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = (a, b) -> indicator.set(sum(a, b));
         consumer.accept(1, 2);
-        assertEquals(3, indicator.get(), "Indicator should indicate the input sum of 3.");
+        assertEquals(3, indicator.get(), "Indicator should indicate the input sum of 3");
         consumer.accept(2, 3);
-        assertEquals(5, indicator.get(), "Indicator should indicate the input sum of 5.");
+        assertEquals(5, indicator.get(), "Indicator should indicate the input sum of 5");
     }
 
     @Test
     void defaultAcceptTest2() {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableBiConsumer<Integer, Integer, Exception> consumer = (a, b) -> indicator.set(exceptionSum(a, b));
-        assertDoesNotThrow(() -> consumer.accept(1, 2), "Consumer should not throw an exception as the arguments are valid.");
-        assertEquals(3, indicator.get(), "Indicator should indicate the input sum of 3.");
-        assertDoesNotThrow(() -> consumer.accept(2, 3), "Consumer should not throw an exception as the arguments are valid.");
-        assertEquals(5, indicator.get(), "Indicator should indicate the input sum of 5.");
+        assertDoesNotThrow(() -> consumer.accept(1, 2), "Consumer should not throw an exception as the arguments are valid");
+        assertEquals(3, indicator.get(), "Indicator should indicate the input sum of 3");
+        assertDoesNotThrow(() -> consumer.accept(2, 3), "Consumer should not throw an exception as the arguments are valid");
+        assertEquals(5, indicator.get(), "Indicator should indicate the input sum of 5");
     }
 
     @Test
     void exceptionAcceptTest1() {
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = this::sum;
         assertThrows(IllegalArgumentException.class, () ->
-            consumer.accept(-5, 3), "Consumer should throw an exception if the arguments don't meet the conditions.");
+            consumer.accept(-5, 3), "Consumer should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
     void exceptionAcceptTest2() {
         ThrowableBiConsumer<Integer, Integer, Exception> consumer = this::exceptionSum;
         assertThrows(Exception.class, () ->
-            consumer.accept(-5, 3), "Consumer should throw an exception if the arguments don't meet the conditions.");
+            consumer.accept(-5, 3), "Consumer should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
@@ -49,16 +49,16 @@ class ThrowableBiConsumerTest {
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> operation = (a, b) -> indicator.set(this.sum(a, b));
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = operation.andThen(andThenConsumer);
         consumer.accept(1, 2);
-        assertEquals(0, indicator.get(), "Indicator should indicate the input sum minus the input sum, which equals zero.");
+        assertEquals(0, indicator.get(), "Indicator should indicate the input sum minus the input sum, which equals zero");
         consumer.accept(3, 2);
-        assertEquals(0, indicator.get(), "Indicator should indicate the input sum minus the input sum, which equals zero.");
+        assertEquals(0, indicator.get(), "Indicator should indicate the input sum minus the input sum, which equals zero");
     }
 
     @Test
     void andThenNullTest() {
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = this::sum;
         assertThrows(NullPointerException.class, () ->
-            consumer.andThen(null), "Consumer should throw a NullPointerException if the andThen consumer is invalid.");
+            consumer.andThen(null), "Consumer should throw a NullPointerException if the andThen consumer is invalid");
     }
 
     @Test
@@ -69,8 +69,8 @@ class ThrowableBiConsumerTest {
             throw new IllegalArgumentException();
         };
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = operation.andThen(andThenConsumer);
-        assertThrows(IllegalArgumentException.class, () -> consumer.accept(1, 2), "The operation should fail.");
-        assertEquals(0, indicator.get(), "AndThenConsumer should not have executed since the operation failed.");
+        assertThrows(IllegalArgumentException.class, () -> consumer.accept(1, 2), "The operation should fail");
+        assertEquals(0, indicator.get(), "AndThenConsumer should not have executed since the operation failed");
     }
 
     private int sum(int a, int b) {

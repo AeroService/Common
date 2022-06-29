@@ -45,7 +45,7 @@ class SchedulerTest {
             .buildTask(latch::countDown)
             .schedule();
         latch.await();
-        assertEquals(TaskStatus.FINISHED, task.status(), "The task should be done executing.");
+        assertEquals(TaskStatus.FINISHED, task.status(), "The task should be done executing");
     }
 
     @Test
@@ -56,8 +56,8 @@ class SchedulerTest {
             .schedule();
         task.cancel();
         Thread.sleep(200);
-        assertEquals(0, indicator.get(), "The indicator value should not have changed.");
-        assertEquals(TaskStatus.CANCELLED, task.status(), "The task should have been cancelled.");
+        assertEquals(0, indicator.get(), "The indicator value should not have changed");
+        assertEquals(TaskStatus.CANCELLED, task.status(), "The task should have been cancelled");
     }
 
     @Test

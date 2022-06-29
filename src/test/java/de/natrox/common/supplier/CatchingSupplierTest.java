@@ -13,9 +13,9 @@ public class CatchingSupplierTest {
     void defaultGetTest() {
         CatchingSupplier<Integer> supplier = new CatchingSupplier<>(this::a);
         a = 1;
-        assertEquals(1, supplier.get(), "Supplier should provide the input of 1.");
+        assertEquals(1, supplier.get(), "Supplier should provide the input of 1");
         a = 2;
-        assertEquals(2, supplier.get(), "Supplier should provide the input of 2.");
+        assertEquals(2, supplier.get(), "Supplier should provide the input of 2");
     }
 
     @Test
@@ -23,7 +23,7 @@ public class CatchingSupplierTest {
         CatchingSupplier<Integer> supplier = new CatchingSupplier<>(this::a);
         a = -1;
         assertThrows(IllegalArgumentException.class,
-            supplier::get, "Supplier should throw an exception if the arguments don't meet the conditions.");
+            supplier::get, "Supplier should throw an exception if the arguments don't meet the conditions");
     }
 
     int a() {

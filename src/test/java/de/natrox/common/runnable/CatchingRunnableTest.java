@@ -23,7 +23,7 @@ class CatchingRunnableTest {
         CatchingRunnable runnable = new CatchingRunnable(this::check);
         a = -1;
         assertThrows(IllegalArgumentException.class,
-            runnable::run, "Function should throw an exception if the arguments don't meet the conditions.");
+            runnable::run, "Function should throw an exception if the arguments don't meet the conditions");
     }
 
     private void check() {

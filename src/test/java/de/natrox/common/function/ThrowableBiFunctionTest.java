@@ -12,18 +12,18 @@ class ThrowableBiFunctionTest {
     @Test
     void defaultApplyTest1() {
         ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = this::sum;
-        assertEquals(3, function.apply(1, 2), "Function should return the input sum of 3.");
-        assertEquals(5, function.apply(2, 3), "Function should return the input sum of 5.");
+        assertEquals(3, function.apply(1, 2), "Function should return the input sum of 3");
+        assertEquals(5, function.apply(2, 3), "Function should return the input sum of 5");
     }
 
     @Test
     void defaultApplyTest2() {
         ThrowableBiFunction<Integer, Integer, Integer, Exception> function = this::exceptionSum;
         try {
-            assertEquals(3, function.apply(1, 2), "Function should return the input sum of 3.");
-            assertEquals(5, function.apply(2, 3), "Function should return the input sum of 5.");
+            assertEquals(3, function.apply(1, 2), "Function should return the input sum of 3");
+            assertEquals(5, function.apply(2, 3), "Function should return the input sum of 5");
         } catch (Exception e) {
-            fail("Function should not throw an exception as the arguments are valid.");
+            fail("Function should not throw an exception as the arguments are valid");
         }
     }
 
@@ -31,14 +31,14 @@ class ThrowableBiFunctionTest {
     void exceptionApplyTest1() {
         ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = this::sum;
         assertThrows(IllegalArgumentException.class, () ->
-            function.apply(-5, 3), "Function should throw an exception if the arguments don't meet the conditions.");
+            function.apply(-5, 3), "Function should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
     void exceptionApplyTest2() {
         ThrowableBiFunction<Integer, Integer, Integer, Exception> function = this::exceptionSum;
         assertThrows(Exception.class, () ->
-            function.apply(-5, 3), "Function should throw an exception if the arguments don't meet the conditions.");
+            function.apply(-5, 3), "Function should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
@@ -46,15 +46,15 @@ class ThrowableBiFunctionTest {
         Function<Integer, Integer> andThenFunction = (a) -> (0);
         ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> operation = this::sum;
         ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = operation.andThen(andThenFunction);
-        assertEquals(0, function.apply(1, 2), "Function should return zero.");
-        assertEquals(0, function.apply(2, 3), "Function should return zero.");
+        assertEquals(0, function.apply(1, 2), "Function should return zero");
+        assertEquals(0, function.apply(2, 3), "Function should return zero");
     }
 
     @Test
     void andThenNullTest() {
         ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = this::sum;
         assertThrows(NullPointerException.class, () ->
-            function.andThen(null), "Function should throw a NullPointerException if the andThen function is invalid.");
+            function.andThen(null), "Function should throw a NullPointerException if the andThen function is invalid");
     }
 
     @Test
@@ -65,8 +65,8 @@ class ThrowableBiFunctionTest {
             throw new IllegalArgumentException();
         };
         ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = operation.andThen(andThenFunction);
-        assertThrows(IllegalArgumentException.class, () -> function.apply(1, 2), "The operation should fail.");
-        assertEquals(0, indicator.get(), "AndThenFunction should not have executed since the operation failed.");
+        assertThrows(IllegalArgumentException.class, () -> function.apply(1, 2), "The operation should fail");
+        assertEquals(0, indicator.get(), "AndThenFunction should not have executed since the operation failed");
     }
 
     private int sum(int a, int b) {

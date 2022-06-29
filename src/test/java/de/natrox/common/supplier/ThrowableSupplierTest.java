@@ -12,9 +12,9 @@ class ThrowableSupplierTest {
     void defaultGetTest1() {
         ThrowableSupplier<Integer, IllegalArgumentException> supplier = this::a;
         a = 1;
-        assertEquals(1, supplier.get(), "Supplier should provide the input of 1.");
+        assertEquals(1, supplier.get(), "Supplier should provide the input of 1");
         a = 2;
-        assertEquals(2, supplier.get(), "Supplier should provide the input of 2.");
+        assertEquals(2, supplier.get(), "Supplier should provide the input of 2");
     }
 
     @Test
@@ -22,11 +22,11 @@ class ThrowableSupplierTest {
         ThrowableSupplier<Integer, Exception> supplier = this::exceptionA;
         try {
             a = 1;
-            assertEquals(1, supplier.get(), "Supplier should provide the input of 1.");
+            assertEquals(1, supplier.get(), "Supplier should provide the input of 1");
             a = 2;
-            assertEquals(2, supplier.get(), "Supplier should provide the input of 2.");
+            assertEquals(2, supplier.get(), "Supplier should provide the input of 2");
         } catch (Exception e) {
-            fail("Function should not throw an exception as the arguments are valid.");
+            fail("Function should not throw an exception as the arguments are valid");
         }
     }
 
@@ -35,7 +35,7 @@ class ThrowableSupplierTest {
         ThrowableSupplier<Integer, IllegalArgumentException> supplier = this::a;
         a = -1;
         assertThrows(IllegalArgumentException.class,
-            supplier::get, "Supplier should throw an exception if the arguments don't meet the conditions.");
+            supplier::get, "Supplier should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
@@ -43,7 +43,7 @@ class ThrowableSupplierTest {
         ThrowableSupplier<Integer, Exception> supplier = this::exceptionA;
         a = -1;
         assertThrows(Exception.class,
-            supplier::get, "Supplier should throw an exception if the arguments don't meet the conditions.");
+            supplier::get, "Supplier should throw an exception if the arguments don't meet the conditions");
     }
 
     int a() {

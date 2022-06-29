@@ -71,52 +71,52 @@ class CounterTest {
     @ParameterizedTest
     @MethodSource("counter")
     void isRunningTest(Counter counter) {
-        assertFalse(counter.isRunning(), "The Counter should not run unless it got started.");
+        assertFalse(counter.isRunning(), "The Counter should not run unless it got started");
         counter.start();
-        assertTrue(counter.isRunning(), "The Counter should run if it got started, unless it got paused.");
+        assertTrue(counter.isRunning(), "The Counter should run if it got started, unless it got paused");
         counter.pause();
-        assertFalse(counter.isRunning(), "The Counter should not run if it got paused.");
+        assertFalse(counter.isRunning(), "The Counter should not run if it got paused");
         counter.resume();
-        assertTrue(counter.isRunning(), "The Counter should run after it got resumed.");
+        assertTrue(counter.isRunning(), "The Counter should run after it got resumed");
         counter.stop();
-        assertFalse(counter.isRunning(), "The Counter should not run after it got stopped.");
+        assertFalse(counter.isRunning(), "The Counter should not run after it got stopped");
     }
 
     @ParameterizedTest
     @MethodSource("counter")
     private void isPausedTest(Counter counter) {
-        assertFalse(counter.isPaused(), "The Counter should not be paused unless it got started.");
+        assertFalse(counter.isPaused(), "The Counter should not be paused unless it got started");
         counter.start();
-        assertFalse(counter.isPaused(), "The Counter should not be paused if it got started, unless it got paused.");
+        assertFalse(counter.isPaused(), "The Counter should not be paused if it got started, unless it got paused");
         counter.pause();
-        assertTrue(counter.isPaused(), "The Counter should be paused if it got paused.");
+        assertTrue(counter.isPaused(), "The Counter should be paused if it got paused");
         counter.resume();
-        assertFalse(counter.isPaused(), "The Counter should not be paused after it got resumed.");
+        assertFalse(counter.isPaused(), "The Counter should not be paused after it got resumed");
         counter.stop();
-        assertFalse(counter.isPaused(), "The Counter should not be paused after it got stopped.");
+        assertFalse(counter.isPaused(), "The Counter should not be paused after it got stopped");
     }
 
     @ParameterizedTest
     @MethodSource("counter")
     void stateTest(Counter counter) {
-        assertEquals(CounterStatus.IDLING, counter.status(), "The Counter should be idling unless it got started.");
+        assertEquals(CounterStatus.IDLING, counter.status(), "The Counter should be idling unless it got started");
         counter.start();
-        assertEquals(CounterStatus.RUNNING, counter.status(), "The Counter should be running if it got started, unless it got paused.");
+        assertEquals(CounterStatus.RUNNING, counter.status(), "The Counter should be running if it got started, unless it got paused");
         counter.pause();
-        assertEquals(CounterStatus.PAUSED, counter.status(), "The Counter should be paused if it got paused.");
+        assertEquals(CounterStatus.PAUSED, counter.status(), "The Counter should be paused if it got paused");
         counter.resume();
-        assertEquals(CounterStatus.RUNNING, counter.status(), "The Counter should be running after it got resumed.");
+        assertEquals(CounterStatus.RUNNING, counter.status(), "The Counter should be running after it got resumed");
         counter.stop();
-        assertEquals(CounterStatus.IDLING, counter.status(), "The Counter should be idling after it got stopped.");
+        assertEquals(CounterStatus.IDLING, counter.status(), "The Counter should be idling after it got stopped");
     }
 
     @ParameterizedTest
     @MethodSource("counter")
     void failedStartTest(Counter counter) {
-        assertDoesNotThrow(counter::start, "The Counter should not throw an exception when it gets started.");
-        assertThrows(IllegalStateException.class, counter::start, "The Counter should throw an exception if it got started twice.");
-        assertDoesNotThrow(counter::stop, "The Counter should not throw an exception when it gets stopped.");
-        assertDoesNotThrow(counter::start, "The Counter should not throw an exception when it gets started again.");
+        assertDoesNotThrow(counter::start, "The Counter should not throw an exception when it gets started");
+        assertThrows(IllegalStateException.class, counter::start, "The Counter should throw an exception if it got started twice");
+        assertDoesNotThrow(counter::stop, "The Counter should not throw an exception when it gets stopped");
+        assertDoesNotThrow(counter::start, "The Counter should not throw an exception when it gets started again");
     }
 
     @ParameterizedTest
@@ -133,15 +133,15 @@ class CounterTest {
         counter.setCurrentCount(count);
         assertEquals(count, counter.currentCount(), "The Counter should be at the set value of " + count + ".");
         assertEquals(Math.abs(counter.startCount() - counter.currentCount()), counter.tickedCount(),
-            "The Counter should have ticked exactly the difference between the startCount and the currentCount times.");
+            "The Counter should have ticked exactly the difference between the startCount and the currentCount times");
     }
 
     @ParameterizedTest
     @MethodSource("counter")
     void presetVariablesTest(Counter counter) {
         counter.start();
-        assertEquals(counter.startCount(), counter.currentCount(), "The Counter's startCount should equal the preset startCount.");
-        assertEquals(counter.stopCount(), counter.stopCount(), "The Counter's stopCount should equal the preset stopCount.");
+        assertEquals(counter.startCount(), counter.currentCount(), "The Counter's startCount should equal the preset startCount");
+        assertEquals(counter.stopCount(), counter.stopCount(), "The Counter's stopCount should equal the preset stopCount");
     }
 
     @ParameterizedTest
@@ -151,12 +151,12 @@ class CounterTest {
         Counter counter = counterBuilder
             .startCallback(c -> indicator.incrementAndGet())
             .build();
-        assertEquals(0, indicator.get(), "The Counter should not have started yet.");
+        assertEquals(0, indicator.get(), "The Counter should not have started yet");
         counter.start();
         counter.pause();
         counter.resume();
         counter.stop();
-        assertEquals(1, indicator.get(), "The Counter should have started exactly one time.");
+        assertEquals(1, indicator.get(), "The Counter should have started exactly one time");
     }
 
     @ParameterizedTest
@@ -166,13 +166,13 @@ class CounterTest {
         Counter counter = counterBuilder
             .tickCallback(c -> indicator.incrementAndGet())
             .build();
-        assertEquals(0, indicator.get(), "The Counter should not have ticked yet.");
+        assertEquals(0, indicator.get(), "The Counter should not have ticked yet");
         counter.start();
         counter.pause();
         counter.resume();
         Thread.sleep(expectedTimeNeeded(counter));
         counter.stop();
-        assertEquals(ticksToFinish(counter), indicator.get(), "The Counter should have ticked from startCount to stopCount.");
+        assertEquals(ticksToFinish(counter), indicator.get(), "The Counter should have ticked from startCount to stopCount");
     }
 
     @ParameterizedTest
@@ -182,13 +182,13 @@ class CounterTest {
         Counter counter = counterBuilder
             .finishCallback(c -> indicator.incrementAndGet())
             .build();
-        assertEquals(0, indicator.get(), "The Counter should not have finished yet.");
+        assertEquals(0, indicator.get(), "The Counter should not have finished yet");
         counter.start();
         counter.pause();
         counter.resume();
         Thread.sleep(expectedTimeNeeded(counter));
         counter.stop();
-        assertEquals(1, indicator.get(), "The Counter should have finished exactly one time.");
+        assertEquals(1, indicator.get(), "The Counter should have finished exactly one time");
     }
 
     @ParameterizedTest
@@ -198,12 +198,12 @@ class CounterTest {
         Counter counter = counterBuilder
             .cancelCallback(c -> indicator.incrementAndGet())
             .build();
-        assertEquals(0, indicator.get(), "The Counter should not have ticked yet.");
+        assertEquals(0, indicator.get(), "The Counter should not have ticked yet");
         counter.start();
         counter.pause();
         counter.resume();
         counter.stop();
-        assertEquals(1, indicator.get(), "The Counter should have been cancelled exactly one time.");
+        assertEquals(1, indicator.get(), "The Counter should have been cancelled exactly one time");
     }
 
     private long expectedTimeNeeded(Counter counter) {

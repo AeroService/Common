@@ -21,7 +21,7 @@ class QuadFunctionTest {
     void nullApplyTest() {
         QuadFunction<Integer, Integer, Integer, Integer, Integer> function = this::sum;
         assertThrows(NullPointerException.class, () ->
-            function.apply(null, null, null, null), "Function should throw a NullPointerException if the arguments are null.");
+            function.apply(null, null, null, null), "Function should throw a NullPointerException if the arguments are null");
     }
 
     @Test
@@ -29,15 +29,15 @@ class QuadFunctionTest {
         Function<Integer, Integer> andThenFunction = (a) -> (0);
         QuadFunction<Integer, Integer, Integer, Integer, Integer> operation = this::sum;
         QuadFunction<Integer, Integer, Integer, Integer, Integer> function = operation.andThen(andThenFunction);
-        assertEquals(0, function.apply(1, 2, 3, 4), "Function should return zero.");
-        assertEquals(0, function.apply(5, 4, 3, 2), "Function should return zero.");
+        assertEquals(0, function.apply(1, 2, 3, 4), "Function should return zero");
+        assertEquals(0, function.apply(5, 4, 3, 2), "Function should return zero");
     }
 
     @Test
     void andThenNullTest() {
         QuadFunction<Integer, Integer, Integer, Integer, Integer> function = this::sum;
         assertThrows(NullPointerException.class, () ->
-            function.andThen(null), "Function should throw a NullPointerException if the andThen function is invalid.");
+            function.andThen(null), "Function should throw a NullPointerException if the andThen function is invalid");
     }
 
     @Test
@@ -48,8 +48,8 @@ class QuadFunctionTest {
             throw new IllegalArgumentException();
         };
         QuadFunction<Integer, Integer, Integer, Integer, Integer> function = operation.andThen(andThenFunction);
-        assertThrows(IllegalArgumentException.class, () -> function.apply(1, 2, 3, 4), "The operation should fail.");
-        assertEquals(0, indicator.get(), "AndThenFunction should not have executed since the operation failed.");
+        assertThrows(IllegalArgumentException.class, () -> function.apply(1, 2, 3, 4), "The operation should fail");
+        assertEquals(0, indicator.get(), "AndThenFunction should not have executed since the operation failed");
     }
 
     private int sum(int a, int b, int c, int d) {

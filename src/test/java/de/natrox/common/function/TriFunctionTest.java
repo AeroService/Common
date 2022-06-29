@@ -13,15 +13,15 @@ class TriFunctionTest {
     @Test
     void defaultApplyTest() {
         TriFunction<Integer, Integer, Integer, Integer> function = this::sum;
-        assertEquals(6, function.apply(1, 2, 3), "Function should return the input sum of 6.");
-        assertEquals(9, function.apply(4, 3, 2), "Function should return the input sum of 9.");
+        assertEquals(6, function.apply(1, 2, 3), "Function should return the input sum of 6");
+        assertEquals(9, function.apply(4, 3, 2), "Function should return the input sum of 9");
     }
 
     @Test
     void nullApplyTest() {
         TriFunction<Integer, Integer, Integer, Integer> function = this::sum;
         assertThrows(NullPointerException.class, () ->
-            function.apply(null, null, null), "Function should throw a NullPointerException if the arguments are null.");
+            function.apply(null, null, null), "Function should throw a NullPointerException if the arguments are null");
     }
 
     @Test
@@ -29,15 +29,15 @@ class TriFunctionTest {
         Function<Integer, Integer> andThenFunction = (a) -> (0);
         TriFunction<Integer, Integer, Integer, Integer> operation = this::sum;
         TriFunction<Integer, Integer, Integer, Integer> function = operation.andThen(andThenFunction);
-        assertEquals(0, function.apply(1, 2, 3), "Function should return zero.");
-        assertEquals(0, function.apply(4, 3, 2), "Function should return zero.");
+        assertEquals(0, function.apply(1, 2, 3), "Function should return zero");
+        assertEquals(0, function.apply(4, 3, 2), "Function should return zero");
     }
 
     @Test
     void andThenNullTest() {
         TriFunction<Integer, Integer, Integer, Integer> function = this::sum;
         assertThrows(NullPointerException.class, () ->
-            function.andThen(null), "Function should throw a NullPointerException if the andThen function is invalid.");
+            function.andThen(null), "Function should throw a NullPointerException if the andThen function is invalid");
     }
 
     @Test
@@ -48,8 +48,8 @@ class TriFunctionTest {
             throw new IllegalArgumentException();
         };
         TriFunction<Integer, Integer, Integer, Integer> function = operation.andThen(andThenFunction);
-        assertThrows(IllegalArgumentException.class, () -> function.apply(1, 2, 3), "The operation should fail.");
-        assertEquals(0, indicator.get(), "AndThenFunction should not have executed since the operation failed.");
+        assertThrows(IllegalArgumentException.class, () -> function.apply(1, 2, 3), "The operation should fail");
+        assertEquals(0, indicator.get(), "AndThenFunction should not have executed since the operation failed");
     }
 
     private int sum(int a, int b, int c) {

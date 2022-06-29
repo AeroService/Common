@@ -22,9 +22,9 @@ class ThrowableRunnableTest {
     void defaultRunTest2() {
         ThrowableRunnable<Exception> runnable = this::exceptionCheck;
         a = 1;
-        assertDoesNotThrow(runnable::run, "Runnable should not throw exception as the arguments are valid.");
+        assertDoesNotThrow(runnable::run, "Runnable should not throw exception as the arguments are valid");
         a = 2;
-        assertDoesNotThrow(runnable::run, "Runnable should not throw exception as the arguments are valid.");
+        assertDoesNotThrow(runnable::run, "Runnable should not throw exception as the arguments are valid");
     }
 
     @Test
@@ -32,7 +32,7 @@ class ThrowableRunnableTest {
         ThrowableRunnable<Exception> runnable = this::check;
         a = -1;
         assertThrows(IllegalArgumentException.class,
-            runnable::run, "Runnable should throw an exception if the arguments don't meet the conditions.");
+            runnable::run, "Runnable should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
@@ -40,7 +40,7 @@ class ThrowableRunnableTest {
         ThrowableRunnable<Exception> runnable = this::check;
         a = -1;
         assertThrows(IllegalArgumentException.class,
-            runnable::run, "Runnable should throw an exception if the arguments don't meet the conditions.");
+            runnable::run, "Runnable should throw an exception if the arguments don't meet the conditions");
     }
 
     private void check() {

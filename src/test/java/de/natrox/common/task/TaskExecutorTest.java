@@ -73,7 +73,7 @@ class TaskExecutorTest {
         };
         taskExecutor.executeInMain(runnable);
         latch.await();
-        assertEquals(1, result.get(), "The code above should have been executed in main thread.");
+        assertEquals(1, result.get(), "The code above should have been executed in main thread");
     }
 
     @Test
@@ -86,7 +86,7 @@ class TaskExecutorTest {
         };
         taskExecutor.executeAsync(runnable);
         latch.await();
-        assertEquals(0, result.get(), "The code above should have not been executed in main thread.");
+        assertEquals(0, result.get(), "The code above should have not been executed in main thread");
     }
 
     @Test
@@ -98,9 +98,9 @@ class TaskExecutorTest {
             latch.countDown();
         };
         taskExecutor.executeWithDelay(runnable, 1, TimeUnit.SECONDS);
-        assertEquals(-1, result.get(), "The code above should not have been executed yet.");
+        assertEquals(-1, result.get(), "The code above should not have been executed yet");
         latch.await();
-        assertEquals(0, result.get(), "The code above should have not been executed in main thread.");
+        assertEquals(0, result.get(), "The code above should have not been executed in main thread");
     }
 
     @Test
@@ -112,10 +112,10 @@ class TaskExecutorTest {
             latch.countDown();
         };
         taskExecutor.executeInRepeat(runnable, 500, 500, TimeUnit.MILLISECONDS);
-        assertFalse(executed.get(), "The code above should not have been executed yet.");
+        assertFalse(executed.get(), "The code above should not have been executed yet");
         long timestamp = System.currentTimeMillis();
         latch.await();
-        assertTrue(System.currentTimeMillis() - timestamp >= 500 * 3, "The execution of the three tasks should have taken longer than 1.5 seconds.");
-        assertTrue(executed.get(), "The code above should have been executed yet.");
+        assertTrue(System.currentTimeMillis() - timestamp >= 500 * 3, "The execution of the three tasks should have taken longer than 1.5 seconds");
+        assertTrue(executed.get(), "The code above should have been executed yet");
     }
 }
