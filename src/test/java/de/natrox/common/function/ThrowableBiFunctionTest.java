@@ -2,67 +2,82 @@ package de.natrox.common.function;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ThrowableBiFunctionTest {
 
     @Test
     void defaultApplyTest1() {
-        ThrowableBiFunction<String, Character, String, IllegalStateException> function = this::remove;
-        assertEquals("Hell Wrld!", function.apply("Hello World!", 'o'), "Function should return \"Hell Wrld!\" as \"Hello World!\" without 'o's.");
-        assertEquals("baaas", function.apply("bananas", 'n'), "Function should return \"baaas!\" as \"bananas!\" without 'n's.");
+        ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = this::sum;
+        assertEquals(3, function.apply(1, 2), "Function should return the input sum of 3.");
+        assertEquals(5, function.apply(2, 3), "Function should return the input sum of 5.");
     }
 
     @Test
     void defaultApplyTest2() {
-        ThrowableBiFunction<Integer, Integer, Long, IllegalArgumentException> function = this::product;
-        assertEquals(6, function.apply(2, 3), "Function should return 6 as 2 * 3.");
-        assertEquals(24, function.apply(8, 3), "Function should return 24 as 8 * 3.");
-    }
-
-    @Test
-    void defaultApplyTest3() {
+        ThrowableBiFunction<Integer, Integer, Integer, Exception> function = this::exceptionSum;
         try {
-            ThrowableBiFunction<Integer, Integer, Integer, Exception> function = this::ratio;
-            assertEquals(3, function.apply(27, 9), "Function should return 3 as 27/9.");
+            assertEquals(3, function.apply(1, 2), "Function should return the input sum of 3.");
+            assertEquals(5, function.apply(2, 3), "Function should return the input sum of 5.");
         } catch (Exception e) {
-            fail();
+            fail("Function should not throw an exception as the arguments are valid.");
         }
     }
 
     @Test
     void exceptionApplyTest1() {
-        ThrowableBiFunction<String, Character, String, IllegalStateException> function = this::remove;
-        assertThrows(IllegalStateException.class, () -> function.apply("Butterfly", 'c'), "Function should throw IllegalStateException if \"Butterfly\" does not contain any 'c's.");
+        ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = this::sum;
+        assertThrows(IllegalArgumentException.class, () ->
+            function.apply(-5, 3), "Function should throw an exception if the arguments don't meet the conditions.");
     }
 
     @Test
     void exceptionApplyTest2() {
-        ThrowableBiFunction<Integer, Integer, Long, IllegalArgumentException> function = this::product;
-        assertThrows(IllegalArgumentException.class, () -> function.apply(3, -5), "Function should throw an exception if the arguments do not meet the preset conditions.");
+        ThrowableBiFunction<Integer, Integer, Integer, Exception> function = this::exceptionSum;
+        assertThrows(Exception.class, () ->
+            function.apply(-5, 3), "Function should throw an exception if the arguments don't meet the conditions.");
     }
 
     @Test
-    void exceptionApplyTest3() {
-        ThrowableBiFunction<Integer, Integer, Integer, Exception> function = this::ratio;
-        assertThrows(Exception.class, () -> function.apply(5, 2), "Function should throw an exception if the arguments do not meet the preset conditions.");
+    void andThenApplyTest() {
+        Function<Integer, Integer> andThenFunction = (a) -> (0);
+        ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> operation = this::sum;
+        ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = operation.andThen(andThenFunction);
+        assertEquals(0, function.apply(1, 2), "Function should return zero.");
+        assertEquals(0, function.apply(5, 4), "Function should return zero.");
     }
 
-    String remove(String s, char c) {
-        if (!s.contains(String.valueOf(c)))
-            throw new IllegalStateException();
-        return s.replace(String.valueOf(c), "");
+    @Test
+    void andThenNullTest() {
+        ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = this::sum;
+        assertThrows(NullPointerException.class, () ->
+            function.andThen(null), "Function should throw a NullPointerException if the andThen function is invalid.");
     }
 
-    long product(int a, int b) {
-        if (a + b < 5)
+    @Test
+    void andThenExecutionTest() {
+        AtomicInteger indicator = new AtomicInteger();
+        Function<Integer, Integer> andThenFunction = (a) -> indicator.incrementAndGet();
+        ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> operation = (a, b) -> {
             throw new IllegalArgumentException();
-        return (long) a * b;
+        };
+        ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = operation.andThen(andThenFunction);
+        assertThrows(IllegalArgumentException.class, () -> function.apply(1, 2), "The operation should fail.");
+        assertEquals(0, indicator.get(), "AndThenFunction should not have executed since the operation failed.");
     }
 
-    int ratio(int a, int b) throws Exception {
-        if (a % b != 0)
+    private int sum(int a, int b) {
+        if (a + b <= 0)
+            throw new IllegalArgumentException();
+        return a + b;
+    }
+
+    private int exceptionSum(int a, int b) throws Exception {
+        if (a + b <= 0)
             throw new Exception();
-        return a / b;
+        return a + b;
     }
 }
