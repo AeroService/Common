@@ -2,33 +2,57 @@ package de.natrox.common.function;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TriFunctionTest {
 
     @Test
-    void applyTest1() {
-        TriFunction<Integer, Integer, Integer, Integer> function = this::doMath;
-        assertEquals(28, function.apply(5, 1, 7), "Function should return 28 for 5 + 2*1 + 3*7.");
+    void defaultApplyTest() {
+        TriFunction<Integer, Integer, Integer, Integer> function = this::sum;
+        assertEquals(6, function.apply(1, 2, 3), "Function should return the input sum of 6.");
+        assertEquals(9, function.apply(4, 3, 2), "Function should return the input sum of 9.");
     }
 
     @Test
-    void applyTest2() {
-        TriFunction<Integer, Long, Double, String> function = this::concat;
-        assertEquals("12345678.9", function.apply(12, 34567L, 8.9D), "Function should return \"12345678.9\" as 12, 334567L, 8.9D get combined.");
+    void nullApplyTest() {
+        TriFunction<Integer, Integer, Integer, Integer> function = this::sum;
+        assertThrows(NullPointerException.class, () ->
+            function.apply(null, null, null), "Function should throw a NullPointerException if the arguments are null.");
     }
 
     @Test
-    void nullTest() {
-        TriFunction<Integer, Integer, Integer, Integer> function = this::doMath;
-        assertThrows(NullPointerException.class, () -> function.apply(null, null, null), "Function should throw a NullPointerException if the arguments are null.");
+    void andThenApplyTest() {
+        Function<Integer, Integer> andThenFunction = (a) -> (0);
+        TriFunction<Integer, Integer, Integer, Integer> operation = this::sum;
+        TriFunction<Integer, Integer, Integer, Integer> function = operation.andThen(andThenFunction);
+        assertEquals(0, function.apply(1, 2, 3), "Function should return zero.");
+        assertEquals(0, function.apply(4, 3, 2), "Function should return zero.");
     }
 
-    int doMath(int a, int b, int c) {
-        return a + 2 * b + 3 * c;
+    @Test
+    void andThenNullTest() {
+        TriFunction<Integer, Integer, Integer, Integer> function = this::sum;
+        assertThrows(NullPointerException.class, () ->
+            function.andThen(null), "Function should throw a NullPointerException if the andThen function is invalid.");
     }
 
-    String concat(Object a, Object b, Object c) {
-        return a.toString() + b.toString() + c.toString();
+    @Test
+    void andThenExecutionTest() {
+        AtomicInteger indicator = new AtomicInteger();
+        Function<Integer, Integer> andThenFunction = (a) -> (indicator.incrementAndGet());
+        TriFunction<Integer, Integer, Integer, Integer> operation = (a, b, c) -> {
+            throw new IllegalArgumentException();
+        };
+        TriFunction<Integer, Integer, Integer, Integer> function = operation.andThen(andThenFunction);
+        assertThrows(IllegalArgumentException.class, () -> function.apply(1, 2, 3), "The operation should fail.");
+        assertEquals(0, indicator.get(), "AndThenFunction should not have executed since the operation failed.");
+    }
+
+    private int sum(int a, int b, int c) {
+        return a + b + c;
     }
 }
