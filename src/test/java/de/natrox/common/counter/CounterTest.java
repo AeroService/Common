@@ -33,13 +33,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CounterTest {
 
-    private static TaskExecutor executor;
     private final static Set<Counter> counter = new HashSet<>();
     private final static Set<Counter.Builder> counterBuilder = new HashSet<>();
 
     @BeforeAll
     private static void init() {
-        executor = CachedTaskExecutor.create();
+        TaskExecutor executor = CachedTaskExecutor.create();
         counterBuilder.add(
             Counter.builder(executor)
                 .tick(100, ChronoUnit.MILLIS)
