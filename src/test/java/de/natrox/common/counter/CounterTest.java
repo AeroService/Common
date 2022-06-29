@@ -24,10 +24,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,12 +56,12 @@ class CounterTest {
             counter.add(builder.build());
     }
 
-    private static Stream<Counter> counter() {
-        return counter.stream();
+    private static Collection<Counter> counter() {
+        return counter;
     }
 
-    private static Stream<Counter.Builder> counterBuilder() {
-        return counterBuilder.stream();
+    private static Collection<Counter.Builder> counterBuilder() {
+        return counterBuilder;
     }
 
     @BeforeEach
