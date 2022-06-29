@@ -22,9 +22,9 @@ class ThrowableBiConsumerTest {
     void defaultApplyTest2() {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableBiConsumer<Integer, Integer, Exception> consumer = (a, b) -> indicator.set(exceptionSum(a, b));
-        assertDoesNotThrow(() -> consumer.accept(1, 2));
+        assertDoesNotThrow(() -> consumer.accept(1, 2), "Consumer should not throw an exception as the arguments are valid.");
         assertEquals(3, indicator.get(), "Indicator should indicate the input sum of 3.");
-        assertDoesNotThrow(() -> consumer.accept(2, 3));
+        assertDoesNotThrow(() -> consumer.accept(2, 3), "Consumer should not throw an exception as the arguments are valid.");
         assertEquals(5, indicator.get(), "Indicator should indicate the input sum of 5.");
     }
 
