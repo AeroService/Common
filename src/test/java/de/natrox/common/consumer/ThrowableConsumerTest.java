@@ -2,77 +2,55 @@ package de.natrox.common.consumer;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ThrowableConsumerTest {
 
-    private static char firstCharResult;
-    private static double invertResult;
-    private static double sqrtResult;
-
     @Test
     void defaultApplyTest1() {
-        ThrowableConsumer<String, IllegalArgumentException> consumer = this::firstChar;
-        consumer.accept("foo");
-        assertEquals('f', firstCharResult, "Consumer should give expected output 'f' as the first char of \"foo\".");
-        consumer.accept("boo");
-        assertEquals('b', firstCharResult, "Consumer should give expected output 'b' as the first char of \"boo\".");
+        AtomicInteger indicator = new AtomicInteger();
+        ThrowableConsumer<Integer, IllegalArgumentException> consumer = (a) -> indicator.set(value(a));
+        consumer.accept(1);
+        assertEquals(1, indicator.get(), "Indicator should indicate the input of 1.");
+        consumer.accept(2);
+        assertEquals(2, indicator.get(), "Indicator should indicate the input of 2.");
     }
 
     @Test
     void defaultApplyTest2() {
-        ThrowableConsumer<Double, StringIndexOutOfBoundsException> consumer = this::inverse;
-        consumer.accept(2D);
-        assertEquals(1D / 2, invertResult, "Consumer should give expected output .5 as the multiplicative inverse of 2.");
-        consumer.accept(1D / 2);
-        assertEquals(2D, invertResult, "Consumer should give expected output 2 as the multiplicative inverse of .5.");
-    }
-
-    @Test
-    void defaultApplyTest3() {
-        try {
-            ThrowableConsumer<Integer, Exception> consumer = this::sqrt;
-            consumer.accept(16);
-            assertEquals(4.0, sqrtResult, "Consumer should give expected output 4 as the square root of 16.");
-        } catch (Exception e) {
-            fail();
-        }
+        AtomicInteger indicator = new AtomicInteger();
+        ThrowableConsumer<Integer, Exception> consumer = (a) -> indicator.set(exceptionValue(a));
+        assertDoesNotThrow(() -> consumer.accept(1), "Consumer should not throw an exception as the arguments are valid.");
+        assertEquals(1, indicator.get(), "Indicator should indicate the input of 1.");
+        assertDoesNotThrow(() -> consumer.accept(2), "Consumer should not throw an exception as the arguments are valid.");
+        assertEquals(2, indicator.get(), "Indicator should indicate the input of 2.");
     }
 
     @Test
     void exceptionApplyTest1() {
-        ThrowableConsumer<String, StringIndexOutOfBoundsException> consumer = this::firstChar;
-        assertThrows(StringIndexOutOfBoundsException.class, () ->
-            consumer.accept(""), "Consumer should throw an exception if the arguments do not meet the preset conditions.");
+        ThrowableConsumer<Integer, IllegalArgumentException> consumer = this::value;
+        assertThrows(IllegalArgumentException.class, () ->
+            consumer.accept(-1), "Consumer should throw an exception if the arguments don't meet the conditions.");
     }
 
     @Test
     void exceptionApplyTest2() {
-        ThrowableConsumer<Double, IllegalArgumentException> consumer = this::inverse;
-        assertThrows(IllegalArgumentException.class, () ->
-            consumer.accept(0D), "Consumer should throw an exception if the arguments do not meet the preset conditions.");
-    }
-
-    @Test
-    void exceptionApplyTest3() {
-        ThrowableConsumer<Integer, Exception> consumer = this::sqrt;
+        ThrowableConsumer<Integer, Exception> consumer = this::exceptionValue;
         assertThrows(Exception.class, () ->
-            consumer.accept(-1), "Consumer should throw an exception if the arguments do not meet the preset conditions.");
+            consumer.accept(-1), "Consumer should throw an exception if the arguments don't meet the conditions.");
     }
 
-    void firstChar(String s) {
-        firstCharResult = s.charAt(0);
-    }
-
-    void inverse(double a) {
-        if (a == 0)
+    private int value(int a) {
+        if (a <= 0)
             throw new IllegalArgumentException();
-        invertResult = 1 / a;
+        return a;
     }
 
-    void sqrt(int a) throws Exception {
-        if (a < 0)
+    private int exceptionValue(int a) throws Exception {
+        if (a <= 0)
             throw new Exception();
-        sqrtResult = Math.sqrt(a);
+        return a;
     }
 }

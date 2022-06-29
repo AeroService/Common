@@ -2,39 +2,31 @@ package de.natrox.common.consumer;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TriConsumerTest {
 
-    private static int doMathResult;
-    private static String concatResult;
-
     @Test
-    void acceptTest1() {
-        TriConsumer<Integer, Integer, Integer> consumer = this::doMath;
-        consumer.accept(5, 1, 7);
-        assertEquals(28, doMathResult, "Consumer should give expected output 38 for 5 + 2*1 + 3*7.");
+    void defaultApplyTest() {
+        AtomicInteger indicator = new AtomicInteger();
+        TriConsumer<Integer, Integer, Integer> consumer = (a, b, c) -> indicator.set(this.addition(a, b, c));
+        consumer.accept(1, 2, 3);
+        assertEquals(6, indicator.get(), "Indicator should indicate the input sum of 6.");
+        consumer.accept(4, 3, 2);
+        assertEquals(9, indicator.get(), "Indicator should indicate the input sum of 9.");
     }
 
     @Test
-    void applyTest2() {
-        TriConsumer<Integer, Long, Double> consumer = this::concat;
-        consumer.accept(12, 34567L, 8.9D);
-        assertEquals("12345678.9", concatResult, "Consumer should give expected output \"12345678.9\" as 12, 34567L, 8.9D get combined.");
-    }
-
-    @Test
-    void nullTest() {
-        TriConsumer<Integer, Integer, Integer> consumer = this::doMath;
+    void nullApplyTest() {
+        TriConsumer<Integer, Integer, Integer> consumer = this::addition;
         assertThrows(NullPointerException.class, () ->
             consumer.accept(null, null, null), "Consumer should throw a NullPointerException if the arguments are null.");
     }
 
-    void doMath(int a, int b, int c) {
-        doMathResult = a + 2 * b + 3 * c;
-    }
-
-    void concat(Object a, Object b, Object c) {
-        concatResult = a.toString() + b.toString() + c.toString();
+    private int addition(int a, int b, int c) {
+        return a + b + c;
     }
 }
