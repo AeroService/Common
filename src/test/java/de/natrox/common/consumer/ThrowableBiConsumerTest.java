@@ -2,79 +2,55 @@ package de.natrox.common.consumer;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ThrowableBiConsumerTest {
 
-    private static String removeResult;
-    private static long productResult;
-    private static int ratioResult;
-
     @Test
     void defaultApplyTest1() {
-        ThrowableBiConsumer<String, Character, IllegalStateException> consumer = this::remove;
-        consumer.accept("Hello World!", 'o');
-        assertEquals("Hell Wrld!", removeResult, "Consumer should give expected output \"Hell Wrld!\" as \"Hello World!\" without 'o's.");
-        consumer.accept("bananas", 'n');
-        assertEquals("baaas", removeResult, "Consumer should give expected output \"baaas!\" as \"bananas!\" without 'n's.");
+        AtomicInteger indicator = new AtomicInteger();
+        ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = (a, b) -> indicator.set(sum(a, b));
+        consumer.accept(1, 2);
+        assertEquals(3, indicator.get(), "Indicator should indicate the input sum of 3.");
+        consumer.accept(2, 3);
+        assertEquals(5, indicator.get(), "Indicator should indicate the input sum of 5.");
     }
 
     @Test
     void defaultApplyTest2() {
-        ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = this::product;
-        consumer.accept(2, 3);
-        assertEquals(6, productResult, "Consumer should give expected output 6 as 2 * 3.");
-        consumer.accept(8, 3);
-        assertEquals(24, productResult, "Consumer should give expected output 24 as 8 * 3.");
-    }
-
-    @Test
-    void defaultApplyTest3() {
-        try {
-            ThrowableBiConsumer<Integer, Integer, Exception> consumer = this::ratio;
-            consumer.accept(27, 9);
-            assertEquals(3, ratioResult, "Consumer should give expected output 3 as 27/9.");
-        } catch (Exception e) {
-            fail();
-        }
+        AtomicInteger indicator = new AtomicInteger();
+        ThrowableBiConsumer<Integer, Integer, Exception> consumer = (a, b) -> indicator.set(exceptionSum(a, b));
+        assertDoesNotThrow(() -> consumer.accept(1, 2));
+        assertEquals(3, indicator.get(), "Indicator should indicate the input sum of 3.");
+        assertDoesNotThrow(() -> consumer.accept(2, 3));
+        assertEquals(5, indicator.get(), "Indicator should indicate the input sum of 5.");
     }
 
     @Test
     void exceptionApplyTest1() {
-        ThrowableBiConsumer<String, Character, IllegalStateException> consumer = this::remove;
-        assertThrows(IllegalStateException.class, ()
-            -> consumer.accept("Butterfly", 'c'), "Consumer should throw IllegalStateException if \"Butterfly\" does not contain any 'c's.");
+        ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = this::sum;
+        assertThrows(IllegalArgumentException.class, () ->
+            consumer.accept(-5, 3), "Consumer should throw an exception if the arguments don't meet the conditions.");
     }
 
     @Test
     void exceptionApplyTest2() {
-        ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = this::product;
-        assertThrows(IllegalArgumentException.class, () ->
-            consumer.accept(3, -5), "Consumer should throw an exception if the arguments do not meet the preset conditions.");
-    }
-
-    @Test
-    void exceptionApplyTest3() {
-        ThrowableBiConsumer<Integer, Integer, Exception> consumer = this::ratio;
+        ThrowableBiConsumer<Integer, Integer, Exception> consumer = this::exceptionSum;
         assertThrows(Exception.class, () ->
-            consumer.accept(5, 2), "Consumer should throw an exception if the arguments do not meet the preset conditions.");
+            consumer.accept(-5, 3), "Consumer should throw an exception if the arguments don't meet the conditions.");
     }
 
-    void remove(String s, char c) {
-        if (!s.contains(String.valueOf(c)))
-            throw new IllegalStateException();
-        removeResult = s.replace(String.valueOf(c), "");
-    }
-
-    void product(int a, int b) {
-        if (a + b < 5)
+    private int sum(int a, int b) {
+        if (a + b <= 0)
             throw new IllegalArgumentException();
-        productResult = (long) a * b;
+        return a + b;
     }
 
-    void ratio(int a, int b) throws Exception {
-        if (a % b != 0)
+    private int exceptionSum(int a, int b) throws Exception {
+        if (a + b <= 0)
             throw new Exception();
-        ratioResult = a / b;
+        return a + b;
     }
 }
