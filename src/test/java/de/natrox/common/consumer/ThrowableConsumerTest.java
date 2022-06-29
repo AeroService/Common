@@ -42,6 +42,37 @@ class ThrowableConsumerTest {
             consumer.accept(-1), "Consumer should throw an exception if the arguments don't meet the conditions.");
     }
 
+    @Test
+    void andThenApplyTest() {
+        AtomicInteger indicator = new AtomicInteger();
+        ThrowableConsumer<Integer, IllegalArgumentException> andThenConsumer = (a) -> indicator.addAndGet(-this.value(a));
+        ThrowableConsumer<Integer, IllegalArgumentException> operation = (a) -> indicator.set(this.value(a));
+        ThrowableConsumer<Integer, IllegalArgumentException> consumer = operation.andThen(andThenConsumer);
+        consumer.accept(1);
+        assertEquals(0, indicator.get(), "Indicator should indicate the input minus the input, which equals zero.");
+        consumer.accept(2);
+        assertEquals(0, indicator.get(), "Indicator should indicate the input minus the input, which equals zero.");
+    }
+
+    @Test
+    void andThenNullTest() {
+        ThrowableConsumer<Integer, IllegalArgumentException> consumer = this::value;
+        assertThrows(NullPointerException.class, () ->
+            consumer.andThen(null), "Consumer should throw a NullPointerException if the andThen consumer is invalid.");
+    }
+
+    @Test
+    void andThenExecutionTest() {
+        AtomicInteger indicator = new AtomicInteger();
+        ThrowableConsumer<Integer, IllegalArgumentException> andThenConsumer = (a) -> indicator.incrementAndGet();
+        ThrowableConsumer<Integer, IllegalArgumentException> operation = (a) -> {
+            throw new IllegalArgumentException();
+        };
+        ThrowableConsumer<Integer, IllegalArgumentException> consumer = operation.andThen(andThenConsumer);
+        assertThrows(IllegalArgumentException.class, () -> consumer.accept(1), "The operation should fail.");
+        assertEquals(0, indicator.get(), "AndThenConsumer should not have executed since the operation failed.");
+    }
+
     private int value(int a) {
         if (a <= 0)
             throw new IllegalArgumentException();

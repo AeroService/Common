@@ -42,6 +42,37 @@ class ThrowableBiConsumerTest {
             consumer.accept(-5, 3), "Consumer should throw an exception if the arguments don't meet the conditions.");
     }
 
+    @Test
+    void andThenApplyTest() {
+        AtomicInteger indicator = new AtomicInteger();
+        ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> andThenConsumer = (a, b) -> indicator.addAndGet(-this.sum(a, b));
+        ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> operation = (a, b) -> indicator.set(this.sum(a, b));
+        ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = operation.andThen(andThenConsumer);
+        consumer.accept(1, 2);
+        assertEquals(0, indicator.get(), "Indicator should indicate the input sum minus the input sum, which equals zero.");
+        consumer.accept(3, 2);
+        assertEquals(0, indicator.get(), "Indicator should indicate the input sum minus the input sum, which equals zero.");
+    }
+
+    @Test
+    void andThenNullTest() {
+        ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = this::sum;
+        assertThrows(NullPointerException.class, () ->
+            consumer.andThen(null), "Consumer should throw a NullPointerException if the andThen consumer is invalid.");
+    }
+
+    @Test
+    void andThenExecutionTest() {
+        AtomicInteger indicator = new AtomicInteger();
+        ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> andThenConsumer = (a, b) -> indicator.incrementAndGet();
+        ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> operation = (a, b) -> {
+            throw new IllegalArgumentException();
+        };
+        ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = operation.andThen(andThenConsumer);
+        assertThrows(IllegalArgumentException.class, () -> consumer.accept(1, 2), "The operation should fail.");
+        assertEquals(0, indicator.get(), "AndThenConsumer should not have executed since the operation failed.");
+    }
+
     private int sum(int a, int b) {
         if (a + b <= 0)
             throw new IllegalArgumentException();
