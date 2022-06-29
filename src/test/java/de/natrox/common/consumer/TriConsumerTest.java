@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class TriConsumerTest {
 
     @Test
-    void defaultApplyTest() {
+    void defaultAcceptTest() {
         AtomicInteger indicator = new AtomicInteger();
         TriConsumer<Integer, Integer, Integer> consumer = (a, b, c) -> indicator.set(this.sum(a, b, c));
         consumer.accept(1, 2, 3);
@@ -20,14 +20,14 @@ class TriConsumerTest {
     }
 
     @Test
-    void nullApplyTest() {
+    void nullAcceptTest() {
         TriConsumer<Integer, Integer, Integer> consumer = this::sum;
         assertThrows(NullPointerException.class, () ->
             consumer.accept(null, null, null), "Consumer should throw a NullPointerException if the arguments are null.");
     }
 
     @Test
-    void andThenApplyTest() {
+    void andThenAcceptTest() {
         AtomicInteger indicator = new AtomicInteger();
         TriConsumer<Integer, Integer, Integer> andThenConsumer = (a, b, c) -> indicator.addAndGet(-this.sum(a, b, c));
         TriConsumer<Integer, Integer, Integer> operation = (a, b, c) -> indicator.set(this.sum(a, b, c));

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ThrowableBiConsumerTest {
 
     @Test
-    void defaultApplyTest1() {
+    void defaultAcceptTest1() {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = (a, b) -> indicator.set(sum(a, b));
         consumer.accept(1, 2);
@@ -19,7 +19,7 @@ class ThrowableBiConsumerTest {
     }
 
     @Test
-    void defaultApplyTest2() {
+    void defaultAcceptTest2() {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableBiConsumer<Integer, Integer, Exception> consumer = (a, b) -> indicator.set(exceptionSum(a, b));
         assertDoesNotThrow(() -> consumer.accept(1, 2), "Consumer should not throw an exception as the arguments are valid.");
@@ -29,21 +29,21 @@ class ThrowableBiConsumerTest {
     }
 
     @Test
-    void exceptionApplyTest1() {
+    void exceptionAcceptTest1() {
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = this::sum;
         assertThrows(IllegalArgumentException.class, () ->
             consumer.accept(-5, 3), "Consumer should throw an exception if the arguments don't meet the conditions.");
     }
 
     @Test
-    void exceptionApplyTest2() {
+    void exceptionAcceptTest2() {
         ThrowableBiConsumer<Integer, Integer, Exception> consumer = this::exceptionSum;
         assertThrows(Exception.class, () ->
             consumer.accept(-5, 3), "Consumer should throw an exception if the arguments don't meet the conditions.");
     }
 
     @Test
-    void andThenApplyTest() {
+    void andThenAcceptTest() {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> andThenConsumer = (a, b) -> indicator.addAndGet(-this.sum(a, b));
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> operation = (a, b) -> indicator.set(this.sum(a, b));
