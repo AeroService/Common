@@ -1,35 +1,33 @@
 package de.natrox.common.runnable;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CatchingRunnableTest {
 
-    private static int a = 1;
-    private static CatchingRunnable runnable;
-
-    @BeforeAll
-    static void init() {
-        runnable = new CatchingRunnable(() -> {
-            if(a % 2 == 0)
-                throw new IllegalStateException();
-            a += a;
-        });
-    }
+    private static int a;
 
     @Test
-    void runTest1() {
+    void defaultRunTest() {
+        CatchingRunnable runnable = new CatchingRunnable(this::check);
+        a = 1;
         assertDoesNotThrow(runnable::run);
-        assertEquals(2, a);
+        a = 2;
+        assertDoesNotThrow(runnable::run);
     }
 
     @Test
-    void runTest2() {
-        assertThrows(IllegalStateException.class, runnable::run);
-        assertEquals(2, a);
+    void exceptionRunTest() {
+        CatchingRunnable runnable = new CatchingRunnable(this::check);
+        a = -1;
+        assertThrows(IllegalArgumentException.class,
+            runnable::run, "Function should throw an exception if the arguments don't meet the conditions.");
+    }
+
+    private void check() {
+        if (a <= 0)
+            throw new IllegalArgumentException();
     }
 }
