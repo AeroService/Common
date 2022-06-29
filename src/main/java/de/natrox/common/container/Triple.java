@@ -18,6 +18,8 @@ package de.natrox.common.container;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Represents a class that can capture three references of three types and set or
  * clear the data using {@link #setFirst(Object)}, {@link #setSecond(Object)} and {@link #setThird(Object)}.
@@ -125,5 +127,17 @@ public final class Triple<T, U, V> {
     public Triple<T, U, V> setThird(V third) {
         this.third = third;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!obj.getClass().equals(this.getClass()))
+            return false;
+        Triple<?, ?, ?> that = (Triple<?, ?, ?>) obj;
+        return Objects.deepEquals(this.first(), that.first())
+            && Objects.deepEquals(this.second(), that.second())
+            && Objects.deepEquals(this.third(), that.third());
     }
 }

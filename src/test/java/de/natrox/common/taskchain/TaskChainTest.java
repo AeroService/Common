@@ -17,10 +17,12 @@
 package de.natrox.common.taskchain;
 
 import de.natrox.common.task.CachedTaskExecutor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,16 +32,8 @@ class TaskChainTest {
     void factoryTest() {
         TaskChain.Factory factory = TaskChain.createFactory(CachedTaskExecutor.create());
         TaskChain taskChain = factory.create();
+        assertThrows(IllegalArgumentException.class, () -> TaskChain.createFactory(null));
         assertNotNull(taskChain);
-    }
-
-    @Test
-    void multipleRunTest() {
-        TaskChain.Factory factory = TaskChain.createFactory(CachedTaskExecutor.create());
-        TaskChain taskChain = factory.create();
-
-        assertDoesNotThrow(() -> taskChain.run());
-        assertThrows(IllegalStateException.class, taskChain::run);
     }
 
     @Test
@@ -62,16 +56,57 @@ class TaskChainTest {
     }
 
     @Test
-    void callbackTest() throws InterruptedException {
+    void multipleRunTest() {
         TaskChain.Factory factory = TaskChain.createFactory(CachedTaskExecutor.create());
-        TaskChain taskChain = factory.create();
-
-        CountDownLatch latch = new CountDownLatch(1);
-
-        taskChain.run(latch::countDown);
-        latch.await();
-
-        assertEquals(0, latch.getCount());
+        {
+            AtomicInteger indicator = new AtomicInteger(0);
+            TaskChain taskChain = factory.create();
+            taskChain.sync(indicator::incrementAndGet);
+            taskChain.run();
+            assertThrows(IllegalStateException.class, taskChain::run);
+            assertThrows(IllegalStateException.class, () -> taskChain.run(indicator::incrementAndGet));
+            assertThrows(IllegalStateException.class, () -> taskChain.run(result -> indicator.incrementAndGet()));
+            assertEquals(1, indicator.get());
+        }
+        {
+            AtomicInteger indicator = new AtomicInteger(0);
+            TaskChain taskChain = factory.create();
+            taskChain.sync(indicator::incrementAndGet);
+            taskChain.run(indicator::incrementAndGet);
+            assertThrows(IllegalStateException.class, taskChain::run);
+            assertThrows(IllegalStateException.class, () -> taskChain.run(indicator::incrementAndGet));
+            assertThrows(IllegalStateException.class, () -> taskChain.run(result -> indicator.incrementAndGet()));
+            assertEquals(2, indicator.get());
+        }
+        {
+            AtomicInteger indicator = new AtomicInteger(0);
+            TaskChain taskChain = factory.create();
+            taskChain.sync(indicator::incrementAndGet);
+            taskChain.run(result -> indicator.incrementAndGet());
+            assertThrows(IllegalStateException.class, taskChain::run);
+            assertThrows(IllegalStateException.class, () -> taskChain.run(indicator::incrementAndGet));
+            assertThrows(IllegalStateException.class, () -> taskChain.run(result -> indicator.incrementAndGet()));
+            assertEquals(2, indicator.get());
+        }
     }
 
+    @Test
+    void callbackTest() throws InterruptedException {
+        TaskChain.Factory factory = TaskChain.createFactory(CachedTaskExecutor.create());
+        {
+            TaskChain taskChain = factory.create();
+            CountDownLatch latch = new CountDownLatch(1);
+            taskChain.run(latch::countDown);
+            latch.await();
+            assertEquals(0, latch.getCount());
+        }
+        {
+            TaskChain taskChain = factory.create();
+            assertDoesNotThrow(() -> taskChain.run((Runnable) null));
+        }
+        {
+            TaskChain taskChain = factory.create();
+            taskChain.run((Assertions::assertTrue));
+        }
+    }
 }

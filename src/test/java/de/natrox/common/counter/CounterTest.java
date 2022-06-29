@@ -18,163 +18,200 @@ package de.natrox.common.counter;
 
 import de.natrox.common.task.CachedTaskExecutor;
 import de.natrox.common.task.TaskExecutor;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.TimeUnit;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CounterTest {
 
-    @Test
-    void isRunningTest() {
+    private final static Set<Counter> counter = new HashSet<>();
+    private final static Set<Counter.Builder> counterBuilder = new HashSet<>();
+
+    @BeforeAll
+    private static void init() {
         TaskExecutor executor = CachedTaskExecutor.create();
-        Counter counter = Counter.builder(executor)
-            .tick(25, ChronoUnit.MILLIS)
-            .startCount(1)
-            .stopCount(5)
-            .build();
-        assertFalse(counter.isRunning());
+        counterBuilder.add(
+            Counter.builder(executor)
+                .tick(100, ChronoUnit.MILLIS)
+                .startCount(10)
+                .stopCount(1)
+        );
+        counterBuilder.add(
+            Counter.builder(executor)
+                .tick(100, ChronoUnit.MILLIS)
+                .startCount(1)
+                .stopCount(10)
+        );
+        for (Counter.Builder builder : counterBuilder)
+            counter.add(builder.build());
+    }
+
+    private static Collection<Counter> counter() {
+        return counter;
+    }
+
+    private static Collection<Counter.Builder> counterBuilder() {
+        return counterBuilder;
+    }
+
+    @BeforeEach
+    private void resetCounters() {
+        counter.forEach(Counter::stop);
+    }
+
+    @ParameterizedTest
+    @MethodSource("counter")
+    void isRunningTest(Counter counter) {
+        assertFalse(counter.isRunning(), "The Counter should not run unless it got started");
         counter.start();
-        assertTrue(counter.isRunning());
+        assertTrue(counter.isRunning(), "The Counter should run if it got started, unless it got paused");
         counter.pause();
-        assertFalse(counter.isRunning());
+        assertFalse(counter.isRunning(), "The Counter should not run if it got paused");
         counter.resume();
-        assertTrue(counter.isRunning());
+        assertTrue(counter.isRunning(), "The Counter should run after it got resumed");
         counter.stop();
-        assertFalse(counter.isRunning());
+        assertFalse(counter.isRunning(), "The Counter should not run after it got stopped");
     }
 
-    @Test
-    void isPausedTest() {
-        TaskExecutor executor = CachedTaskExecutor.create();
-        Counter counter = Counter.builder(executor)
-            .tick(25, ChronoUnit.MILLIS)
-            .startCount(1)
-            .stopCount(5)
-            .build();
-        assertFalse(counter.isPaused());
+    @ParameterizedTest
+    @MethodSource("counter")
+    private void isPausedTest(Counter counter) {
+        assertFalse(counter.isPaused(), "The Counter should not be paused unless it got started");
         counter.start();
-        assertFalse(counter.isPaused());
+        assertFalse(counter.isPaused(), "The Counter should not be paused if it got started, unless it got paused");
         counter.pause();
-        assertTrue(counter.isPaused());
+        assertTrue(counter.isPaused(), "The Counter should be paused if it got paused");
         counter.resume();
-        assertFalse(counter.isPaused());
+        assertFalse(counter.isPaused(), "The Counter should not be paused after it got resumed");
         counter.stop();
-        assertFalse(counter.isPaused());
+        assertFalse(counter.isPaused(), "The Counter should not be paused after it got stopped");
     }
 
-    @Test
-    void stateTest() {
-        TaskExecutor executor = CachedTaskExecutor.create();
-        Counter counter = Counter.builder(executor)
-            .tick(25, ChronoUnit.MILLIS)
-            .startCount(1)
-            .stopCount(5)
-            .build();
-        assertEquals(CounterStatus.IDLING, counter.status());
+    @ParameterizedTest
+    @MethodSource("counter")
+    void stateTest(Counter counter) {
+        assertEquals(CounterStatus.IDLING, counter.status(), "The Counter should be idling unless it got started");
         counter.start();
-        assertEquals(CounterStatus.RUNNING, counter.status());
+        assertEquals(CounterStatus.RUNNING, counter.status(), "The Counter should be running if it got started, unless it got paused");
         counter.pause();
-        assertEquals(CounterStatus.PAUSED, counter.status());
+        assertEquals(CounterStatus.PAUSED, counter.status(), "The Counter should be paused if it got paused");
         counter.resume();
-        assertEquals(CounterStatus.RUNNING, counter.status());
+        assertEquals(CounterStatus.RUNNING, counter.status(), "The Counter should be running after it got resumed");
         counter.stop();
-        assertEquals(CounterStatus.IDLING, counter.status());
+        assertEquals(CounterStatus.IDLING, counter.status(), "The Counter should be idling after it got stopped");
     }
 
-    @Test
-    void countTest() {
-        TaskExecutor executor = CachedTaskExecutor.create();
-        Counter slowCounter = Counter.builder(executor)
-            .tick(1, ChronoUnit.HOURS)
-            .startCount(2)
-            .stopCount(6)
-            .build();
-        slowCounter.start();
-        assertEquals(2, slowCounter.currentCount());
-        assertEquals(0, slowCounter.tickedCount());
-        slowCounter.setCurrentCount(4);
-        assertEquals(4, slowCounter.currentCount());
-        assertEquals(2, slowCounter.tickedCount());
+    @ParameterizedTest
+    @MethodSource("counter")
+    void failedStartTest(Counter counter) {
+        assertDoesNotThrow(counter::start, "The Counter should not throw an exception when it gets started");
+        assertThrows(IllegalStateException.class, counter::start, "The Counter should throw an exception if it got started twice");
+        assertDoesNotThrow(counter::stop, "The Counter should not throw an exception when it gets stopped");
+        assertDoesNotThrow(counter::start, "The Counter should not throw an exception when it gets started again");
     }
 
-    @Test
-    void presetVariablesTest() {
-        TaskExecutor executor = CachedTaskExecutor.create();
-        Counter counter = Counter.builder(executor)
-            .tick(1, ChronoUnit.SECONDS)
-            .startCount(2)
-            .stopCount(-3)
-            .build();
-        assertEquals(1, counter.tickValue());
-        assertEquals(TimeUnit.SECONDS, counter.tickUnit());
-        assertEquals(2, counter.startCount());
-        assertEquals(-3, counter.stopCount());
-    }
-
-    @Test
-    void callbackTest() throws InterruptedException {
-        AtomicInteger timesStarted = new AtomicInteger();
-        AtomicInteger timesTicked = new AtomicInteger();
-        AtomicInteger timesFinished = new AtomicInteger();
-        AtomicInteger timesCanceled = new AtomicInteger();
-        TaskExecutor executor = CachedTaskExecutor.create();
-        Counter counter = Counter.builder(executor)
-            .tick(50, ChronoUnit.MILLIS)
-            .startCount(1)
-            .stopCount(10)
-            .startCallback(c -> timesStarted.incrementAndGet())
-            .tickCallback(c -> timesTicked.incrementAndGet())
-            .finishCallback(c -> timesFinished.incrementAndGet())
-            .cancelCallback(c -> timesCanceled.incrementAndGet())
-            .build();
-
-        assertEquals(0, timesStarted.get());
-        assertEquals(0, timesTicked.get());
-        assertEquals(0, timesFinished.get());
-        assertEquals(0, timesCanceled.get());
-
+    @ParameterizedTest
+    @MethodSource("counter")
+    void tickedCountTest(Counter counter) {
         counter.start();
-        assertEquals(1, timesStarted.get());
-        Thread.sleep(525);
-        assertEquals(11, timesTicked.get());
-        assertEquals(1, timesFinished.get());
-        assertEquals(0, timesCanceled.get());
-
-        counter.stop();
-        assertEquals(0, timesCanceled.get());
-
-        counter.start();
-        Thread.sleep(50);
-        assertEquals(1, timesFinished.get());
-        counter.stop();
-        assertEquals(1, timesCanceled.get());
+        long minCount = Math.min(counter.startCount(), counter.stopCount());
+        final long maxCount = Math.max(counter.startCount(), counter.stopCount());
+        for (; minCount <= maxCount; minCount++)
+            this.checkTickedCount(counter, minCount);
     }
 
-    @Test
-    void tickTest() throws InterruptedException {
-        AtomicInteger upTicked = new AtomicInteger();
-        AtomicInteger downTicked = new AtomicInteger();
-        TaskExecutor executor = CachedTaskExecutor.create();
-        Counter upTicker = Counter.builder(executor)
-            .tick(10, ChronoUnit.MILLIS)
-            .startCount(50)
-            .stopCount(1)
-            .tickCallback(counter -> upTicked.incrementAndGet())
+    void checkTickedCount(Counter counter, long count) {
+        counter.setCurrentCount(count);
+        assertEquals(count, counter.currentCount(), "The Counter should be at the set value of " + count + ".");
+        assertEquals(Math.abs(counter.startCount() - counter.currentCount()), counter.tickedCount(),
+            "The Counter should have ticked exactly the difference between the startCount and the currentCount times");
+    }
+
+    @ParameterizedTest
+    @MethodSource("counter")
+    void presetVariablesTest(Counter counter) {
+        counter.start();
+        assertEquals(counter.startCount(), counter.currentCount(), "The Counter's startCount should equal the preset startCount");
+        assertEquals(counter.stopCount(), counter.stopCount(), "The Counter's stopCount should equal the preset stopCount");
+    }
+
+    @ParameterizedTest
+    @MethodSource("counterBuilder")
+    void startCallbackTest(Counter.Builder counterBuilder) {
+        AtomicInteger indicator = new AtomicInteger();
+        Counter counter = counterBuilder
+            .startCallback(c -> indicator.incrementAndGet())
             .build();
-        Counter downTicker = Counter.builder(executor)
-            .tick(10, ChronoUnit.MILLIS)
-            .startCount(1)
-            .stopCount(50)
-            .tickCallback(counter -> downTicked.incrementAndGet())
+        assertEquals(0, indicator.get(), "The Counter should not have started yet");
+        counter.start();
+        counter.pause();
+        counter.resume();
+        counter.stop();
+        assertEquals(1, indicator.get(), "The Counter should have started exactly one time");
+    }
+
+    @ParameterizedTest
+    @MethodSource("counterBuilder")
+    void tickCallbackTest(Counter.Builder counterBuilder) throws InterruptedException {
+        AtomicInteger indicator = new AtomicInteger();
+        Counter counter = counterBuilder
+            .tickCallback(c -> indicator.incrementAndGet())
             .build();
-        upTicker.start();
-        downTicker.start();
-        Thread.sleep(550);
-        assertEquals(51, upTicked.get());
-        assertEquals(51, downTicked.get());
+        assertEquals(0, indicator.get(), "The Counter should not have ticked yet");
+        counter.start();
+        counter.pause();
+        counter.resume();
+        Thread.sleep(expectedTimeNeeded(counter));
+        counter.stop();
+        assertEquals(ticksToFinish(counter), indicator.get(), "The Counter should have ticked from startCount to stopCount");
+    }
+
+    @ParameterizedTest
+    @MethodSource("counterBuilder")
+    void finishCallbackTest(Counter.Builder counterBuilder) throws InterruptedException {
+        AtomicInteger indicator = new AtomicInteger();
+        Counter counter = counterBuilder
+            .finishCallback(c -> indicator.incrementAndGet())
+            .build();
+        assertEquals(0, indicator.get(), "The Counter should not have finished yet");
+        counter.start();
+        counter.pause();
+        counter.resume();
+        Thread.sleep(expectedTimeNeeded(counter));
+        counter.stop();
+        assertEquals(1, indicator.get(), "The Counter should have finished exactly one time");
+    }
+
+    @ParameterizedTest
+    @MethodSource("counterBuilder")
+    void cancelCallbackTest(Counter.Builder counterBuilder) {
+        AtomicInteger indicator = new AtomicInteger();
+        Counter counter = counterBuilder
+            .cancelCallback(c -> indicator.incrementAndGet())
+            .build();
+        assertEquals(0, indicator.get(), "The Counter should not have ticked yet");
+        counter.start();
+        counter.pause();
+        counter.resume();
+        counter.stop();
+        assertEquals(1, indicator.get(), "The Counter should have been cancelled exactly one time");
+    }
+
+    private long expectedTimeNeeded(Counter counter) {
+        //A buffer of one tick added.
+        return counter.tickUnit().toMillis(this.ticksToFinish(counter) * counter.tickValue());
+    }
+
+    private long ticksToFinish(Counter counter) {
+        return Math.abs(counter.startCount() - counter.stopCount()) + 1;
     }
 }

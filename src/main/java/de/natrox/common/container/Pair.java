@@ -18,6 +18,8 @@ package de.natrox.common.container;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Represents a class that can capture two references of two types and set or
  * clear the data using {@link #setFirst(Object)} and {@link #setSecond(Object)}.
@@ -99,5 +101,16 @@ public final class Pair<T, U> {
     public Pair<T, U> setSecond(U second) {
         this.second = second;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!obj.getClass().equals(this.getClass()))
+            return false;
+        Pair<?, ?> that = (Pair<?, ?>) obj;
+        return Objects.deepEquals(this.first(), that.first())
+            && Objects.deepEquals(this.second(), that.second());
     }
 }

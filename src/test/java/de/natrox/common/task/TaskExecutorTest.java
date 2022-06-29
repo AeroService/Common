@@ -17,19 +17,28 @@
 package de.natrox.common.task;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TaskExecutorTest {
 
     private static TaskExecutor taskExecutor;
 
     @BeforeAll
-    static void createTaskExecutor() {
+    private static void init() {
+        taskExecutor = CachedTaskExecutor.create();
+    }
+
+    @BeforeEach
+    private void reinit() {
+        taskExecutor.shutdown();
         taskExecutor = CachedTaskExecutor.create();
     }
 
@@ -54,4 +63,59 @@ class TaskExecutorTest {
         assertTrue(taskExecutor.isShutdown());
     }
 
+    @Test
+    void executeMainTest() throws InterruptedException {
+        AtomicInteger result = new AtomicInteger(-1);
+        CountDownLatch latch = new CountDownLatch(1);
+        Runnable runnable = () -> {
+            result.set(taskExecutor.isMainThread() ? 1 : 0);
+            latch.countDown();
+        };
+        taskExecutor.executeInMain(runnable);
+        latch.await();
+        assertEquals(1, result.get(), "The code above should have been executed in main thread");
+    }
+
+    @Test
+    void executeAsyncTest() throws InterruptedException {
+        AtomicInteger result = new AtomicInteger(-1);
+        CountDownLatch latch = new CountDownLatch(1);
+        Runnable runnable = () -> {
+            result.set(taskExecutor.isMainThread() ? 1 : 0);
+            latch.countDown();
+        };
+        taskExecutor.executeAsync(runnable);
+        latch.await();
+        assertEquals(0, result.get(), "The code above should have not been executed in main thread");
+    }
+
+    @Test
+    void executeDelayedTest() throws InterruptedException {
+        AtomicInteger result = new AtomicInteger(-1);
+        CountDownLatch latch = new CountDownLatch(1);
+        Runnable runnable = () -> {
+            result.set(taskExecutor.isMainThread() ? 1 : 0);
+            latch.countDown();
+        };
+        taskExecutor.executeWithDelay(runnable, 1, TimeUnit.SECONDS);
+        assertEquals(-1, result.get(), "The code above should not have been executed yet");
+        latch.await();
+        assertEquals(0, result.get(), "The code above should have not been executed in main thread");
+    }
+
+    @Test
+    void executeRepeatedTest() throws InterruptedException {
+        AtomicBoolean executed = new AtomicBoolean();
+        CountDownLatch latch = new CountDownLatch(3);
+        Runnable runnable = () -> {
+            executed.set(true);
+            latch.countDown();
+        };
+        taskExecutor.executeInRepeat(runnable, 500, 500, TimeUnit.MILLISECONDS);
+        assertFalse(executed.get(), "The code above should not have been executed yet");
+        long timestamp = System.currentTimeMillis();
+        latch.await();
+        assertTrue(System.currentTimeMillis() - timestamp >= 500 * 3, "The execution of the three tasks should have taken longer than 1.5 seconds");
+        assertTrue(executed.get(), "The code above should have been executed yet");
+    }
 }
