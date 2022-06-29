@@ -19,6 +19,7 @@ package de.natrox.common.scheduler;
 import de.natrox.common.task.CachedTaskExecutor;
 import de.natrox.common.task.TaskExecutor;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -29,36 +30,38 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SchedulerTest {
 
-    @Test
-    void buildTaskTest() throws Exception {
+    private static Scheduler scheduler;
+
+    @BeforeAll
+    private static void init() {
         TaskExecutor taskExecutor = CachedTaskExecutor.create();
-        Scheduler scheduler = Scheduler.create(taskExecutor);
+        scheduler = Scheduler.create(taskExecutor);
+    }
+
+    @Test
+    void buildTaskTest() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
         Task task = scheduler
             .buildTask(latch::countDown)
             .schedule();
         latch.await();
-        assertEquals(TaskStatus.FINISHED, task.status());
+        assertEquals(TaskStatus.FINISHED, task.status(), "The task should be done executing.");
     }
 
     @Test
-    void cancelTest() throws Exception {
-        TaskExecutor taskExecutor = CachedTaskExecutor.create();
-        Scheduler scheduler = Scheduler.create(taskExecutor);
-        AtomicInteger i = new AtomicInteger(3);
-        Task task = scheduler.buildTask(i::decrementAndGet)
+    void cancelTest() throws InterruptedException {
+        AtomicInteger indicator = new AtomicInteger(0);
+        Task task = scheduler.buildTask(indicator::incrementAndGet)
             .delay(100, TimeUnit.SECONDS)
             .schedule();
         task.cancel();
         Thread.sleep(200);
-        assertEquals(3, i.get());
-        assertEquals(TaskStatus.CANCELLED, task.status());
+        assertEquals(0, indicator.get(), "The indicator value should not have changed.");
+        assertEquals(TaskStatus.CANCELLED, task.status(), "The task should have been cancelled.");
     }
 
     @Test
-    void repeatTaskTest() throws Exception {
-        TaskExecutor taskExecutor = CachedTaskExecutor.create();
-        Scheduler scheduler = Scheduler.create(taskExecutor);
+    void repeatTaskTest() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(3);
         Task task = scheduler.buildTask(latch::countDown)
             .delay(100, TimeUnit.MILLISECONDS)
@@ -70,8 +73,6 @@ class SchedulerTest {
 
     @Test
     void callbackTest() throws InterruptedException {
-        TaskExecutor taskExecutor = CachedTaskExecutor.create();
-        Scheduler scheduler = Scheduler.create(taskExecutor);
         CountDownLatch latch = new CountDownLatch(1);
 
         scheduler
@@ -86,8 +87,6 @@ class SchedulerTest {
 
     @Test
     void callbackCancelTest() throws InterruptedException {
-        TaskExecutor taskExecutor = CachedTaskExecutor.create();
-        Scheduler scheduler = Scheduler.create(taskExecutor);
         CountDownLatch latch = new CountDownLatch(1);
 
         scheduler
