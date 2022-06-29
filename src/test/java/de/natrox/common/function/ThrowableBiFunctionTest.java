@@ -47,7 +47,7 @@ class ThrowableBiFunctionTest {
         ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> operation = this::sum;
         ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = operation.andThen(andThenFunction);
         assertEquals(0, function.apply(1, 2), "Function should return zero.");
-        assertEquals(0, function.apply(5, 4), "Function should return zero.");
+        assertEquals(0, function.apply(2, 3), "Function should return zero.");
     }
 
     @Test
