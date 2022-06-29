@@ -102,6 +102,8 @@ final class TaskImpl implements Runnable, Task {
     }
 
     private void done() {
+        if(this.doneCallback == null)
+            return;
         this.doneCallback.run();
     }
 
@@ -150,5 +152,4 @@ final class TaskImpl implements Runnable, Task {
             return task;
         }
     }
-
 }
