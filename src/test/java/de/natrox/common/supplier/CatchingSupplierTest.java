@@ -2,46 +2,33 @@ package de.natrox.common.supplier;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Objects;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CatchingSupplierTest {
 
-    private static int valueA;
-    private static long valueB;
+    private static int a;
 
     @Test
-    void getTest1() {
-        valueA = 3;
-        CatchingSupplier<Integer> supplier = new CatchingSupplier<>(this::valueA);
-        assertDoesNotThrow(supplier::get);
-        assertEquals(3, supplier.get());
-    }
-
-    @Test
-    void getTest2() {
-        valueB = 4;
-        CatchingSupplier<Long> supplier = new CatchingSupplier<>(this::valueB);
-        assertDoesNotThrow(supplier::get);
-        assertEquals(4, supplier.get());
+    void defaultGetTest() {
+        CatchingSupplier<Integer> supplier = new CatchingSupplier<>(this::a);
+        a = 1;
+        assertEquals(1, supplier.get(), "Supplier should provide the input of 1.");
+        a = 2;
+        assertEquals(2, supplier.get(), "Supplier should provide the input of 2.");
     }
 
     @Test
-    void getExceptionTest1() {
-        valueB = 7;
-        CatchingSupplier<Long> supplier = new CatchingSupplier<>(this::valueB);
-        assertThrows(IllegalStateException.class, supplier::get);
+    void exceptionGetTest() {
+        CatchingSupplier<Integer> supplier = new CatchingSupplier<>(this::a);
+        a = -1;
+        assertThrows(IllegalArgumentException.class,
+            supplier::get, "Supplier should throw an exception if the arguments don't meet the conditions.");
     }
 
-    int valueA() {
-        return valueA;
-    }
-
-    long valueB() {
-        if(valueB >= 5)
-            throw new IllegalStateException();
-        return valueB;
+    int a() {
+        if (a <= 0)
+            throw new IllegalArgumentException();
+        return a;
     }
 }
