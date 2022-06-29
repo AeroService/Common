@@ -36,7 +36,7 @@ class TaskChainTest {
     void factoryTest() {
         TaskChain.Factory factory = TaskChain.createFactory(CachedTaskExecutor.create());
         TaskChain taskChain = factory.create();
-        assertThrows(NullPointerException.class, () -> TaskChain.createFactory(null));
+        assertThrows(IllegalArgumentException.class, () -> TaskChain.createFactory(null));
         assertNotNull(taskChain);
     }
 
