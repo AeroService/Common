@@ -24,7 +24,7 @@ defaultTasks("build", "shadowJar")
 allprojects {
     group = "de.natrox"
     version = "1.0.0-SNAPSHOT"
-    description = "A common core library for Java"
+    description = "A common core library"
 
     repositories {
         mavenCentral()
