@@ -44,4 +44,12 @@ public class SerializeException extends IOException {
     public static <T> SerializeException serialize(T value) {
         return new SerializeException("Unable to serialize " + value.toString() + " (" + value.getClass().getName() + ").");
     }
+
+    public static SerializeException deserialize(Type type, Object value, Throwable cause) {
+        return new SerializeException("Unable to deserialize " + value.toString() + "(" + type.toString() + ") to " + type.getTypeName() + ".", cause);
+    }
+
+    public static <T> SerializeException serialize(T value, Throwable cause) {
+        return new SerializeException("Unable to serialize " + value.toString() + " (" + value.getClass().getName() + ").", cause);
+    }
 }
