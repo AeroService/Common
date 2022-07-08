@@ -6,6 +6,8 @@ public final class TypeSerializers {
         throw new UnsupportedOperationException();
     }
 
-    public final static TypeSerializer<Boolean> BOOLEAN = new BooleanSerializer();
+    public final static TypeSerializer<Boolean> BOOLEAN = new BooleanSerializer(Boolean.class);
+
+    public final static TypeSerializer<Boolean> BOOLEAN_PRIMITIVE = new BooleanSerializer(boolean.class);
 
 }

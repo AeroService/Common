@@ -13,6 +13,7 @@ final class SerializerRegistryImpl implements SerializerRegistry {
         DEFAULT = SerializerRegistry
             .builder()
             .register(TypeSerializers.BOOLEAN)
+            .register(TypeSerializers.BOOLEAN_PRIMITIVE)
             .build();
     }
 

@@ -1,12 +1,14 @@
 package de.natrox.serialize;
 
+import io.leangen.geantyref.TypeToken;
+
 import java.lang.reflect.Type;
 import java.util.Locale;
 
 final class BooleanSerializer extends TypeSerializer<Boolean> {
 
-    public BooleanSerializer() {
-        super(Boolean.class);
+    public BooleanSerializer(Class<Boolean> type) {
+        super(type);
     }
 
     @Override
