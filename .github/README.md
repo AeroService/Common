@@ -2,47 +2,80 @@
 
 [![license](https://img.shields.io/github/license/NatroxMC/Common?style=for-the-badge&color=b2204c)](../LICENSE)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=for-the-badge)](https://github.com/RichardLitt/standard-readme)
+[![discord-banner](https://shields.io/discord/718476275022299157?label=discord&style=for-the-badge&color=7289da)](https://discord.natrox.de)
 
 A basic and common library for the development of Java projects
 
 # Table of contents
-
-- [Why use Common?](#why-use-common)
-- [Advantages & Disadvantages](#advantages-and-disadvantages)
 - [Usage](#usage)
+- [Why Common?](#why-common)
+- [Advantages & Disadvantages](#advantages-and-disadvantages)
+- [API](#api)
 - [Contributing](#contributing)
 - [License](#license)
 
-# Why use Common
+# Usage
+Comming soon.
 
-Coming soon.
+# Why Common?
+Coming soon
 
 # Advantages and Disadvantages
-
-Coming soon.
+The Common library isn't perfect, our choices make it much better for some cases, worse for some others.
 
 ## Advantages
-
-- Coming soon
-- Coming soon
+* Coming soon
+* Coming soon
 
 ## Disadvantages
+* Coming soon
+* Coming soon
 
-- Coming soon
-- Coming soon
+# API
+Adding the Common library to your project is really simple, you only need to add a few repositories. The Common library needs Java 17 or newer. If you are using Gradle, you must use version 7.2 or higher.
 
-# Usage
+## Gradle
 
-## Add to your project
+#### Repository
+```java
+repositories {
+    mavenCentral()
+    maven("https://repo.natrox.de")
+}
+```
 
-- Gradle: (Not yet available)
-- Maven: (Not yet available)
+#### Dependency
+```java
+dependencies {
+    implementation("de.natrox:common:LATEST")
+}
+```
+## Maven
+
+#### Repository
+```xml
+<repositories>
+    <repository>
+        <id>natrox</id>
+        <url>https://repo.natrox.de</url>
+    </repository>
+</repositories>
+```
+
+#### Dependency
+```xml
+<dependencies>
+    <dependency>
+        <groupId>de.natrox</groupId>
+        <artifactId>common</artifactId>
+        <version>LATEST</version>
+    </dependency>
+</dependencies>
+```
 
 # Contributing
-
 See [the contributing file](CONTRIBUTING.md)!
 All WIP features are previewed as Draft PRs!
 
 # License
-
 This project is licensed under the [Apache License Version 2.0](../LICENSE).
