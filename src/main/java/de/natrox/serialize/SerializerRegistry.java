@@ -11,11 +11,15 @@ import java.lang.reflect.Type;
 public sealed interface SerializerRegistry permits SerializerRegistryImpl {
 
     static @NotNull SerializerRegistry.Builder builder() {
-        return new SerializerRegistryImpl.BuilderImpl();
+        return new SerializerRegistryImpl.BuilderImpl(null);
     }
 
     static @NotNull SerializerRegistry defaults() {
         return SerializerRegistryImpl.DEFAULT;
+    }
+
+    default SerializerRegistry.Builder childBuilder() {
+        return new SerializerRegistryImpl.BuilderImpl(this);
     }
 
     <T> @Nullable Serializer<T> get(@NotNull Type type);

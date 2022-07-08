@@ -27,9 +27,11 @@ final class SerializerRegistryImpl implements SerializerRegistry {
     }
 
     final List<RegisteredSerializer> serializers;
+    private final @Nullable SerializerRegistry parent;
     private final Map<Type, Serializer<?>> typeMatches = new ConcurrentHashMap<>();
 
-    public SerializerRegistryImpl(List<RegisteredSerializer> serializers) {
+    public SerializerRegistryImpl(@Nullable SerializerRegistry parent, List<RegisteredSerializer> serializers) {
+        this.parent = parent;
         this.serializers = Collections.unmodifiableList(serializers);
     }
 
@@ -45,16 +47,24 @@ final class SerializerRegistryImpl implements SerializerRegistry {
             return DummySerializer.INSTANCE;
         });
 
-        if(serial == DummySerializer.INSTANCE) {
+        if (serial == DummySerializer.INSTANCE) {
             serial = null;
         }
 
+        if (serial == null && this.parent != null) {
+            serial = this.parent.get(type);
+        }
         return (Serializer<T>) serial;
     }
 
     final static class BuilderImpl implements SerializerRegistry.Builder {
 
+        private final @Nullable SerializerRegistry parent;
         private final List<RegisteredSerializer> serializers = new ArrayList<>();
+
+        BuilderImpl(@Nullable SerializerRegistry parent) {
+            this.parent = parent;
+        }
 
         @Override
         public @NotNull Builder register(@NotNull Type type, @NotNull Serializer<?> serializer) {
@@ -82,7 +92,7 @@ final class SerializerRegistryImpl implements SerializerRegistry {
 
         @Override
         public @UnknownNullability SerializerRegistry build() {
-            return new SerializerRegistryImpl(this.serializers);
+            return new SerializerRegistryImpl(this.parent, this.serializers);
         }
     }
 
