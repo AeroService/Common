@@ -2,6 +2,7 @@ package de.natrox.serialize;
 
 import java.lang.reflect.Type;
 import java.util.Locale;
+import java.util.function.Predicate;
 
 final class BooleanSerializer extends TypeSerializer<Boolean> {
 
@@ -10,8 +11,12 @@ final class BooleanSerializer extends TypeSerializer<Boolean> {
     }
 
     @Override
-    public Object serialize(Boolean value) {
-        return value.toString();
+    public Object serialize(Boolean value, Predicate<Class<?>> types) {
+        if (types.test(Integer.class)) {
+            return value ? 1 : 0;
+        } else {
+            return value.toString();
+        }
     }
 
     @Override

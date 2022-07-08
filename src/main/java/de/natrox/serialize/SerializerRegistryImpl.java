@@ -125,7 +125,7 @@ final class SerializerRegistryImpl implements SerializerRegistry {
         }
 
         @Override
-        public Object serialize(Void value) {
+        public Object serialize(Void value, Predicate<Class<?>> types) {
             throw new UnsupportedOperationException("This is a placeholder for null, should not be called directly");
         }
 
