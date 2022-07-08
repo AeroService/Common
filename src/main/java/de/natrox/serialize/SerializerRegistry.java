@@ -39,28 +39,38 @@ public sealed interface SerializerRegistry permits SerializerRegistryImpl {
         SerializerRegistry.@NotNull Builder register(@NotNull Type type, @NotNull Serializer<?> serializer);
 
         default <T> SerializerRegistry.@NotNull Builder register(@NotNull Class<T> type, @NotNull Serializer<? super T> serializer) {
+            Check.notNull(type, "type");
+            Check.notNull(serializer, "serializer");
             return this.register((Type) type, serializer);
         }
 
-        default <T> SerializerRegistry.@NotNull Builder register(@NotNull TypeToken<T> type, final Serializer<? super T> serializer) {
-            return this.register(type.getType(), serializer);
+        default <T> SerializerRegistry.@NotNull Builder register(@NotNull TypeToken<T> typeToken, final Serializer<? super T> serializer) {
+            Check.notNull(typeToken, "typeToken");
+            Check.notNull(serializer, "serializer");
+            return this.register(typeToken.getType(), serializer);
         }
 
         default SerializerRegistry.@NotNull Builder register(@NotNull TypeSerializer<?> serializer) {
+            Check.notNull(serializer, "serializer");
             return this.register(serializer.type().getType(), serializer);
         }
 
         SerializerRegistry.@NotNull Builder registerExact(@NotNull Type type, @NotNull Serializer<?> serializer);
 
         default <T> SerializerRegistry.@NotNull Builder registerExact(@NotNull Class<T> type, @NotNull Serializer<? super T> serializer) {
+            Check.notNull(type, "type");
+            Check.notNull(serializer, "serializer");
             return this.registerExact((Type) type, serializer);
         }
 
-        default <T> SerializerRegistry.@NotNull Builder registerExact(@NotNull TypeToken<T> type, final Serializer<? super T> serializer) {
-            return this.registerExact(type.getType(), serializer);
+        default <T> SerializerRegistry.@NotNull Builder registerExact(@NotNull TypeToken<T> typeToken, final Serializer<? super T> serializer) {
+            Check.notNull(typeToken, "typeToken");
+            Check.notNull(serializer, "serializer");
+            return this.registerExact(typeToken.getType(), serializer);
         }
 
         default SerializerRegistry.@NotNull Builder registerExact(@NotNull TypeSerializer<?> serializer) {
+            Check.notNull(serializer, "serializer");
             return this.registerExact(serializer.type().getType(), serializer);
         }
 

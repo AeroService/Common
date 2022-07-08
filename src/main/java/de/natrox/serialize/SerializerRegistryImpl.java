@@ -1,5 +1,6 @@
 package de.natrox.serialize;
 
+import de.natrox.common.validate.Check;
 import io.leangen.geantyref.GenericTypeReflector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,13 +31,14 @@ final class SerializerRegistryImpl implements SerializerRegistry {
     private final @Nullable SerializerRegistry parent;
     private final Map<Type, Serializer<?>> typeMatches = new ConcurrentHashMap<>();
 
-    public SerializerRegistryImpl(@Nullable SerializerRegistry parent, List<RegisteredSerializer> serializers) {
+    SerializerRegistryImpl(@Nullable SerializerRegistry parent, List<RegisteredSerializer> serializers) {
         this.parent = parent;
         this.serializers = Collections.unmodifiableList(serializers);
     }
 
     @Override
     public @Nullable <T> Serializer<T> get(@NotNull Type type) {
+        Check.notNull(type, "type");
         Serializer<?> serial = this.typeMatches.computeIfAbsent(type, param -> {
             for (final RegisteredSerializer ent : this.serializers) {
                 if (ent.matches(param)) {
@@ -68,6 +70,8 @@ final class SerializerRegistryImpl implements SerializerRegistry {
 
         @Override
         public @NotNull Builder register(@NotNull Type type, @NotNull Serializer<?> serializer) {
+            Check.notNull(type, "type");
+            Check.notNull(serializer, "serializer");
             this.serializers.add(new RegisteredSerializer(test -> {
                 if (GenericTypeReflector.isSuperType(type, test)) {
                     return true;
@@ -86,6 +90,8 @@ final class SerializerRegistryImpl implements SerializerRegistry {
 
         @Override
         public @NotNull Builder registerExact(@NotNull Type type, @NotNull Serializer<?> serializer) {
+            Check.notNull(type, "type");
+            Check.notNull(serializer, "serializer");
             this.serializers.add(new RegisteredSerializer(test -> test.equals(type), serializer));
             return this;
         }
@@ -102,7 +108,7 @@ final class SerializerRegistryImpl implements SerializerRegistry {
         private final Predicate<Type> predicate;
         private final Serializer<?> serializer;
 
-        RegisteredSerializer(final Predicate<Type> predicate, final Serializer<?> serializer) {
+        RegisteredSerializer(Predicate<Type> predicate, Serializer<?> serializer) {
             this.predicate = predicate;
             this.serializer = serializer;
         }
