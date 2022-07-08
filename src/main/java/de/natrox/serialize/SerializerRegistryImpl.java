@@ -22,7 +22,7 @@ final class SerializerRegistryImpl implements SerializerRegistry {
     static {
         DEFAULT = SerializerRegistry
             .builder()
-            .register(TypeSerializers.BOOLEAN)
+            .registerExact(TypeSerializers.BOOLEAN)
             .build();
     }
 
@@ -66,6 +66,12 @@ final class SerializerRegistryImpl implements SerializerRegistry {
                 }
                 return false;
             }, serializer));
+            return this;
+        }
+
+        @Override
+        public @NotNull Builder registerExact(@NotNull Type type, @NotNull Serializer<?> serializer) {
+            this.serializers.add(new RegisteredSerializer(test -> test.equals(type), serializer));
             return this;
         }
 
