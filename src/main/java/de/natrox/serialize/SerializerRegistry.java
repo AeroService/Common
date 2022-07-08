@@ -26,7 +26,7 @@ public sealed interface SerializerRegistry permits SerializerRegistryImpl {
 
     default <T> @Nullable Serializer<T> get(@NotNull Class<T> type) {
         Check.notNull(type, "type");
-        return this.get(type);
+        return this.get((Type) type);
     }
 
     default <T> @Nullable Serializer<T> get(@NotNull TypeToken<T> typeToken) {
