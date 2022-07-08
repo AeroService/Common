@@ -5,7 +5,7 @@ import java.util.Locale;
 
 final class BooleanSerializer extends TypeSerializer<Boolean> {
 
-    public BooleanSerializer() {
+    BooleanSerializer() {
         super(Boolean.class);
     }
 
