@@ -46,7 +46,7 @@ public sealed interface SerializerRegistry permits SerializerRegistryImpl {
             return this.register(serializer.type().getType(), serializer);
         }
 
-        SerializerRegistry.@Nullable Builder registerExact(@NotNull Type type, @NotNull Serializer<?> serializer);
+        SerializerRegistry.@NotNull Builder registerExact(@NotNull Type type, @NotNull Serializer<?> serializer);
 
         default <T> SerializerRegistry.@NotNull Builder registerExact(@NotNull Class<T> type, @NotNull Serializer<? super T> serializer) {
             return this.registerExact((Type) type, serializer);
