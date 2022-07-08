@@ -18,7 +18,7 @@ allprojects {
 
 dependencies {
     implementation("org.jetbrains:annotations:23.0.0")
-    implementation(files("D:\\intelliJ\\natrox\\Common\\build\\libs\\common.jar"))
+    implementation(files("D:\\workspace\\NatroxMC\\Common\\build\\libs\\common.jar"))
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
