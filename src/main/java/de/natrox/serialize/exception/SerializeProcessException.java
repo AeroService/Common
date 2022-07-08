@@ -16,21 +16,21 @@
 
 package de.natrox.serialize.exception;
 
-public class SerializeException extends RuntimeException {
+public class SerializeProcessException extends SerializeException {
 
-    public SerializeException() {
+    public SerializeProcessException() {
         super();
     }
 
-    public SerializeException(String message) {
+    public SerializeProcessException(String message) {
         super(message);
     }
 
-    public SerializeException(String message, Throwable cause) {
+    public SerializeProcessException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public SerializeException(Throwable cause) {
+    public SerializeProcessException(Throwable cause) {
         super(cause);
     }
 }

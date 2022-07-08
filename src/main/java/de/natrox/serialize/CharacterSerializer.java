@@ -16,63 +16,56 @@
 
 package de.natrox.serialize;
 
-import de.natrox.serialize.exception.SerializeException;
-import org.jetbrains.annotations.NotNull;
+import de.natrox.serialize.exception.SerializeProcessException;
+import de.natrox.serialize.preferences.SerializerPreferences;
+import de.natrox.serialize.util.NumberUtil;
 
-import java.lang.reflect.Type;
-import java.util.function.Predicate;
+public final class CharacterSerializer {
 
-public class CharacterSerializer extends AbstractSerializer<Character> {
-
-    public CharacterSerializer() {
-        super(Character.class);
+    private CharacterSerializer() {
+        throw new UnsupportedOperationException();
     }
 
-    @Override
-    public @NotNull Character deserialize(@NotNull Type type, @NotNull Object object) throws SerializeException {
-        if (Character.class.isAssignableFrom(object.getClass()))
-            return (Character) object;
-        if (Number.class.isAssignableFrom(object.getClass()))
-            return this.deserializeFromNumber((Number) object);
-        if (CharSequence.class.isAssignableFrom(object.getClass()))
-            return this.deserializeFromText((CharSequence) object);
-
-        throw SerializeException.deserialize(type, object);
+    public static Object serialize(Character value, SerializerPreferences preferences) {
+        for (Class<?> acceptedType : preferences.acceptedTypes()) {
+            if (Character.class.isAssignableFrom(acceptedType))
+                return value;
+            else if (Number.class.isAssignableFrom(acceptedType))
+                return serializeToNumber(value).byteValue();
+            else if (CharSequence.class.isAssignableFrom(acceptedType))
+                return serializeToText(value);
+        }
+        throw new SerializeProcessException("Unable to find matching type to serialize in preferences.");
     }
 
-    @Override
-    public Object serialize(Character value, @NotNull Predicate<Class<?>> typeSupported) throws SerializeException {
-        if (typeSupported.test(Character.class))
-            return value;
-        if (typeSupported.test(Integer.class))
-            return this.serializeToNumber(value).intValue();
-        if (typeSupported.test(Short.class))
-            return this.serializeToNumber(value).shortValue();
-        if (typeSupported.test(String.class))
-            return this.serializeToText(value);
-
-        throw SerializeException.serialize(value);
+    public static Character deserialize(Object value, SerializerPreferences preferences) {
+        if (Number.class.isAssignableFrom(value.getClass()))
+            return deserializeFromNumber((Number) value);
+        if (CharSequence.class.isAssignableFrom(value.getClass())) {
+            CharSequence sequence = (CharSequence) value;
+            if (sequence.isEmpty())
+                throw new SerializeProcessException("Unable to extract character out of an empty char sequence.");
+            if (!preferences.lenient() && sequence.length() > 1)
+                throw new SerializeProcessException("Unable to extract first character out of an longer char sequence.");
+            return deserializeFromText(sequence);
+        }
+        throw new SerializeProcessException("Unable to cast to an deserializable type for character.");
     }
 
-    @Override
-    public @NotNull Number serializeToNumber(@NotNull Character value) {
-        return (short) (int) value;
+
+    private static Number serializeToNumber(final Character value) {
+        return (int) value;
     }
 
-    @Override
-    public @NotNull Character deserializeFromNumber(@NotNull Number value) {
-        return (char) value.shortValue();
-    }
-
-    @Override
-    public @NotNull CharSequence serializeToText(@NotNull Character value) {
+    private static CharSequence serializeToText(Character value) {
         return value.toString();
     }
 
-    @Override
-    public @NotNull Character deserializeFromText(@NotNull CharSequence value) throws SerializeException {
-        if (value.length() < 1)
-            throw new SerializeException("Given char sequence contains no characters.");
-        return value.charAt(0);
+    private static Character deserializeFromNumber(Number number) {
+        return (char) (int) NumberUtil.cast(number, int.class);
+    }
+
+    private static Character deserializeFromText(CharSequence text) {
+        return text.charAt(0);
     }
 }

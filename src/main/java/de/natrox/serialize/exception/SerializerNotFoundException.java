@@ -16,21 +16,21 @@
 
 package de.natrox.serialize.exception;
 
-public class SerializeException extends RuntimeException {
+public class SerializerNotFoundException extends SerializeException {
 
-    public SerializeException() {
+    public SerializerNotFoundException() {
         super();
     }
 
-    public SerializeException(String message) {
+    public SerializerNotFoundException(String message) {
         super(message);
     }
 
-    public SerializeException(String message, Throwable cause) {
+    public SerializerNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public SerializeException(Throwable cause) {
+    public SerializerNotFoundException(Throwable cause) {
         super(cause);
     }
 }

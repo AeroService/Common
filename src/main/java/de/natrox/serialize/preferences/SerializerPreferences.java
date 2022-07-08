@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize.exception;
+package de.natrox.serialize.preferences;
 
-public class SerializeException extends RuntimeException {
+import java.util.List;
 
-    public SerializeException() {
-        super();
+public interface SerializerPreferences {
+
+    static SerializerPreferences create() {
+        return new SerializerPreferencesImpl();
     }
 
-    public SerializeException(String message) {
-        super(message);
-    }
+    boolean lenient();
 
-    public SerializeException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    SerializerPreferences lenient(boolean lenient);
 
-    public SerializeException(Throwable cause) {
-        super(cause);
-    }
+    List<Class<?>> acceptedTypes();
+
+    SerializerPreferences acceptedTypes(List<Class<?>> acceptedTypes);
 }

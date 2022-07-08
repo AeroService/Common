@@ -16,76 +16,77 @@
 
 package de.natrox.serialize;
 
-import de.natrox.serialize.exception.SerializeException;
-import org.jetbrains.annotations.NotNull;
+import de.natrox.serialize.exception.SerializeProcessException;
+import de.natrox.serialize.preferences.SerializerPreferences;
+import de.natrox.serialize.util.NumberUtil;
 
-import java.lang.reflect.Type;
 import java.util.Locale;
-import java.util.function.Predicate;
 
-public final class BooleanSerializer extends AbstractSerializer<Boolean> {
+public final class BooleanSerializer {
 
-    public BooleanSerializer() {
-        super(Boolean.class);
+    private BooleanSerializer() {
+        throw new UnsupportedOperationException();
     }
 
-    @Override
-    public @NotNull Boolean deserialize(@NotNull Type type, @NotNull Object object) throws SerializeException {
-        if (Boolean.class.isAssignableFrom(object.getClass()))
-            return (Boolean) object;
-        if (Number.class.isAssignableFrom(object.getClass()))
-            return this.deserializeFromNumber((Number) object);
-        if (CharSequence.class.isAssignableFrom(object.getClass()))
-            return this.deserializeFromText((CharSequence) object);
+    public static Object serialize(Boolean value, SerializerPreferences preferences) {
+        for (Class<?> acceptedType : preferences.acceptedTypes()) {
+            if (Boolean.class.isAssignableFrom(acceptedType))
+                return value;
+            else if (Number.class.isAssignableFrom(acceptedType))
+                return NumberUtil.cast(serializeToNumber(value), (Class<? extends Number>) acceptedType);
+            else if (CharSequence.class.isAssignableFrom(acceptedType))
+                return serializeToText(value);
+        }
 
-        throw SerializeException.deserialize(type, object);
+        throw new SerializeProcessException("Unable to find matching type to serialize in preferences.");
     }
 
-    @Override
-    public Object serialize(Boolean value, @NotNull Predicate<Class<?>> typeSupported) throws SerializeException {
-        if (typeSupported.test(Boolean.class))
-            return value;
-        if (typeSupported.test(Byte.class))
-            return this.serializeToNumber(value).byteValue();
-        if (typeSupported.test(Short.class))
-            return this.serializeToNumber(value).shortValue();
-        if (typeSupported.test(Integer.class))
-            return this.serializeToNumber(value);
-        if (typeSupported.test(String.class))
-            return this.serializeToText(value);
-
-        throw SerializeException.serialize(value);
+    public static Boolean deserialize(Object value, SerializerPreferences preferences) {
+        if (preferences.lenient()) {
+            if (Number.class.isAssignableFrom(value.getClass()))
+                return ((Number) value).intValue() % 2 == 0;
+            if (CharSequence.class.isAssignableFrom(value.getClass())) {
+                try {
+                    return deserializeFromText((CharSequence) value);
+                } catch (SerializeProcessException ignored) {
+                    return false;
+                }
+            }
+        } else {
+            if (Number.class.isAssignableFrom(value.getClass())) {
+                Number numericValue = (Number) value;
+                if (numericValue.intValue() == 1)
+                    return true;
+                else if (numericValue.intValue() == 0)
+                    return false;
+                throw new SerializeProcessException("Unable to deserialize to boolean from number. Consider use of lenient deserialization instead.");
+            }
+            if (CharSequence.class.isAssignableFrom(value.getClass()))
+                return deserializeFromText((CharSequence) value);
+        }
+        throw new SerializeProcessException("Unable to cast to an deserializable type for boolean.");
     }
 
-    @Override
-    public @NotNull Number serializeToNumber(@NotNull Boolean value) {
+    private static Number serializeToNumber(Boolean value) {
         return value ? 1 : 0;
     }
 
-    @Override
-    public @NotNull Boolean deserializeFromNumber(@NotNull Number value) {
-        return value.intValue() % 2 == 0;
-    }
-
-    @Override
-    public @NotNull CharSequence serializeToText(@NotNull Boolean value) {
+    private static CharSequence serializeToText(Boolean value) {
         return value ? "true" : "false";
     }
 
-    @Override
-    public @NotNull Boolean deserializeFromText(@NotNull CharSequence value) throws SerializeException {
-        String stringValue = value.toString().toLowerCase(Locale.ROOT);
-        if ("true".equals(stringValue) ||
-            "t".equals(stringValue) ||
-            "yes".equals(stringValue) ||
-            "y".equals(stringValue))
+    private static Boolean deserializeFromText(CharSequence text) {
+        String textValue = text.toString().toLowerCase(Locale.ROOT);
+        if ("true".equals(textValue) ||
+            "t".equals(textValue) ||
+            "yes".equals(textValue) ||
+            "y".equals(textValue))
             return true;
-        if ("false".equals(stringValue) ||
-            "f".equals(stringValue) ||
-            "no".equals(stringValue) ||
-            "n".equals(stringValue))
+        if ("false".equals(textValue) ||
+            "f".equals(textValue) ||
+            "no".equals(textValue) ||
+            "n".equals(textValue))
             return false;
-
-        throw new SerializeException("Given char sequence could not be converted to a boolean.");
+        throw new SerializeProcessException("Unable to deserialize to boolean from text. Consider use of lenient deserialization instead.");
     }
 }

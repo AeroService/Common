@@ -16,51 +16,21 @@
 
 package de.natrox.serialize;
 
-import de.natrox.serialize.exception.SerializeException;
-import io.leangen.geantyref.TypeToken;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import de.natrox.common.function.ThrowableBiFunction;
+import de.natrox.serialize.preferences.SerializerPreferences;
 
-import java.lang.reflect.Type;
-import java.util.function.Predicate;
-
-public interface Serializer<T> {
-
-    Serializer<String> STRING = new StringSerializer();
-    Serializer<Boolean> BOOLEAN = new BooleanSerializer();
-    Serializer<Character> CHAR = new CharacterSerializer();
-
-    TypeToken<T> type();
-
-    @NotNull T deserialize(@NotNull Object object) throws SerializeException;
-
-    @NotNull T deserialize(@NotNull Type type, @NotNull Object object) throws SerializeException;
-
-    Object serialize(@Nullable T object, @NotNull Predicate<Class<?>> typeSupported) throws SerializeException;
-
-    T tryDeserialize(@Nullable Object object);
-
-    default @NotNull Number serializeToNumber(@NotNull T value) throws SerializeException {
-        throw new UnsupportedOperationException();
+public interface Serializer {
+    static Serializer create(SerializerPreferences preferences) {
+        return new SerializerImpl(preferences);
     }
 
-    default @NotNull T deserializeFromNumber(@NotNull Number value) throws SerializeException {
-        throw new UnsupportedOperationException();
-    }
+    Serializer addDefaultOperations();
 
-    default @NotNull CharSequence serializeToText(@NotNull T value) throws SerializeException {
-        throw new UnsupportedOperationException();
-    }
+    <T> Object serialize(T value);
 
-    default @NotNull T deserializeFromText(@NotNull CharSequence value) throws SerializeException {
-        throw new UnsupportedOperationException();
-    }
+    <T> T deserialize(Object value, Class<T> valueClass);
 
-    default @NotNull Object reserialize(@NotNull T object) throws SerializeException {
-        return this.reserialize(object, (everyClass) -> true);
-    }
+    <T> Serializer addSerializer(Class<? extends T> type, ThrowableBiFunction<T, SerializerPreferences, Object, RuntimeException> operation);
 
-    default Object reserialize(@NotNull T object, @NotNull Predicate<Class<?>> typeSupported) throws SerializeException {
-        return this.serialize(this.deserialize(object), typeSupported);
-    }
+    <T> Serializer addDeserializer(Class<? extends T> type, ThrowableBiFunction<Object, SerializerPreferences, T, RuntimeException> operation);
 }

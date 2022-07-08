@@ -18,8 +18,7 @@ allprojects {
 
 dependencies {
     implementation("org.jetbrains:annotations:23.0.0")
-    implementation("org.slf4j:slf4j-api:2.0.0-alpha7")
-    implementation("io.leangen.geantyref:geantyref:1.3.13")
+    implementation(files("D:\\intelliJ\\natrox\\Common\\build\\libs\\common.jar"))
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
