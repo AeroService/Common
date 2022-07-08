@@ -1,7 +1,5 @@
 package de.natrox.serialize;
 
-import io.leangen.geantyref.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.Locale;
 

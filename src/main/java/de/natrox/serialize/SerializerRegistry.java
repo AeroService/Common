@@ -4,6 +4,7 @@ import de.natrox.common.builder.IBuilder;
 import de.natrox.common.validate.Check;
 import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 
@@ -17,14 +18,14 @@ public sealed interface SerializerRegistry permits SerializerRegistryImpl {
         return SerializerRegistryImpl.DEFAULT;
     }
 
-    <T> @NotNull Serializer<T> get(@NotNull Type type);
+    <T> @Nullable Serializer<T> get(@NotNull Type type);
 
-    default <T> @NotNull Serializer<T> get(@NotNull Class<T> type) {
+    default <T> @Nullable Serializer<T> get(@NotNull Class<T> type) {
         Check.notNull(type, "type");
         return this.get(type);
     }
 
-    default <T> @NotNull Serializer<T> get(@NotNull TypeToken<T> typeToken) {
+    default <T> @Nullable Serializer<T> get(@NotNull TypeToken<T> typeToken) {
         Check.notNull(typeToken, "typeToken");
         return this.get(typeToken.getType());
     }
