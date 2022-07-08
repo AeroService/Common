@@ -5,8 +5,8 @@ import java.util.Locale;
 
 final class BooleanSerializer extends TypeSerializer<Boolean> {
 
-    public BooleanSerializer(Class<Boolean> type) {
-        super(type);
+    public BooleanSerializer() {
+        super(Boolean.class);
     }
 
     @Override

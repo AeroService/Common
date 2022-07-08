@@ -25,7 +25,7 @@ class SerializeTest {
 
     @Test
     void test() {
-        TypeSerializer<Boolean> primSerializer = TypeSerializers.BOOLEAN_PRIMITIVE;
+        TypeSerializer<Boolean> primSerializer = TypeSerializers.BOOLEAN;
         Map<String, Object> data = new HashMap<>();
 
         data.put("test", true);
