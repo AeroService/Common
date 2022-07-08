@@ -1,19 +1,20 @@
 package de.natrox.serialize;
 
+import de.natrox.common.builder.IBuilder;
 import de.natrox.common.validate.Check;
 import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
-public interface SerializerRegistry {
+public sealed interface SerializerRegistry permits SerializerRegistryImpl {
 
     static @NotNull SerializerRegistry.Builder builder() {
-        return null;
+        return new SerializerRegistryImpl.BuilderImpl();
     }
 
     static @NotNull SerializerRegistry defaults() {
-        return null;
+        return SerializerRegistryImpl.DEFAULT;
     }
 
     <T> @NotNull Serializer<T> get(@NotNull Type type);
@@ -22,13 +23,27 @@ public interface SerializerRegistry {
         Check.notNull(type, "type");
         return this.get(type);
     }
+
     default <T> @NotNull Serializer<T> get(@NotNull TypeToken<T> typeToken) {
         Check.notNull(typeToken, "typeToken");
         return this.get(typeToken.getType());
     }
 
+    interface Builder extends IBuilder<SerializerRegistry> {
 
-    interface Builder {
+        SerializerRegistry.@NotNull Builder register(@NotNull Type type, @NotNull Serializer<?> serializer);
+
+        default <T> SerializerRegistry.@NotNull Builder register(@NotNull Class<T> type, @NotNull Serializer<? super T> serializer) {
+            return this.register((Type) type, serializer);
+        }
+
+        default <T> SerializerRegistry.@NotNull Builder register(@NotNull TypeToken<T> type, final Serializer<? super T> serializer) {
+            return this.register(type.getType(), serializer);
+        }
+
+        default SerializerRegistry.@NotNull Builder register(@NotNull TypeSerializer<?> serializer) {
+            return this.register(serializer.type().getType(), serializer);
+        }
 
     }
 
