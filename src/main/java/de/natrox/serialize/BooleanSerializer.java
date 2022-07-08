@@ -3,7 +3,11 @@ package de.natrox.serialize;
 import java.lang.reflect.Type;
 import java.util.Locale;
 
-final class BooleanSerializer implements Serializer<Boolean> {
+final class BooleanSerializer extends TypeSerializer<Boolean> {
+
+    public BooleanSerializer() {
+        super(Boolean.class);
+    }
 
     @Override
     public Object serialize(Boolean value) {
