@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/github/license/NatroxMC/Serialize?style=for-the-badge&color=b2204c)](../LICENSE)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=for-the-badge)](https://github.com/RichardLitt/standard-readme)
 
-A serializer which de/serializes objects of a given type
+A serializer which coerces an input value to another type
 
 # Table of contents
 

@@ -25,7 +25,7 @@ defaultTasks("build", "shadowJar")
 allprojects {
     group = "de.natrox"
     version = "1.0.0-SNAPSHOT"
-    description = "A serializer which de/serializes objects of a given type"
+    description = "A serializer which coerces an input value to another type"
 
     repositories {
         mavenCentral()
