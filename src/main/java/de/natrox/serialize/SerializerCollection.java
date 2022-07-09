@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public sealed interface SerializerCollection extends Serializer<Object> permits SerializerCollectionImpl {
@@ -53,6 +54,8 @@ public sealed interface SerializerCollection extends Serializer<Object> permits 
     }
 
     interface Builder extends IBuilder<SerializerCollection> {
+
+        <T> SerializerCollection.@NotNull Builder register(@NotNull Predicate<Type> test, final TypeSerializer<? super T> serializer);
 
         SerializerCollection.@NotNull Builder register(@NotNull Type type, @NotNull Serializer<?> serializer);
 

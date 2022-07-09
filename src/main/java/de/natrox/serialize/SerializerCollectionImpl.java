@@ -95,6 +95,15 @@ final class SerializerCollectionImpl implements SerializerCollection {
             this.parent = parent;
         }
 
+        @NotNull
+        @Override
+        public <T> Builder register(@NotNull Predicate<Type> test, TypeSerializer<? super T> serializer) {
+            Check.notNull(test, "test");
+            Check.notNull(serializer, "serializer");
+            this.serializers.add(new RegisteredSerializer(test, serializer));
+            return this;
+        }
+
         @Override
         public @NotNull Builder register(@NotNull Type type, @NotNull Serializer<?> serializer) {
             Check.notNull(type, "type");
