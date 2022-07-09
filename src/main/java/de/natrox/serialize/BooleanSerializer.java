@@ -2,7 +2,6 @@ package de.natrox.serialize;
 
 import java.lang.reflect.Type;
 import java.util.Locale;
-import java.util.function.Predicate;
 
 final class BooleanSerializer extends TypeSerializer<Boolean> {
 

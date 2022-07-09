@@ -16,5 +16,4 @@ public interface Serializer<T> {
     default T deserialize(TypeToken<T> typeToken, Object obj) {
         return this.deserialize(typeToken.getType(), obj);
     }
-
 }
