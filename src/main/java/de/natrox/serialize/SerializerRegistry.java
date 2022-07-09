@@ -73,7 +73,5 @@ public sealed interface SerializerRegistry permits SerializerRegistryImpl {
             Check.notNull(serializer, "serializer");
             return this.registerExact(serializer.type().getType(), serializer);
         }
-
     }
-
 }

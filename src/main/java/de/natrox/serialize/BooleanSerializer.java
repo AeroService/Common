@@ -11,15 +11,6 @@ final class BooleanSerializer extends TypeSerializer<Boolean> {
     }
 
     @Override
-    public Object serialize(Boolean value, Predicate<Class<?>> types) {
-        if (types.test(Integer.class)) {
-            return value ? 1 : 0;
-        } else {
-            return value.toString();
-        }
-    }
-
-    @Override
     public Boolean deserialize(Type type, Object obj) {
         if (obj instanceof Number) {
             return !obj.equals(0);
