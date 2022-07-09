@@ -24,6 +24,7 @@ final class SerializerRegistryImpl implements SerializerRegistry {
         DEFAULT = SerializerRegistry
             .builder()
             .registerExact(TypeSerializers.BOOLEAN)
+            .registerExact(TypeSerializers.STRING)
             .build();
     }
 
