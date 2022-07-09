@@ -46,12 +46,8 @@ final class SerializerRegistryImpl implements SerializerRegistry {
                 }
             }
 
-            return DummySerializer.INSTANCE;
+            return null;
         });
-
-        if (serial == DummySerializer.INSTANCE) {
-            serial = null;
-        }
 
         if (serial == null && this.parent != null) {
             serial = this.parent.get(type);
@@ -119,25 +115,6 @@ final class SerializerRegistryImpl implements SerializerRegistry {
 
         public Serializer<?> serializer() {
             return this.serializer;
-        }
-    }
-
-    static final class DummySerializer implements Serializer<Void> {
-
-        static final DummySerializer INSTANCE = new DummySerializer();
-
-        private DummySerializer() {
-
-        }
-
-        @Override
-        public Object serialize(Void value, Predicate<Class<?>> types) {
-            throw new UnsupportedOperationException("This is a placeholder for null, should not be called directly");
-        }
-
-        @Override
-        public Void deserialize(Type type, Object obj) {
-            throw new UnsupportedOperationException("This is a placeholder for null, should not be called directly");
         }
     }
 }
