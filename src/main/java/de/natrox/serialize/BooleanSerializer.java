@@ -1,5 +1,8 @@
 package de.natrox.serialize;
 
+import de.natrox.serialize.exception.CoercionFailedException;
+import de.natrox.serialize.exception.SerializeException;
+
 import java.lang.reflect.Type;
 import java.util.Locale;
 
@@ -10,7 +13,7 @@ final class BooleanSerializer extends TypeSerializer<Boolean> {
     }
 
     @Override
-    public Boolean deserialize(Type type, Object obj) {
+    public Boolean deserialize(Type type, Object obj) throws SerializeException {
         if (obj instanceof Number) {
             return !obj.equals(0);
         }
@@ -30,6 +33,6 @@ final class BooleanSerializer extends TypeSerializer<Boolean> {
             return false;
         }
 
-        throw new RuntimeException();
+        throw new CoercionFailedException(type, obj, "boolean");
     }
 }

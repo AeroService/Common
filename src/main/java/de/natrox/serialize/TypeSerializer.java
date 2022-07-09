@@ -1,5 +1,6 @@
 package de.natrox.serialize;
 
+import de.natrox.serialize.exception.SerializeException;
 import io.leangen.geantyref.TypeToken;
 
 public abstract class TypeSerializer<T> implements Serializer<T> {
@@ -18,7 +19,7 @@ public abstract class TypeSerializer<T> implements Serializer<T> {
         return this.typeToken;
     }
 
-    public T deserialize(Object obj) {
+    public T deserialize(Object obj) throws SerializeException {
         return this.deserialize(this.typeToken, obj);
     }
 }
