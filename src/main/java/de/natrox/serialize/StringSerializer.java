@@ -1,5 +1,7 @@
 package de.natrox.serialize;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Type;
 
 final class StringSerializer extends TypeSerializer<String> {
@@ -9,7 +11,7 @@ final class StringSerializer extends TypeSerializer<String> {
     }
 
     @Override
-    public String deserialize(Type type, Object obj) {
+    public @NotNull String deserialize(@NotNull Object obj, @NotNull Type type) {
         return obj.toString();
     }
 }

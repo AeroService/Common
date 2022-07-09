@@ -1,20 +1,26 @@
 package de.natrox.serialize;
 
+import de.natrox.common.validate.Check;
 import de.natrox.serialize.exception.SerializeException;
 import io.leangen.geantyref.TypeToken;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
 @FunctionalInterface
 public interface Serializer<T> {
 
-    T deserialize(Type type, Object obj) throws SerializeException;
+    @NotNull T deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException;
 
-    default T deserialize(Class<T> type, Object obj) throws SerializeException {
-        return this.deserialize((Type) type, obj);
+    default T deserialize(@NotNull Object obj, @NotNull Class<T> type) throws SerializeException {
+        Check.notNull(obj, "object");
+        Check.notNull(type, "type");
+        return this.deserialize(obj, (Type) type);
     }
 
-    default T deserialize(TypeToken<T> typeToken, Object obj) throws SerializeException {
-        return this.deserialize(typeToken.getType(), obj);
+    default T deserialize(@NotNull Object obj, @NotNull TypeToken<T> typeToken) throws SerializeException {
+        Check.notNull(obj, "object");
+        Check.notNull(typeToken, "typeToken");
+        return this.deserialize(obj, typeToken.getType());
     }
 }

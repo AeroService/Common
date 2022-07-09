@@ -1,7 +1,9 @@
 package de.natrox.serialize;
 
+import de.natrox.common.validate.Check;
 import de.natrox.serialize.exception.SerializeException;
 import io.leangen.geantyref.TypeToken;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class TypeSerializer<T> implements Serializer<T> {
 
@@ -19,7 +21,8 @@ public abstract class TypeSerializer<T> implements Serializer<T> {
         return this.typeToken;
     }
 
-    public T deserialize(Object obj) throws SerializeException {
-        return this.deserialize(this.typeToken, obj);
+    public @NotNull T deserialize(@NotNull Object obj) throws SerializeException {
+        Check.notNull(obj, "object");
+        return this.deserialize(obj, this.typeToken);
     }
 }

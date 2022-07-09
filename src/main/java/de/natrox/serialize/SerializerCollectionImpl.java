@@ -1,6 +1,8 @@
 package de.natrox.serialize;
 
 import de.natrox.common.validate.Check;
+import de.natrox.serialize.exception.SerializeException;
+import de.natrox.serialize.exception.SerializerNotFoundException;
 import io.leangen.geantyref.GenericTypeReflector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,12 +18,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 @SuppressWarnings("unchecked")
-final class SerializerRegistryImpl implements SerializerRegistry {
+final class SerializerCollectionImpl implements SerializerCollection {
 
-    final static SerializerRegistry DEFAULT;
+    final static SerializerCollection DEFAULT;
 
     static {
-        DEFAULT = SerializerRegistry
+        DEFAULT = SerializerCollection
             .builder()
             .registerExact(TypeSerializers.BOOLEAN)
             .registerExact(TypeSerializers.STRING)
@@ -29,10 +31,10 @@ final class SerializerRegistryImpl implements SerializerRegistry {
     }
 
     final List<RegisteredSerializer> serializers;
-    private final @Nullable SerializerRegistry parent;
+    private final @Nullable SerializerCollection parent;
     private final Map<Type, Serializer<?>> typeMatches = new ConcurrentHashMap<>();
 
-    SerializerRegistryImpl(@Nullable SerializerRegistry parent, List<RegisteredSerializer> serializers) {
+    SerializerCollectionImpl(@Nullable SerializerCollection parent, List<RegisteredSerializer> serializers) {
         this.parent = parent;
         this.serializers = Collections.unmodifiableList(serializers);
     }
@@ -56,12 +58,40 @@ final class SerializerRegistryImpl implements SerializerRegistry {
         return (Serializer<T>) serial;
     }
 
-    final static class BuilderImpl implements SerializerRegistry.Builder {
+    @Override
+    public @NotNull Object deserialize(@NotNull Object obj, Type @NotNull ... types) throws SerializeException {
+        for (Type type : types) {
+            try {
+                Serializer<Object> serializer = this.get(type);
 
-        private final @Nullable SerializerRegistry parent;
+                if (serializer != null) {
+                    return serializer.deserialize(obj, type);
+                }
+            } catch (SerializeException ignored) {
+
+            }
+        }
+
+        throw new SerializerNotFoundException(obj, types);
+    }
+
+    @Override
+    public @NotNull Object deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
+        Serializer<Object> serializer = this.get(type);
+
+        if (serializer != null) {
+            return serializer.deserialize(obj, type);
+        }
+
+        throw new SerializerNotFoundException(obj, type);
+    }
+
+    final static class BuilderImpl implements SerializerCollection.Builder {
+
+        private final @Nullable SerializerCollection parent;
         private final List<RegisteredSerializer> serializers = new ArrayList<>();
 
-        BuilderImpl(@Nullable SerializerRegistry parent) {
+        BuilderImpl(@Nullable SerializerCollection parent) {
             this.parent = parent;
         }
 
@@ -94,8 +124,8 @@ final class SerializerRegistryImpl implements SerializerRegistry {
         }
 
         @Override
-        public @UnknownNullability SerializerRegistry build() {
-            return new SerializerRegistryImpl(this.parent, this.serializers);
+        public @UnknownNullability SerializerCollection build() {
+            return new SerializerCollectionImpl(this.parent, this.serializers);
         }
     }
 
