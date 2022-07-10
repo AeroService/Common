@@ -17,6 +17,7 @@
 package de.natrox.serialize.objectmapping;
 
 import de.natrox.common.function.ThrowableFunction;
+import de.natrox.common.validate.Check;
 import de.natrox.serialize.exception.SerializeException;
 import io.leangen.geantyref.GenericTypeReflector;
 import org.jetbrains.annotations.NotNull;
@@ -46,6 +47,7 @@ final class ObjectMapperFactoryImpl implements ObjectMapper.Factory {
 
     @Override
     public @NotNull ObjectMapper<?> get(@NotNull Type type) throws SerializeException {
+        Check.notNull(type, "type");
         if (GenericTypeReflector.isMissingTypeParameters(type)) {
             throw new SerializeException(type, "Raw types are not supported!");
         }

@@ -17,6 +17,7 @@
 package de.natrox.serialize.objectmapping;
 
 import de.natrox.common.function.ThrowableFunction;
+import de.natrox.common.validate.Check;
 import de.natrox.serialize.Serializer;
 import de.natrox.serialize.SerializerCollection;
 import de.natrox.serialize.exception.SerializeException;
@@ -43,11 +44,14 @@ final class ObjectMapperImpl<T, U> implements ObjectMapper<T> {
 
     @Override
     public @NotNull T load(@NotNull Map<String, Object> source) throws SerializeException {
+        Check.notNull(source, "source");
         return this.load(source, intermediate -> (T) this.instanceFactory.complete(intermediate));
     }
 
     @Override
     public void load(@NotNull T value, @NotNull Map<String, Object> source) throws SerializeException {
+        Check.notNull(value, "value");
+        Check.notNull(source, "source");
         this.load(source, intermediate -> {
             this.instanceFactory.complete(value, intermediate);
             return value;
@@ -80,6 +84,7 @@ final class ObjectMapperImpl<T, U> implements ObjectMapper<T> {
 
     @Override
     public @NotNull Map<String, Object> save(@NotNull T value) throws SerializeException {
+        Check.notNull(value, "value");
         Map<String, Object> target = new HashMap<>();
 
         this.save(target, value);
@@ -89,6 +94,8 @@ final class ObjectMapperImpl<T, U> implements ObjectMapper<T> {
 
     @Override
     public void save(@NotNull Map<String, Object> target, @NotNull T value) throws SerializeException {
+        Check.notNull(target, "target");
+        Check.notNull(value, "value");
         for (FieldInfo<T, U> field : this.fields) {
             Object fieldValue = null;
             try {

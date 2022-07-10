@@ -17,6 +17,7 @@
 package de.natrox.serialize.objectmapping;
 
 import de.natrox.common.function.ThrowableFunction;
+import de.natrox.common.validate.Check;
 import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +33,7 @@ public interface FieldDiscoverer<T> {
     }
 
     static @NotNull FieldDiscoverer<?> create(@NotNull ThrowableFunction<Type, Supplier<Object>, SerializeException> instanceFactory) {
+        Check.notNull(instanceFactory, "instanceFactory");
         return new ObjectFieldDiscoverer(instanceFactory, true);
     }
 

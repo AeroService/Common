@@ -17,6 +17,7 @@
 package de.natrox.serialize.objectmapping;
 
 import de.natrox.common.builder.IBuilder;
+import de.natrox.common.validate.Check;
 import de.natrox.serialize.Serializer;
 import de.natrox.serialize.exception.SerializeException;
 import io.leangen.geantyref.TypeToken;
@@ -47,12 +48,14 @@ public interface ObjectMapper<T> {
 
         @SuppressWarnings("unchecked")
         default <V> @NotNull ObjectMapper<V> get(@NotNull TypeToken<V> type) throws SerializeException {
+            Check.notNull(type, "type");
             return (ObjectMapper<V>) get(type.getType());
         }
 
         @SuppressWarnings("unchecked")
-        default <V> @NotNull ObjectMapper<V> get(@NotNull Class<V> clazz) throws SerializeException {
-            return (ObjectMapper<V>) get((Type) clazz);
+        default <V> @NotNull ObjectMapper<V> get(@NotNull Class<V> type) throws SerializeException {
+            Check.notNull(type, "type");
+            return (ObjectMapper<V>) get((Type) type);
         }
 
         @NotNull ObjectMapper<?> get(@NotNull Type type) throws SerializeException;
