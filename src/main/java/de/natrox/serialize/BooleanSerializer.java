@@ -35,7 +35,7 @@ final class BooleanSerializer extends TypeSerializer<Boolean> {
             return !obj.equals(0);
         }
 
-        final String potential = obj.toString().toLowerCase(Locale.ROOT);
+        String potential = obj.toString().toLowerCase(Locale.ROOT);
         if (potential.equals("true")
             || potential.equals("t")
             || potential.equals("yes")

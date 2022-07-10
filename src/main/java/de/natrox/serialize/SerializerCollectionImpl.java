@@ -19,6 +19,7 @@ package de.natrox.serialize;
 import de.natrox.common.validate.Check;
 import de.natrox.serialize.exception.SerializeException;
 import de.natrox.serialize.exception.SerializerNotFoundException;
+import de.natrox.serialize.objectmapping.ObjectMapper;
 import io.leangen.geantyref.GenericTypeReflector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +43,9 @@ final class SerializerCollectionImpl implements SerializerCollection {
         DEFAULT = SerializerCollection
             .builder()
             .registerExact(TypeSerializers.BOOLEAN)
+            .registerExact(boolean.class, TypeSerializers.BOOLEAN)
             .registerExact(TypeSerializers.STRING)
+            .register(type -> true, ObjectMapper.factory())
             .build();
     }
 
@@ -59,7 +62,7 @@ final class SerializerCollectionImpl implements SerializerCollection {
     public @Nullable <T> Serializer<T> get(@NotNull Type type) {
         Check.notNull(type, "type");
         Serializer<?> serial = this.typeMatches.computeIfAbsent(type, param -> {
-            for (final RegisteredSerializer ent : this.serializers) {
+            for (RegisteredSerializer ent : this.serializers) {
                 if (ent.matches(param)) {
                     return ent.serializer();
                 }
@@ -111,9 +114,8 @@ final class SerializerCollectionImpl implements SerializerCollection {
             this.parent = parent;
         }
 
-        @NotNull
         @Override
-        public <T> Builder register(@NotNull Predicate<Type> test, TypeSerializer<? super T> serializer) {
+        public @NotNull Builder register(@NotNull Predicate<Type> test, @NotNull Serializer<?> serializer) {
             Check.notNull(test, "test");
             Check.notNull(serializer, "serializer");
             this.serializers.add(new RegisteredSerializer(test, serializer));
@@ -130,7 +132,7 @@ final class SerializerCollectionImpl implements SerializerCollection {
                 }
 
                 if (test instanceof WildcardType) {
-                    final Type[] upperBounds = ((WildcardType) test).getUpperBounds();
+                    Type[] upperBounds = ((WildcardType) test).getUpperBounds();
                     if (upperBounds.length == 1) {
                         return GenericTypeReflector.isSuperType(type, upperBounds[0]);
                     }
@@ -165,7 +167,7 @@ final class SerializerCollectionImpl implements SerializerCollection {
             this.serializer = serializer;
         }
 
-        public boolean matches(final Type test) {
+        public boolean matches(Type test) {
             return this.predicate.test(test);
         }
 

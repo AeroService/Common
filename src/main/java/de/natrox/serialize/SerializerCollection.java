@@ -71,7 +71,7 @@ public sealed interface SerializerCollection extends Serializer<Object> permits 
 
     interface Builder extends IBuilder<SerializerCollection> {
 
-        <T> SerializerCollection.@NotNull Builder register(@NotNull Predicate<Type> test, final TypeSerializer<? super T> serializer);
+        SerializerCollection.@NotNull Builder register(@NotNull Predicate<Type> test, @NotNull Serializer<?> serializer);
 
         SerializerCollection.@NotNull Builder register(@NotNull Type type, @NotNull Serializer<?> serializer);
 
@@ -81,7 +81,7 @@ public sealed interface SerializerCollection extends Serializer<Object> permits 
             return this.register((Type) type, serializer);
         }
 
-        default <T> SerializerCollection.@NotNull Builder register(@NotNull TypeToken<T> typeToken, final Serializer<? super T> serializer) {
+        default <T> SerializerCollection.@NotNull Builder register(@NotNull TypeToken<T> typeToken, @NotNull Serializer<? super T> serializer) {
             Check.notNull(typeToken, "typeToken");
             Check.notNull(serializer, "serializer");
             return this.register(typeToken.getType(), serializer);
@@ -100,7 +100,7 @@ public sealed interface SerializerCollection extends Serializer<Object> permits 
             return this.registerExact((Type) type, serializer);
         }
 
-        default <T> SerializerCollection.@NotNull Builder registerExact(@NotNull TypeToken<T> typeToken, final Serializer<? super T> serializer) {
+        default <T> SerializerCollection.@NotNull Builder registerExact(@NotNull TypeToken<T> typeToken, @NotNull Serializer<? super T> serializer) {
             Check.notNull(typeToken, "typeToken");
             Check.notNull(serializer, "serializer");
             return this.registerExact(typeToken.getType(), serializer);
