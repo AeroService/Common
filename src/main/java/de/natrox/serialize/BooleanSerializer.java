@@ -16,77 +16,40 @@
 
 package de.natrox.serialize;
 
-import de.natrox.serialize.exception.SerializeProcessException;
-import de.natrox.serialize.preferences.SerializerPreferences;
-import de.natrox.serialize.util.NumberUtil;
+import de.natrox.serialize.exception.CoercionFailedException;
+import de.natrox.serialize.exception.SerializeException;
+import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Type;
 import java.util.Locale;
 
-public final class BooleanSerializer {
+final class BooleanSerializer extends TypeSerializer<Boolean> {
 
-    private BooleanSerializer() {
-        throw new UnsupportedOperationException();
+    BooleanSerializer() {
+        super(Boolean.class);
     }
 
-    public static Object serialize(Boolean value, SerializerPreferences preferences) {
-        for (Class<?> acceptedType : preferences.acceptedTypes()) {
-            if (Boolean.class.isAssignableFrom(acceptedType))
-                return value;
-            else if (Number.class.isAssignableFrom(acceptedType))
-                return NumberUtil.cast(serializeToNumber(value), (Class<? extends Number>) acceptedType);
-            else if (CharSequence.class.isAssignableFrom(acceptedType))
-                return serializeToText(value);
+    @Override
+    public @NotNull Boolean deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
+        if (obj instanceof Number) {
+            return !obj.equals(0);
         }
 
-        throw new SerializeProcessException("Unable to find matching type to serialize in preferences.");
-    }
-
-    public static Boolean deserialize(Object value, SerializerPreferences preferences) {
-        if (preferences.lenient()) {
-            if (Number.class.isAssignableFrom(value.getClass()))
-                return ((Number) value).intValue() % 2 == 0;
-            if (CharSequence.class.isAssignableFrom(value.getClass())) {
-                try {
-                    return deserializeFromText((CharSequence) value);
-                } catch (SerializeProcessException ignored) {
-                    return false;
-                }
-            }
-        } else {
-            if (Number.class.isAssignableFrom(value.getClass())) {
-                Number numericValue = (Number) value;
-                if (numericValue.intValue() == 1)
-                    return true;
-                else if (numericValue.intValue() == 0)
-                    return false;
-                throw new SerializeProcessException("Unable to deserialize to boolean from number. Consider use of lenient deserialization instead.");
-            }
-            if (CharSequence.class.isAssignableFrom(value.getClass()))
-                return deserializeFromText((CharSequence) value);
-        }
-        throw new SerializeProcessException("Unable to cast to an deserializable type for boolean.");
-    }
-
-    private static Number serializeToNumber(Boolean value) {
-        return value ? 1 : 0;
-    }
-
-    private static CharSequence serializeToText(Boolean value) {
-        return value ? "true" : "false";
-    }
-
-    private static Boolean deserializeFromText(CharSequence text) {
-        String textValue = text.toString().toLowerCase(Locale.ROOT);
-        if ("true".equals(textValue) ||
-            "t".equals(textValue) ||
-            "yes".equals(textValue) ||
-            "y".equals(textValue))
+        final String potential = obj.toString().toLowerCase(Locale.ROOT);
+        if (potential.equals("true")
+            || potential.equals("t")
+            || potential.equals("yes")
+            || potential.equals("y")
+            || potential.equals("1")) {
             return true;
-        if ("false".equals(textValue) ||
-            "f".equals(textValue) ||
-            "no".equals(textValue) ||
-            "n".equals(textValue))
+        } else if (potential.equals("false")
+            || potential.equals("f")
+            || potential.equals("no")
+            || potential.equals("n")
+            || potential.equals("0")) {
             return false;
-        throw new SerializeProcessException("Unable to deserialize to boolean from text. Consider use of lenient deserialization instead.");
+        }
+
+        throw new CoercionFailedException(type, obj, "boolean");
     }
 }

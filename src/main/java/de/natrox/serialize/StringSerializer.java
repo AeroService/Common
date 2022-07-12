@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize.preferences;
+package de.natrox.serialize;
 
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
-public interface SerializerPreferences {
+import java.lang.reflect.Type;
 
-    static SerializerPreferences create() {
-        return new SerializerPreferencesImpl();
+final class StringSerializer extends TypeSerializer<String> {
+
+    StringSerializer() {
+        super(String.class);
     }
 
-    boolean lenient();
-
-    SerializerPreferences lenient(boolean lenient);
-
-    List<Class<?>> acceptedTypes();
-
-    SerializerPreferences acceptedTypes(List<Class<?>> acceptedTypes);
+    @Override
+    public @NotNull String deserialize(@NotNull Object obj, @NotNull Type type) {
+        return obj.toString();
+    }
 }

@@ -21,22 +21,24 @@ import de.natrox.serialize.exception.SerializeException;
 import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
+public abstract class TypeSerializer<T> implements Serializer<T> {
 
-@FunctionalInterface
-public interface Serializer<T> {
+    private final TypeToken<T> typeToken;
 
-    @NotNull T deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException;
-
-    default T deserialize(@NotNull Object obj, @NotNull Class<T> type) throws SerializeException {
-        Check.notNull(obj, "object");
-        Check.notNull(type, "type");
-        return this.deserialize(obj, (Type) type);
+    protected TypeSerializer(TypeToken<T> typeToken) {
+        this.typeToken = typeToken;
     }
 
-    default T deserialize(@NotNull Object obj, @NotNull TypeToken<T> typeToken) throws SerializeException {
+    protected TypeSerializer(Class<T> type) {
+        this.typeToken = TypeToken.get(type);
+    }
+
+    public TypeToken<T> type() {
+        return this.typeToken;
+    }
+
+    public @NotNull T deserialize(@NotNull Object obj) throws SerializeException {
         Check.notNull(obj, "object");
-        Check.notNull(typeToken, "typeToken");
-        return this.deserialize(obj, typeToken.getType());
+        return this.deserialize(obj, this.typeToken);
     }
 }

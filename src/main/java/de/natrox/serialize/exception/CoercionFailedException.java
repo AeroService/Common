@@ -16,21 +16,15 @@
 
 package de.natrox.serialize.exception;
 
-public class SerializeProcessException extends SerializeException {
+import java.lang.reflect.Type;
 
-    public SerializeProcessException() {
-        super();
+public class CoercionFailedException extends SerializeException {
+
+    public CoercionFailedException(Object inputValue, String typeDescription) {
+        super("Failed to coerce input value of type " + inputValue.getClass() + " to " + typeDescription);
     }
 
-    public SerializeProcessException(String message) {
-        super(message);
-    }
-
-    public SerializeProcessException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public SerializeProcessException(Throwable cause) {
-        super(cause);
+    public CoercionFailedException(Type target, Object inputValue, String typeDescription) {
+        super(target, "Failed to coerce input value of type " + inputValue.getClass() + " to " + typeDescription);
     }
 }

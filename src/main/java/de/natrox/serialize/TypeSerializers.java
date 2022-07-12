@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize.exception;
+package de.natrox.serialize;
 
-import java.lang.reflect.Type;
-import java.util.Arrays;
+public final class TypeSerializers {
 
-public class SerializerNotFoundException extends SerializeException {
+    public final static TypeSerializer<Boolean> BOOLEAN = new BooleanSerializer();
 
-    public SerializerNotFoundException(Object inputValue, Type... targets) {
-        super("Failed to find serializer which coerces the input value of type " + inputValue.getClass() + " to one of this types "
-            + Arrays.toString(Arrays.stream(targets).map(Type::getTypeName).toArray()));
+    public final static TypeSerializer<String> STRING = new StringSerializer();
+
+    private TypeSerializers() {
+        throw new UnsupportedOperationException();
     }
 }
