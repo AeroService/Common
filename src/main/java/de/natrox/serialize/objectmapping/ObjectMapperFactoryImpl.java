@@ -90,8 +90,8 @@ final class ObjectMapperFactoryImpl implements ObjectMapper.Factory {
     }
 
     @Override
-    public @NotNull Object deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
-        return get(type).load((Map<String, Object>) obj);
+    public @NotNull <T> T deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
+        return (T) this.get(type).load((Map<String, Object>) obj);
     }
 
     static class BuilderImpl implements ObjectMapper.Factory.Builder {

@@ -18,7 +18,7 @@ package de.natrox.serialize.objectmapping;
 
 import de.natrox.common.builder.IBuilder;
 import de.natrox.common.validate.Check;
-import de.natrox.serialize.Serializer;
+import de.natrox.serialize.ChildSerializer;
 import de.natrox.serialize.exception.SerializeException;
 import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +44,7 @@ public interface ObjectMapper<T> {
 
     void save(@NotNull Map<String, Object> target, @NotNull T value) throws Exception;
 
-    interface Factory extends Serializer<Object> {
+    interface Factory extends ChildSerializer {
 
         @SuppressWarnings("unchecked")
         default <V> @NotNull ObjectMapper<V> get(@NotNull TypeToken<V> type) throws SerializeException {

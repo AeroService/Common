@@ -19,15 +19,17 @@ package de.natrox.serialize;
 import de.natrox.common.builder.IBuilder;
 import de.natrox.common.validate.Check;
 import de.natrox.serialize.exception.SerializeException;
+import io.leangen.geantyref.GenericTypeReflector;
 import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public sealed interface SerializerCollection extends Serializer<Object> permits SerializerCollectionImpl {
+public sealed interface SerializerCollection extends ChildSerializer permits SerializerCollectionImpl {
 
     static @NotNull SerializerCollection.Builder builder() {
         return new SerializerCollectionImpl.BuilderImpl(null);
@@ -53,16 +55,16 @@ public sealed interface SerializerCollection extends Serializer<Object> permits 
         return this.get(typeToken.getType());
     }
 
-    @NotNull Object deserialize(@NotNull Object obj, Type @NotNull ... types) throws SerializeException;
+    <T> @NotNull T deserialize(@NotNull Object obj, Type @NotNull ... types) throws SerializeException;
 
-    default Object deserialize(Object obj, Class<?>... types) throws SerializeException {
+    default <T> @NotNull T deserialize(@NotNull Object obj, Class<? super T> @NotNull ... types) throws SerializeException {
         Check.notNull(obj, "object");
         Check.notNull(types, "types");
         Check.argCondition(types.length <= 0, "types");
         return this.deserialize(obj, (Type[]) types);
     }
 
-    default Object deserialize(Object obj, TypeToken<?>... typeTokens) throws SerializeException {
+    default <T> @NotNull T deserialize(@NotNull Object obj, TypeToken<? super T> @NotNull ... typeTokens) throws SerializeException {
         Check.notNull(obj, "object");
         Check.notNull(typeTokens, "types");
         Check.argCondition(typeTokens.length <= 0, "types");
@@ -71,9 +73,27 @@ public sealed interface SerializerCollection extends Serializer<Object> permits 
 
     interface Builder extends IBuilder<SerializerCollection> {
 
+        SerializerCollection.@NotNull Builder register(@NotNull ChildSerializer serializer);
+
         SerializerCollection.@NotNull Builder register(@NotNull Predicate<Type> test, @NotNull Serializer<?> serializer);
 
-        SerializerCollection.@NotNull Builder register(@NotNull Type type, @NotNull Serializer<?> serializer);
+        default SerializerCollection.@NotNull Builder register(@NotNull Type type, @NotNull Serializer<?> serializer) {
+            Check.notNull(type, "type");
+            Check.notNull(serializer, "serializer");
+            return this.register(test -> {
+                if (GenericTypeReflector.isSuperType(type, test)) {
+                    return true;
+                }
+
+                if (test instanceof WildcardType) {
+                    Type[] upperBounds = ((WildcardType) test).getUpperBounds();
+                    if (upperBounds.length == 1) {
+                        return GenericTypeReflector.isSuperType(type, upperBounds[0]);
+                    }
+                }
+                return false;
+            }, serializer);
+        }
 
         default <T> SerializerCollection.@NotNull Builder register(@NotNull Class<T> type, @NotNull Serializer<? super T> serializer) {
             Check.notNull(type, "type");
@@ -92,7 +112,9 @@ public sealed interface SerializerCollection extends Serializer<Object> permits 
             return this.register(serializer.type().getType(), serializer);
         }
 
-        SerializerCollection.@NotNull Builder registerExact(@NotNull Type type, @NotNull Serializer<?> serializer);
+        default SerializerCollection.@NotNull Builder registerExact(@NotNull Type type, @NotNull Serializer<?> serializer) {
+            return this.register(test -> test.equals(type), serializer);
+        }
 
         default <T> SerializerCollection.@NotNull Builder registerExact(@NotNull Class<T> type, @NotNull Serializer<? super T> serializer) {
             Check.notNull(type, "type");

@@ -17,25 +17,46 @@
 package de.natrox.serialize;
 
 import de.natrox.serialize.exception.SerializeException;
-import de.natrox.serialize.objectmapping.FieldDiscoverer;
 import de.natrox.serialize.objectmapping.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 class ObjectMapperTest {
 
     @Test
-    void test() throws SerializeException {
+    void testCollection() throws SerializeException {
         Map<String, Object> data = Map.of("name", true, "test", 0, "innerObject", Map.of("innerName", "test"));
-
         System.out.println(data.toString());
 
-        TestObject testObject = (TestObject) SerializerCollection.defaults().deserialize(data, TestObject.class);
+        TestObject testObject = SerializerCollection.defaults().deserialize(data, TestObject.class);
+        assertNotNull(testObject);
 
-        System.out.println(testObject.name + " : " +  testObject.name.getClass());
+        System.out.println(testObject.name + " : " + testObject.name.getClass());
         System.out.println(testObject.test);
         System.out.println(testObject.innerObject.innerName);
+
+        Serializer<TestObject> serializer = SerializerCollection.defaults().get(TestObject.class);
+        assertNotNull(serializer);
+        System.out.println(serializer);
+        testObject = serializer.deserialize(data, TestObject.class);
+        assertNotNull(testObject);
+    }
+
+    @Test
+    void testMapper() throws SerializeException {
+        Map<String, Object> data = Map.of("name", true, "test", 0, "innerObject", Map.of("innerName", "test"));
+        System.out.println(data.toString());
+
+        TestObject testObject = ObjectMapper.factory().deserialize(data, TestObject.class);
+        assertNotNull(testObject);
+
+        ObjectMapper<TestObject> objectMapper = ObjectMapper.factory().get(TestObject.class);
+        assertNotNull(objectMapper);
+        testObject = objectMapper.load(data);
+        assertNotNull(testObject);
     }
 
 }

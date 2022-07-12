@@ -20,13 +20,11 @@ import de.natrox.common.validate.Check;
 import de.natrox.serialize.exception.SerializeException;
 import de.natrox.serialize.exception.SerializerNotFoundException;
 import de.natrox.serialize.objectmapping.ObjectMapper;
-import io.leangen.geantyref.GenericTypeReflector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.lang.reflect.Type;
-import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +43,7 @@ final class SerializerCollectionImpl implements SerializerCollection {
             .registerExact(TypeSerializers.BOOLEAN)
             .registerExact(boolean.class, TypeSerializers.BOOLEAN)
             .registerExact(TypeSerializers.STRING)
-            .register(type -> true, ObjectMapper.factory())
+            .register(ObjectMapper.factory())
             .build();
     }
 
@@ -78,13 +76,13 @@ final class SerializerCollectionImpl implements SerializerCollection {
     }
 
     @Override
-    public @NotNull Object deserialize(@NotNull Object obj, Type @NotNull ... types) throws SerializeException {
+    public @NotNull <T> T deserialize(@NotNull Object obj, Type @NotNull ... types) throws SerializeException {
         for (Type type : types) {
             try {
                 Serializer<Object> serializer = this.get(type);
 
                 if (serializer != null) {
-                    return serializer.deserialize(obj, type);
+                    return (T) serializer.deserialize(obj, type);
                 }
             } catch (SerializeException ignored) {
 
@@ -95,11 +93,11 @@ final class SerializerCollectionImpl implements SerializerCollection {
     }
 
     @Override
-    public @NotNull Object deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
+    public @NotNull <T> T deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
         Serializer<Object> serializer = this.get(type);
 
         if (serializer != null) {
-            return serializer.deserialize(obj, type);
+            return (T) serializer.deserialize(obj, type);
         }
 
         throw new SerializerNotFoundException(obj, type);
@@ -123,30 +121,10 @@ final class SerializerCollectionImpl implements SerializerCollection {
         }
 
         @Override
-        public @NotNull Builder register(@NotNull Type type, @NotNull Serializer<?> serializer) {
-            Check.notNull(type, "type");
+        public @NotNull Builder register(@NotNull ChildSerializer serializer) {
             Check.notNull(serializer, "serializer");
-            this.serializers.add(new RegisteredSerializer(test -> {
-                if (GenericTypeReflector.isSuperType(type, test)) {
-                    return true;
-                }
-
-                if (test instanceof WildcardType) {
-                    Type[] upperBounds = ((WildcardType) test).getUpperBounds();
-                    if (upperBounds.length == 1) {
-                        return GenericTypeReflector.isSuperType(type, upperBounds[0]);
-                    }
-                }
-                return false;
-            }, serializer));
-            return this;
-        }
-
-        @Override
-        public @NotNull Builder registerExact(@NotNull Type type, @NotNull Serializer<?> serializer) {
-            Check.notNull(type, "type");
-            Check.notNull(serializer, "serializer");
-            this.serializers.add(new RegisteredSerializer(test -> test.equals(type), serializer));
+            // FIXME: 12.07.2022 Predicate test
+            this.serializers.add(new RegisteredSerializer(test -> true, serializer::deserialize));
             return this;
         }
 
