@@ -23,18 +23,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
-@FunctionalInterface
-public interface Serializer<T> {
+public interface ChildSerializer {
 
-    @NotNull T deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException;
+    @NotNull <T> T deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException;
 
-    default @NotNull T deserialize(@NotNull Object obj, @NotNull Class<T> type) throws SerializeException {
+    default <T> T deserialize(@NotNull Object obj, @NotNull Class<T> type) throws SerializeException {
         Check.notNull(obj, "object");
         Check.notNull(type, "type");
         return this.deserialize(obj, (Type) type);
     }
 
-    default @NotNull T deserialize(@NotNull Object obj, @NotNull TypeToken<T> typeToken) throws SerializeException {
+    default <T> T deserialize(@NotNull Object obj, @NotNull TypeToken<T> typeToken) throws SerializeException {
         Check.notNull(obj, "object");
         Check.notNull(typeToken, "typeToken");
         return this.deserialize(obj, typeToken.getType());
