@@ -41,8 +41,20 @@ final class SerializerCollectionImpl implements SerializerCollection {
         DEFAULT = SerializerCollection
             .builder()
             .registerExact(TypeSerializers.BOOLEAN)
-            .registerExact(boolean.class, TypeSerializers.BOOLEAN)
+            .registerExact(TypeSerializers.PRIM_BOOLEAN)
             .registerExact(TypeSerializers.STRING)
+            .registerExact(TypeSerializers.BYTE)
+            .registerExact(TypeSerializers.PRIM_BYTE)
+            .registerExact(TypeSerializers.SHORT)
+            .registerExact(TypeSerializers.PRIM_SHORT)
+            .registerExact(TypeSerializers.INTEGER)
+            .registerExact(TypeSerializers.PRIM_INTEGER)
+            .registerExact(TypeSerializers.LONG)
+            .registerExact(TypeSerializers.PRIM_LONG)
+            .registerExact(TypeSerializers.FLOAT)
+            .registerExact(TypeSerializers.PRIM_FLOAT)
+            .registerExact(TypeSerializers.DOUBLE)
+            .registerExact(TypeSerializers.PRIM_DOUBLE)
             .register(ObjectMapper.factory())
             .build();
     }
