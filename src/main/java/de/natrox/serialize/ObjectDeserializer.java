@@ -24,11 +24,11 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 @SuppressWarnings({"unchecked", "ClassCanBeRecord"})
-public class MapObjectDeserializer<T> implements SpecificDeserializer<T, Map<String, Object>> {
+public final class ObjectDeserializer<T> implements SpecificDeserializer<T, Map<String, Object>> {
 
     private final ObjectMapper.Factory objectMapperFactory;
 
-    public MapObjectDeserializer(ObjectMapper.Factory objectMapperFactory) {
+    public ObjectDeserializer(ObjectMapper.Factory objectMapperFactory) {
         this.objectMapperFactory = objectMapperFactory;
     }
 
