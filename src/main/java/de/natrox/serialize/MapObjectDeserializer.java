@@ -16,27 +16,24 @@
 
 package de.natrox.serialize;
 
-import de.natrox.common.validate.Check;
 import de.natrox.serialize.exception.SerializeException;
-import io.leangen.geantyref.TypeToken;
+import de.natrox.serialize.objectmapping.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
+import java.util.Map;
 
-@FunctionalInterface
-public interface Serializer<T> {
+@SuppressWarnings({"unchecked", "ClassCanBeRecord"})
+public class MapObjectDeserializer<T> implements SpecificDeserializer<T, Map<String, Object>> {
 
-    @NotNull T deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException;
+    private final ObjectMapper.Factory objectMapperFactory;
 
-    default @NotNull T deserialize(@NotNull Object obj, @NotNull Class<T> type) throws SerializeException {
-        Check.notNull(obj, "object");
-        Check.notNull(type, "type");
-        return this.deserialize(obj, (Type) type);
+    public MapObjectDeserializer(ObjectMapper.Factory objectMapperFactory) {
+        this.objectMapperFactory = objectMapperFactory;
     }
 
-    default @NotNull T deserialize(@NotNull Object obj, @NotNull TypeToken<T> typeToken) throws SerializeException {
-        Check.notNull(obj, "object");
-        Check.notNull(typeToken, "typeToken");
-        return this.deserialize(obj, typeToken.getType());
+    @Override
+    public @NotNull T deserialize(@NotNull Map<String, Object> obj, @NotNull Type type) throws SerializeException {
+        return (T) this.objectMapperFactory.get(type).load(obj);
     }
 }

@@ -18,15 +18,14 @@ package de.natrox.serialize;
 
 import de.natrox.serialize.exception.CoercionFailedException;
 import de.natrox.serialize.exception.SerializeException;
-import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 import java.util.Locale;
 
-final class BooleanSerializer extends TypeSerializer<Boolean> {
+final class BooleanDeserializer extends TypeDeserializer<Boolean> {
 
-    BooleanSerializer(Class<Boolean> typeToken) {
+    BooleanDeserializer(Class<Boolean> typeToken) {
         super(typeToken);
     }
 

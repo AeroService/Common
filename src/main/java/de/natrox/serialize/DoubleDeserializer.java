@@ -22,29 +22,27 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
-final class ShortSerializer extends NumericSerializer<Short> {
+final class DoubleDeserializer extends NumericDeserializer<Double> {
 
-    ShortSerializer(Class<Short> type) {
+    DoubleDeserializer(Class<Double> type) {
         super(type);
     }
 
     @Override
-    public @NotNull Short deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
-        if(obj instanceof Float || obj instanceof Double) {
-            double absValue = Math.abs(((Number) obj).doubleValue());
-            if((absValue - Math.floor(absValue)) < EPSILON && absValue <= Short.MAX_VALUE) {
-                return (short) absValue;
+    public @NotNull Double deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
+        if (obj instanceof Number) {
+            return ((Number) obj).doubleValue();
+        } else if (obj instanceof CharSequence) {
+            String stringValue = obj.toString();
+            if (stringValue.endsWith("d") || stringValue.endsWith("D")) {
+                stringValue = stringValue.substring(0, stringValue.length() - 1);
+            }
+            try {
+                return Double.parseDouble(stringValue);
+            } catch (NumberFormatException exception) {
+                throw new SerializeException(exception);
             }
         }
-
-        if(obj instanceof Number) {
-            long full = ((Number) obj).longValue();
-            if(full > Short.MAX_VALUE || full < Short.MIN_VALUE) {
-                throw new SerializeException("Value " + full + " is out of range for a short ([" + Short.MIN_VALUE + "," + Short.MAX_VALUE + "])");
-            }
-            return (short) full;
-        }
-
-        throw new CoercionFailedException(obj, "short");
+        throw new CoercionFailedException(obj, "double");
     }
 }

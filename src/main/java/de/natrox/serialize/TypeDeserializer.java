@@ -21,15 +21,15 @@ import de.natrox.serialize.exception.SerializeException;
 import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class TypeSerializer<T> implements Serializer<T> {
+public abstract class TypeDeserializer<T> implements Deserializer<T> {
 
     private final TypeToken<T> typeToken;
 
-    protected TypeSerializer(TypeToken<T> typeToken) {
+    protected TypeDeserializer(TypeToken<T> typeToken) {
         this.typeToken = typeToken;
     }
 
-    protected TypeSerializer(Class<T> type) {
+    protected TypeDeserializer(Class<T> type) {
         this.typeToken = TypeToken.get(type);
     }
 

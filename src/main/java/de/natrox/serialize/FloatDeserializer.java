@@ -22,27 +22,41 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
-final class DoubleSerializer extends NumericSerializer<Double> {
+final class FloatDeserializer extends NumericDeserializer<Float> {
 
-    DoubleSerializer(Class<Double> type) {
+    FloatDeserializer(Class<Float> type) {
         super(type);
     }
 
+    private static boolean canRepresentDoubleAsFloat(double test) {
+        if (test == 0d || !Double.isFinite(test)) { // NaN, +/-inf
+            return true;
+        }
+
+        int exponent = Math.getExponent(test);
+        return exponent >= Float.MIN_EXPONENT && exponent <= Float.MAX_EXPONENT;
+    }
+
     @Override
-    public @NotNull Double deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
+    public @NotNull Float deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
         if (obj instanceof Number) {
-            return ((Number) obj).doubleValue();
+            double doubleValue = ((Number) obj).doubleValue();
+            if (!canRepresentDoubleAsFloat(doubleValue)) {
+                throw new SerializeException("Value " + doubleValue + " cannot be represented as a float without significant loss of precision");
+            }
         } else if (obj instanceof CharSequence) {
             String stringValue = obj.toString();
-            if (stringValue.endsWith("d") || stringValue.endsWith("D")) {
+            if (stringValue.endsWith("f") || stringValue.endsWith("F")) {
                 stringValue = stringValue.substring(0, stringValue.length() - 1);
             }
+
             try {
-                return Double.parseDouble(stringValue);
+                return Float.parseFloat(stringValue);
             } catch (NumberFormatException exception) {
                 throw new SerializeException(exception);
             }
         }
-        throw new CoercionFailedException(obj, "double");
+
+        throw new CoercionFailedException(obj, "float");
     }
 }

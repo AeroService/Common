@@ -18,35 +18,35 @@ package de.natrox.serialize;
 
 public final class TypeSerializers {
 
-    public final static TypeSerializer<Boolean> BOOLEAN = new BooleanSerializer(Boolean.class);
+    public final static TypeDeserializer<Boolean> BOOLEAN = new BooleanDeserializer(Boolean.class);
 
-    public final static TypeSerializer<Boolean> PRIM_BOOLEAN = new BooleanSerializer(boolean.class);
+    public final static TypeDeserializer<Boolean> PRIM_BOOLEAN = new BooleanDeserializer(boolean.class);
 
-    public final static TypeSerializer<String> STRING = new StringSerializer();
+    public final static TypeDeserializer<String> STRING = new StringDeserializer();
 
-    public final static TypeSerializer<Byte> BYTE = new ByteSerializer(Byte.class);
+    public final static TypeDeserializer<Byte> BYTE = new ByteDeserializer(Byte.class);
 
-    public final static TypeSerializer<Byte> PRIM_BYTE = new ByteSerializer(byte.class);
+    public final static TypeDeserializer<Byte> PRIM_BYTE = new ByteDeserializer(byte.class);
 
-    public final static TypeSerializer<Short> SHORT = new ShortSerializer(Short.class);
+    public final static TypeDeserializer<Short> SHORT = new ShortDeserializer(Short.class);
 
-    public final static TypeSerializer<Short> PRIM_SHORT = new ShortSerializer(short.class);
+    public final static TypeDeserializer<Short> PRIM_SHORT = new ShortDeserializer(short.class);
 
-    public final static TypeSerializer<Integer> INTEGER = new IntegerSerializer(Integer.class);
+    public final static TypeDeserializer<Integer> INTEGER = new IntegerDeserializer(Integer.class);
 
-    public final static TypeSerializer<Integer> PRIM_INTEGER = new IntegerSerializer(int.class);
+    public final static TypeDeserializer<Integer> PRIM_INTEGER = new IntegerDeserializer(int.class);
 
-    public final static TypeSerializer<Long> LONG = new LongSerializer(Long.class);
+    public final static TypeDeserializer<Long> LONG = new LongDeserializer(Long.class);
 
-    public final static TypeSerializer<Long> PRIM_LONG = new LongSerializer(long.class);
+    public final static TypeDeserializer<Long> PRIM_LONG = new LongDeserializer(long.class);
 
-    public final static TypeSerializer<Float> FLOAT = new FloatSerializer(Float.class);
+    public final static TypeDeserializer<Float> FLOAT = new FloatDeserializer(Float.class);
 
-    public final static TypeSerializer<Float> PRIM_FLOAT = new FloatSerializer(float.class);
+    public final static TypeDeserializer<Float> PRIM_FLOAT = new FloatDeserializer(float.class);
 
-    public final static TypeSerializer<Double> DOUBLE = new DoubleSerializer(Double.class);
+    public final static TypeDeserializer<Double> DOUBLE = new DoubleDeserializer(Double.class);
 
-    public final static TypeSerializer<Double> PRIM_DOUBLE = new DoubleSerializer(double.class);
+    public final static TypeDeserializer<Double> PRIM_DOUBLE = new DoubleDeserializer(double.class);
 
     private TypeSerializers() {
         throw new UnsupportedOperationException();

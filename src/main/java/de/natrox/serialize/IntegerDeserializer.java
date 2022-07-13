@@ -22,9 +22,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
-final class IntegerSerializer extends NumericSerializer<Integer> {
+final class IntegerDeserializer extends NumericDeserializer<Integer> {
 
-    IntegerSerializer(Class<Integer> type) {
+    IntegerDeserializer(Class<Integer> type) {
         super(type);
     }
 
@@ -43,6 +43,10 @@ final class IntegerSerializer extends NumericSerializer<Integer> {
                 throw new SerializeException("Value " + full + " is out of range for an integer ([" + Integer.MIN_VALUE + "," + Integer.MAX_VALUE + "])");
             }
             return (int) full;
+        }
+
+        if (obj instanceof CharSequence) {
+            return parseNumber(obj.toString(), Integer::parseInt, Integer::parseUnsignedInt, "i");
         }
 
         throw new CoercionFailedException(obj, "int");

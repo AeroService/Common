@@ -20,9 +20,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
-final class StringSerializer extends TypeSerializer<String> {
+final class StringDeserializer extends TypeDeserializer<String> {
 
-    StringSerializer() {
+    StringDeserializer() {
         super(String.class);
     }
 

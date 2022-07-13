@@ -22,28 +22,33 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
-final class ByteSerializer extends NumericSerializer<Byte> {
+final class ShortDeserializer extends NumericDeserializer<Short> {
 
-    ByteSerializer(Class<Byte> type) {
+    ShortDeserializer(Class<Short> type) {
         super(type);
     }
 
     @Override
-    public @NotNull Byte deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
-        if(obj instanceof Float || obj instanceof Double) {
+    public @NotNull Short deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
+        if (obj instanceof Float || obj instanceof Double) {
             double absValue = Math.abs(((Number) obj).doubleValue());
-            if((absValue - Math.floor(absValue)) < EPSILON && absValue <= Byte.MAX_VALUE) {
-                return (byte) absValue;
+            if ((absValue - Math.floor(absValue)) < EPSILON && absValue <= Short.MAX_VALUE) {
+                return (short) absValue;
             }
         }
 
-        if(obj instanceof Number) {
+        if (obj instanceof Number) {
             long full = ((Number) obj).longValue();
-            if(full > Byte.MAX_VALUE || full < Byte.MIN_VALUE) {
-                throw new SerializeException("Value " + full + " is out of range for a byte ([" + Byte.MIN_VALUE + "," + Byte.MAX_VALUE + "])");
+            if (full > Short.MAX_VALUE || full < Short.MIN_VALUE) {
+                throw new SerializeException("Value " + full + " is out of range for a short ([" + Short.MIN_VALUE + "," + Short.MAX_VALUE + "])");
             }
+            return (short) full;
         }
 
-        throw new CoercionFailedException(obj, "byte");
+        if (obj instanceof CharSequence) {
+            return parseNumber(obj.toString(), Short::parseShort, Short::parseShort, "s");
+        }
+
+        throw new CoercionFailedException(obj, "short");
     }
 }

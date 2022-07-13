@@ -16,11 +16,7 @@
 
 package de.natrox.serialize;
 
-abstract class NumericSerializer<T> extends TypeSerializer<T> {
+@FunctionalInterface
+public interface Deserializer<T> extends SpecificDeserializer<T, Object> {
 
-    protected final static float EPSILON = Float.MIN_NORMAL;
-
-    protected NumericSerializer(Class<T> type) {
-        super(type);
-    }
 }
