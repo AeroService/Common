@@ -73,8 +73,8 @@ public sealed interface SerializerCollection permits SerializerCollectionImpl {
             return this.register(deserializer, function.apply(Registrable.create()));
         }
 
-        //default SerializerCollection.@NotNull Builder register(@NotNull TypeDeserializer<?> deserializer) {
-        //    return this.register(registrable -> registrable.typeExact(deserializer.type()), deserializer);
-        //}
+        default SerializerCollection.@NotNull Builder register(@NotNull TypeDeserializer<?> deserializer) {
+            return this.register(deserializer, registrable -> registrable.typeExact(deserializer.type().getType()).inputType(Object.class));
+        }
     }
 }
