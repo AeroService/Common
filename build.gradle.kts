@@ -62,9 +62,9 @@ if (System.getProperty("publishName") != null && System.getProperty("publishPass
         }
         publications {
             create<MavenPublication>(project.name) {
-                groupId = project.group.toString()
+                groupId = "de.natrox"
                 artifactId = project.name
-                version = project.version.toString()
+                version = "1.0.0-SNAPSHOT"
                 from(components.findByName("java"))
                 pom {
                     name.set(project.name)
