@@ -16,6 +16,8 @@
 
 package de.natrox.serialize;
 
+import java.util.UUID;
+
 public final class TypeSerializers {
 
     public final static TypeDeserializer<Boolean> BOOLEAN = new BooleanDeserializer(Boolean.class);
@@ -23,6 +25,8 @@ public final class TypeSerializers {
     public final static TypeDeserializer<Boolean> PRIM_BOOLEAN = new BooleanDeserializer(boolean.class);
 
     public final static TypeDeserializer<String> STRING = new StringDeserializer();
+
+    public final static TypeDeserializer<UUID> UUID = new UuidDeserializer();
 
     public final static TypeDeserializer<Byte> BYTE = new ByteDeserializer(Byte.class);
 
