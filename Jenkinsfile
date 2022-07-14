@@ -13,5 +13,12 @@ pipeline {
                 sh "./gradlew shadowJar";
             }
         }
+        stage("Publish") {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'nexus', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                  sh "./gradlew publish -DpublishPassword=$PASSWORD -DpublishName=$USERNAME"
+                }
+            }
+        }
     }
 }

@@ -54,3 +54,39 @@ tasks.withType<JavaCompile> {
 tasks.withType<Jar> {
     archiveFileName.set("common.jar")
 }
+
+if (System.getProperty("publishName") != null && System.getProperty("publishPassword") != null) {
+    publishing {
+        (components["java"] as AdhocComponentWithVariants).withVariantsFromConfiguration(configurations["shadowRuntimeElements"]) {
+            skip()
+        }
+        publications {
+            create<MavenPublication>(project.name) {
+                groupId = project.group.toString()
+                artifactId = project.name
+                version = project.version.toString()
+                from(components.findByName("java"))
+                pom {
+                    name.set(project.name)
+                    properties.put("inceptionYear", "2021")
+                    developers {
+                        developer {
+                            id.set("NatroxMC")
+                            name.set("NatroxMC")
+                            email.set("admin@natrox.de")
+                        }
+                    }
+                }
+            }
+            repositories {
+                maven("https://repo.natrox.de/repository/maven-internal/") {
+                    this.name = "natrox-internal"
+                    credentials {
+                        this.password = System.getProperty("publishPassword")
+                        this.username = System.getProperty("publishName")
+                    }
+                }
+            }
+        }
+    }
+}
