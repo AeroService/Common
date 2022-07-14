@@ -1,3 +1,5 @@
+import com.palantir.gradle.gitversion.VersionDetails
+
 /*
  * Copyright 2020-2022 NatroxMC
  *
@@ -16,6 +18,7 @@
 plugins {
     id("java")
     id("maven-publish")
+    id("com.palantir.git-version") version "0.15.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
@@ -23,7 +26,7 @@ defaultTasks("build", "shadowJar")
 
 allprojects {
     group = "de.natrox"
-    version = "1.0.0-SNAPSHOT"
+    version = "1.0"
     description = "A common core library"
 
     repositories {
@@ -51,36 +54,30 @@ tasks.withType<JavaCompile> {
 
 }
 
-tasks.withType<Jar> {
-    archiveFileName.set("common.jar")
-}
-
 if (System.getProperty("publishName") != null && System.getProperty("publishPassword") != null) {
+    val versionDetails: groovy.lang.Closure<VersionDetails> by extra
     publishing {
         (components["java"] as AdhocComponentWithVariants).withVariantsFromConfiguration(configurations["shadowRuntimeElements"]) {
             skip()
         }
         publications {
             create<MavenPublication>(project.name) {
-                groupId = "de.natrox"
                 artifactId = project.name
-                version = "1.0.0-SNAPSHOT"
+                version = versionDetails().gitHash
                 from(components.findByName("java"))
                 pom {
                     name.set(project.name)
-                    properties.put("inceptionYear", "2021")
-                    developers {
-                        developer {
-                            id.set("NatroxMC")
-                            name.set("NatroxMC")
-                            email.set("admin@natrox.de")
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
                         }
                     }
                 }
             }
             repositories {
-                maven("https://repo.natrox.de/repository/maven-internal/") {
-                    this.name = "natrox-internal"
+                maven("https://repo.natrox.de/repository/maven-public/") {
+                    this.name = "natrox-public"
                     credentials {
                         this.password = System.getProperty("publishPassword")
                         this.username = System.getProperty("publishName")
