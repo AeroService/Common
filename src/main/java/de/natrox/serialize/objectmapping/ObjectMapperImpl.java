@@ -68,12 +68,12 @@ final class ObjectMapperImpl<T, U> implements ObjectMapper<T> {
             }
 
             Object value = source.get(field.name());
-            Object newValue = null;
 
-            if (value != null) {
-                newValue = serial.deserialize(value, field.type());
+            if (value == null) {
+                continue;
             }
 
+            Object newValue = serial.deserialize(value, field.type());
             field.validateValue(newValue);
 
             field.deserializer().accept(intermediate, newValue);
@@ -97,14 +97,12 @@ final class ObjectMapperImpl<T, U> implements ObjectMapper<T> {
         Check.notNull(target, "target");
         Check.notNull(value, "value");
         for (FieldInfo<T, U> field : this.fields) {
-            Object fieldValue = null;
             try {
-                fieldValue = field.serializer().apply(value);
+                Object fieldValue = field.serializer().apply(value);
+                target.put(field.name(), fieldValue);
             } catch (Exception exception) {
                 throw new SerializeException(field.type(), exception);
             }
-
-            target.put(field.name(), fieldValue);
         }
     }
 }
