@@ -18,7 +18,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'nexus', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                   sh "./gradlew publish -DpublishPassword=$PASSWORD -DpublishName=$USERNAME"
                 }
-                discordSend description: "Jenkins Pipeline Build", result: currentBuild.currentResult, webhookURL: "https://discord.com/api/webhooks/997287075755859978/2dbdXwh6XDakfRHb35dPeQVQSUF1OqJviJ-FHq_lB8FwffoUL31lF0g07jLYcH_h9RZH"
+                discordSend description: "Jenkins Pipeline Build", link: env.BUILD_URL, result: currentBuild.currentResult, webhookURL: "https://discord.com/api/webhooks/997287075755859978/2dbdXwh6XDakfRHb35dPeQVQSUF1OqJviJ-FHq_lB8FwffoUL31lF0g07jLYcH_h9RZH"
             }
         }
     }
