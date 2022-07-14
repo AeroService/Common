@@ -39,6 +39,8 @@ final class SerializerCollectionImpl implements SerializerCollection {
             .builder()
             .register(TypeSerializers.BOOLEAN)
             .register(TypeSerializers.PRIM_BOOLEAN)
+            .register(TypeSerializers.CHAR)
+            .register(TypeSerializers.PRIM_CHAR)
             .register(TypeSerializers.STRING)
             .register(TypeSerializers.UUID)
             .register(TypeSerializers.BYTE)

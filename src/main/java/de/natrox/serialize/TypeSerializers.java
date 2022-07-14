@@ -26,6 +26,10 @@ public final class TypeSerializers {
 
     public final static TypeDeserializer<String> STRING = new StringDeserializer();
 
+    public static final TypeDeserializer<Character> CHAR = new CharDeserializer(Character.class);
+
+    public static final TypeDeserializer<Character> PRIM_CHAR = new CharDeserializer(char.class);
+
     public final static TypeDeserializer<UUID> UUID = new UuidDeserializer();
 
     public final static TypeDeserializer<Byte> BYTE = new ByteDeserializer(Byte.class);
