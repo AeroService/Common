@@ -34,7 +34,7 @@ allprojects {
 }
 
 dependencies {
-    implementation("de.natrox:Common:72c9211")
+    implementation("de.natrox:Common:1308097")
 
     implementation("org.jetbrains:annotations:23.0.0")
     implementation("org.slf4j:slf4j-api:2.0.0-alpha7")
