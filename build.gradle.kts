@@ -62,6 +62,7 @@ if (System.getProperty("publishName") != null && System.getProperty("publishPass
         }
         publications {
             create<MavenPublication>(project.name) {
+                groupId = project.properties["group"] as? String?
                 artifactId = project.name
                 version = versionDetails().gitHash
                 from(components.findByName("java"))
