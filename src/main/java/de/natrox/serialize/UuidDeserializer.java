@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 import java.util.UUID;
 
-final class UuidDeserializer extends TypeDeserializer<UUID>  {
+final class UuidDeserializer extends TypeDeserializer<UUID> {
 
     private static final char DASH = '-';
 

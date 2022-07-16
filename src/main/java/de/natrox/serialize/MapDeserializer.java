@@ -40,8 +40,8 @@ final class MapDeserializer implements Deserializer<Map<?, ?>> {
             }
             Type key = typeArgs[0];
             Type value = typeArgs[1];
-            @Nullable SpecificDeserializer<?, Object> keySerial = (SpecificDeserializer<?, Object>) SerializerCollection.defaults().get(key);
-            @Nullable SpecificDeserializer<?, Object> valueSerial = (SpecificDeserializer<?, Object>) SerializerCollection.defaults().get(value);
+            @Nullable SpecificDeserializer<?, Object> keySerial = SerializerCollection.defaults().get(key);
+            @Nullable SpecificDeserializer<?, Object> valueSerial = SerializerCollection.defaults().get(value);
 
             if (keySerial == null) {
                 throw new SerializeException(type, "No type serializer available for key type " + key);

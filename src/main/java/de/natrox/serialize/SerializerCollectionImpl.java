@@ -25,7 +25,10 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
@@ -57,7 +60,8 @@ final class SerializerCollectionImpl implements SerializerCollection {
             .register(TypeSerializers.PRIM_DOUBLE)
             .register(
                 new ObjectDeserializer<>(ObjectMapper.factory()),
-                registrable -> registrable.type(Object.class).inputTypeExact(new TypeToken<Map<String, Object>>(){}.getType())
+                registrable -> registrable.type(Object.class).inputTypeExact(new TypeToken<Map<String, Object>>() {
+                }.getType())
             )
             .build();
     }

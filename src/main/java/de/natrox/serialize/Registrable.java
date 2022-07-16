@@ -33,7 +33,7 @@ public interface Registrable<T, U> {
     @NotNull Registrable<T, U> type(@NotNull Predicate<Type> test);
 
     default @NotNull Registrable<T, U> type(@NotNull Type type) {
-        return this.type(test -> Registrable.testType(test, type));
+        return this.type(test -> this.testType(test, type));
     }
 
     default @NotNull Registrable<T, U> type(@NotNull Class<T> type) {
@@ -59,7 +59,7 @@ public interface Registrable<T, U> {
     @NotNull Registrable<T, U> inputType(@NotNull Predicate<Type> test);
 
     default @NotNull Registrable<T, U> inputType(@NotNull Type type) {
-        return this.inputType(test -> Registrable.testType(test, type));
+        return this.inputType(test -> this.testType(test, type));
     }
 
     default @NotNull Registrable<T, U> inputType(@NotNull Class<U> type) {
@@ -82,7 +82,7 @@ public interface Registrable<T, U> {
         return this.inputType(type.getType());
     }
 
-    private static boolean testType(Type test, Type type) {
+    private boolean testType(Type test, Type type) {
         if (GenericTypeReflector.isSuperType(type, test)) {
             return true;
         }

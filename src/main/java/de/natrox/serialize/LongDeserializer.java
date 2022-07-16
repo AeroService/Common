@@ -37,7 +37,7 @@ final class LongDeserializer extends NumericDeserializer<Long> {
             }
         }
 
-        if(obj instanceof Number) {
+        if (obj instanceof Number) {
             return ((Number) obj).longValue();
         }
 
