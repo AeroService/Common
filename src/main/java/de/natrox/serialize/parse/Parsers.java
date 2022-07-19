@@ -16,6 +16,8 @@
 
 package de.natrox.serialize.parse;
 
+import java.io.File;
+
 public final class Parsers {
 
     public final static Parser<Boolean> BOOLEAN = new BooleanParser();
@@ -25,6 +27,8 @@ public final class Parsers {
     public static final Parser<Character> CHAR = new CharParser();
 
     public final static Parser<java.util.UUID> UUID = new UuidParser();
+
+    public final static Parser<File> FILE = new FileParser();
 
     public final static Parser<Byte> BYTE = new ByteParser();
 
