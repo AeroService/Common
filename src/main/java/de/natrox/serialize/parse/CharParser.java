@@ -20,7 +20,7 @@ import de.natrox.serialize.exception.CoercionFailedException;
 import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
-final class CharParser implements Parser<Character, Object> {
+final class CharParser implements Parser<Character> {
 
     @Override
     public @NotNull Character parse(@NotNull Object obj) throws SerializeException {

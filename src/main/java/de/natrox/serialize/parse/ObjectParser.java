@@ -21,12 +21,11 @@ import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
-import java.util.Map;
 
-public interface ObjectParser<T> extends Parser<T, Map<String, Object>> {
+public interface ObjectParser<T> extends Parser<T> {
 
-    static <T> @NotNull ObjectParser<T> create() {
-        return new ObjectParserImpl<>(new TypeToken<>(){}.getType(), ObjectMapper.factory());
+    static <T> @NotNull ObjectParser<T> create(@NotNull TypeToken<T> typeToken) {
+        return new ObjectParserImpl<>(typeToken.getType(), ObjectMapper.factory());
     }
 
     static <T> @NotNull ObjectParser<T> create(Type type) {

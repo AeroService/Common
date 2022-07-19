@@ -21,7 +21,7 @@ import de.natrox.serialize.exception.SerializeException;
 import java.util.Locale;
 import java.util.function.BiFunction;
 
-abstract class NumericParser<T> implements Parser<T, Object> {
+abstract class NumericParser<T> implements Parser<T> {
 
     protected final static float EPSILON = Float.MIN_NORMAL;
 

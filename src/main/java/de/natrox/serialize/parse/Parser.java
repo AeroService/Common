@@ -20,8 +20,8 @@ import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
 @FunctionalInterface
-public interface Parser<T, U> {
+public interface Parser<T> {
 
-    @NotNull T parse(@NotNull U obj) throws SerializeException;
+    @NotNull T parse(@NotNull Object obj) throws SerializeException;
 
 }

@@ -24,12 +24,10 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-public interface MapParser<T, U> extends Parser<Map<T, U>, Object> {
+public interface MapParser<T, U> extends Parser<Map<T, U>> {
 
-    static <T, U> @NotNull MapParser<T, U> create() {
-        return new MapParserImpl<>(new TypeToken<>() {
-
-        }.getType(), SerializerCollection.defaults());
+    static <T, U> @NotNull MapParser<T, U> create(@NotNull TypeToken<Map<T, U>> typeToken) {
+        return new MapParserImpl<>(typeToken.getType(), SerializerCollection.defaults());
     }
 
     static <T, U> @NotNull MapParser<T, U> create(@NotNull Type type) {
@@ -37,11 +35,9 @@ public interface MapParser<T, U> extends Parser<Map<T, U>, Object> {
         return new MapParserImpl<>(type, SerializerCollection.defaults());
     }
 
-    static <T, U> @NotNull MapParser<T, U> create(@NotNull SerializerCollection collection) {
+    static <T, U> @NotNull MapParser<T, U> create(@NotNull TypeToken<Map<T, U>> typeToken, @NotNull SerializerCollection collection) {
         Check.notNull(collection, "collection");
-        return new MapParserImpl<>(new TypeToken<>() {
-
-        }.getType(), collection);
+        return new MapParserImpl<>(typeToken.getType(), collection);
     }
 
     static <T, U> @NotNull MapParser<T, U> create(@NotNull Type type, @NotNull SerializerCollection collection) {

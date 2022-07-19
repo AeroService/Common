@@ -62,7 +62,7 @@ final class ObjectMapperImpl<T, U> implements ObjectMapper<T> {
         U intermediate = this.instanceFactory.begin();
 
         for (FieldInfo<T, U> field : this.fields) {
-            Parser<?, Object> parser = SerializerCollection.defaults().get(field.type());
+            Parser<?> parser = SerializerCollection.defaults().get(field.type());
             if (parser == null) {
                 throw new SerializeException("No TypeSerializer found for field " + field.name() + " of type " + field.type());
             }

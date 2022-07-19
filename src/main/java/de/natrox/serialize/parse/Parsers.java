@@ -18,25 +18,25 @@ package de.natrox.serialize.parse;
 
 public final class Parsers {
 
-    public final static Parser<Boolean, Object> BOOLEAN = new BooleanParser();
+    public final static Parser<Boolean> BOOLEAN = new BooleanParser();
 
-    public final static Parser<String, Object> STRING = new StringParser();
+    public final static Parser<String> STRING = new StringParser();
 
-    public static final Parser<Character, Object> CHAR = new CharParser();
+    public static final Parser<Character> CHAR = new CharParser();
 
-    public final static Parser<java.util.UUID, Object> UUID = new UuidParser();
+    public final static Parser<java.util.UUID> UUID = new UuidParser();
 
-    public final static Parser<Byte, Object> BYTE = new ByteParser();
+    public final static Parser<Byte> BYTE = new ByteParser();
 
-    public final static Parser<Short, Object> SHORT = new ShortParser();
+    public final static Parser<Short> SHORT = new ShortParser();
 
-    public final static Parser<Integer, Object> INTEGER = new IntegerParser();
+    public final static Parser<Integer> INTEGER = new IntegerParser();
 
-    public final static Parser<Long, Object> LONG = new LongParser();
+    public final static Parser<Long> LONG = new LongParser();
 
-    public final static Parser<Float, Object> FLOAT = new FloatParser();
+    public final static Parser<Float> FLOAT = new FloatParser();
 
-    public final static Parser<Double, Object> DOUBLE = new DoubleParser();
+    public final static Parser<Double> DOUBLE = new DoubleParser();
 
     private Parsers() {
         throw new UnsupportedOperationException();

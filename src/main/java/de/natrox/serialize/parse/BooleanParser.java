@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-final class BooleanParser implements Parser<Boolean, Object> {
+final class BooleanParser implements Parser<Boolean> {
 
     @Override
     public @NotNull Boolean parse(@NotNull Object obj) throws SerializeException {

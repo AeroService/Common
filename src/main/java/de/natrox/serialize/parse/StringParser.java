@@ -18,7 +18,7 @@ package de.natrox.serialize.parse;
 
 import org.jetbrains.annotations.NotNull;
 
-final class StringParser implements Parser<String, Object> {
+final class StringParser implements Parser<String> {
 
     @Override
     public @NotNull String parse(@NotNull Object obj) {

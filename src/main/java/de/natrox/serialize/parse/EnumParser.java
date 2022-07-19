@@ -16,13 +16,18 @@
 
 package de.natrox.serialize.parse;
 
-import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
-public interface EnumParser<T extends Enum<T>> extends Parser<T, Object> {
+import java.lang.reflect.Type;
 
-    static <T extends Enum<T>> @NotNull EnumParser<T> create() {
-        return new EnumParserImpl<>(new TypeToken<>(){}.getType());
+public interface EnumParser<T extends Enum<T>> extends Parser<T> {
+
+    static <T extends Enum<T>> @NotNull EnumParser<T> create(Type type) {
+        return new EnumParserImpl<>(type);
+    }
+
+    static <T extends Enum<T>> @NotNull EnumParser<T> create(Class<T> type) {
+        return new EnumParserImpl<>(type);
     }
 
 }

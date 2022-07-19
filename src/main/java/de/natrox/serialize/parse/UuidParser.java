@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-final class UuidParser implements Parser<UUID, Object> {
+final class UuidParser implements Parser<UUID> {
 
     private static final char DASH = '-';
 

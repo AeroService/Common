@@ -50,8 +50,8 @@ final class MapParserImpl<T, U> implements MapParser<T, U> {
 
             Type key = typeArgs[0];
             Type value = typeArgs[1];
-            Parser<T, Object> keyParser = this.collection.get(key);
-            Parser<U, Object> valueParser = this.collection.get(value);
+            Parser<T> keyParser = this.collection.get(key);
+            Parser<U> valueParser = this.collection.get(value);
 
             if (keyParser == null) {
                 throw new SerializeException(this.type, "No type serializer available for key type " + key);

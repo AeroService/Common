@@ -18,8 +18,11 @@ package de.natrox.serialize.parse;
 
 import de.natrox.serialize.exception.SerializeException;
 import de.natrox.serialize.objectmapping.ObjectMapper;
+import io.leangen.geantyref.GenericTypeReflector;
+import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 
@@ -35,7 +38,13 @@ final class ObjectParserImpl<T> implements ObjectParser<T> {
     }
 
     @Override
-    public @NotNull T parse(@NotNull Map<String, Object> obj) throws SerializeException {
-        return (T) this.objectMapperFactory.get(type).load(obj);
+    public @NotNull T parse(@NotNull Object obj) throws SerializeException {
+        Type objType = TypeToken.get(obj.getClass()).getType();
+
+        if (!GenericTypeReflector.isSuperType(Map.class, objType)) {
+            throw new SerializeException(this.type, "Only map types are supported");
+        }
+
+        return (T) this.objectMapperFactory.get(type).load((Map<String, Object>) obj);
     }
 }
