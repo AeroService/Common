@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
-final class TestObject {
+import org.jetbrains.annotations.NotNull;
 
-    public String name;
-    public boolean test;
+final class StringParser implements Parser<String> {
 
+    @Override
+    public @NotNull String parse(@NotNull Object obj) {
+        return obj.toString();
+    }
 }

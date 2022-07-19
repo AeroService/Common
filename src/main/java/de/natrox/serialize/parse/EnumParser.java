@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
-final class StringSerializer extends TypeSerializer<String> {
+public interface EnumParser<T extends Enum<T>> extends Parser<T> {
 
-    StringSerializer() {
-        super(String.class);
+    static <T extends Enum<T>> @NotNull EnumParser<T> create(Type type) {
+        return new EnumParserImpl<>(type);
     }
 
-    @Override
-    public @NotNull String deserialize(@NotNull Object obj, @NotNull Type type) {
-        return obj.toString();
+    static <T extends Enum<T>> @NotNull EnumParser<T> create(Class<T> type) {
+        return new EnumParserImpl<>(type);
     }
+
 }

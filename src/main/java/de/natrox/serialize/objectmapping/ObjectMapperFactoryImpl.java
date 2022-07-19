@@ -26,7 +26,6 @@ import org.jetbrains.annotations.UnknownNullability;
 import java.lang.reflect.Type;
 import java.util.*;
 
-@SuppressWarnings("unchecked")
 final class ObjectMapperFactoryImpl implements ObjectMapper.Factory {
 
     static final ObjectMapper.Factory INSTANCE = ObjectMapper.factoryBuilder().addDiscoverer(FieldDiscoverer.create()).build();
@@ -87,11 +86,6 @@ final class ObjectMapperFactoryImpl implements ObjectMapper.Factory {
                 throw new RuntimeException(e);
             }
         });
-    }
-
-    @Override
-    public @NotNull <T> T deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
-        return (T) this.get(type).load((Map<String, Object>) obj);
     }
 
     static class BuilderImpl implements ObjectMapper.Factory.Builder {

@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
-public final class TypeSerializers {
+import de.natrox.serialize.exception.SerializeException;
+import org.jetbrains.annotations.NotNull;
 
-    public final static TypeSerializer<Boolean> BOOLEAN = new BooleanSerializer();
+@FunctionalInterface
+public interface Parser<T> {
 
-    public final static TypeSerializer<String> STRING = new StringSerializer();
+    @NotNull T parse(@NotNull Object obj) throws SerializeException;
 
-    private TypeSerializers() {
-        throw new UnsupportedOperationException();
-    }
 }
