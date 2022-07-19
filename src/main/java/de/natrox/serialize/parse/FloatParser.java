@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
 import de.natrox.serialize.exception.CoercionFailedException;
 import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
-
-final class FloatDeserializer extends NumericDeserializer<Float> {
-
-    FloatDeserializer(Class<Float> type) {
-        super(type);
-    }
+final class FloatParser extends NumericParser<Float> {
 
     private static boolean canRepresentDoubleAsFloat(double test) {
         if (test == 0d || !Double.isFinite(test)) { // NaN, +/-inf
@@ -38,7 +32,7 @@ final class FloatDeserializer extends NumericDeserializer<Float> {
     }
 
     @Override
-    public @NotNull Float deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
+    public @NotNull Float parse(@NotNull Object obj) throws SerializeException {
         if (obj instanceof Number) {
             double doubleValue = ((Number) obj).doubleValue();
             if (!canRepresentDoubleAsFloat(doubleValue)) {

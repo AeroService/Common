@@ -14,41 +14,34 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
 import de.natrox.serialize.exception.CoercionFailedException;
 import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
-
-final class IntegerDeserializer extends NumericDeserializer<Integer> {
-
-    IntegerDeserializer(Class<Integer> type) {
-        super(type);
-    }
+final class ByteParser extends NumericParser<Byte> {
 
     @Override
-    public @NotNull Integer deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
+    public @NotNull Byte parse(@NotNull Object obj) throws SerializeException {
         if (obj instanceof Float || obj instanceof Double) {
             double absValue = Math.abs(((Number) obj).doubleValue());
-            if ((absValue - Math.floor(absValue)) < EPSILON && absValue <= Integer.MAX_VALUE) {
-                return (int) absValue;
+            if ((absValue - Math.floor(absValue)) < EPSILON && absValue <= Byte.MAX_VALUE) {
+                return (byte) absValue;
             }
         }
 
         if (obj instanceof Number) {
-            final long full = ((Number) obj).longValue();
-            if (full > Integer.MAX_VALUE || full < Integer.MIN_VALUE) {
-                throw new SerializeException("Value " + full + " is out of range for an integer ([" + Integer.MIN_VALUE + "," + Integer.MAX_VALUE + "])");
+            long full = ((Number) obj).longValue();
+            if (full > Byte.MAX_VALUE || full < Byte.MIN_VALUE) {
+                throw new SerializeException("Value " + full + " is out of range for a byte ([" + Byte.MIN_VALUE + "," + Byte.MAX_VALUE + "])");
             }
-            return (int) full;
         }
 
         if (obj instanceof CharSequence) {
-            return parseNumber(obj.toString(), Integer::parseInt, Integer::parseUnsignedInt, "i");
+            return parseNumber(obj.toString(), Byte::parseByte, Byte::parseByte, "b");
         }
 
-        throw new CoercionFailedException(obj, "int");
+        throw new CoercionFailedException(obj, "byte");
     }
 }

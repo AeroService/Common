@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
 import de.natrox.serialize.exception.SerializeException;
 
 import java.util.Locale;
 import java.util.function.BiFunction;
 
-abstract class NumericDeserializer<T> extends TypeDeserializer<T> {
+abstract class NumericParser<T> implements Parser<T, Object> {
 
     protected final static float EPSILON = Float.MIN_NORMAL;
-
-    protected NumericDeserializer(Class<T> type) {
-        super(type);
-    }
 
     static <T extends Number> T parseNumber(String input,
                                             final BiFunction<String, Integer, T> parseFunc, final BiFunction<String, Integer, T> unsignedParseFunc,

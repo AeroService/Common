@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
 import de.natrox.serialize.exception.CoercionFailedException;
 import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
-
-final class DoubleDeserializer extends NumericDeserializer<Double> {
-
-    DoubleDeserializer(Class<Double> type) {
-        super(type);
-    }
+final class DoubleParser extends NumericParser<Double> {
 
     @Override
-    public @NotNull Double deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
+    public @NotNull Double parse(@NotNull Object obj) throws SerializeException {
         if (obj instanceof Number) {
             return ((Number) obj).doubleValue();
         } else if (obj instanceof CharSequence) {

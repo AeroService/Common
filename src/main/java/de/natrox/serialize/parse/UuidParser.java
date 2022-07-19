@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
 import de.natrox.serialize.exception.CoercionFailedException;
 import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
 import java.util.UUID;
 
-final class UuidDeserializer extends TypeDeserializer<UUID> {
+final class UuidParser implements Parser<UUID, Object> {
 
     private static final char DASH = '-';
 
-    UuidDeserializer() {
-        super(UUID.class);
-    }
-
     @Override
-    public @NotNull UUID deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
+    public @NotNull UUID parse(@NotNull Object obj) throws SerializeException {
         if (obj instanceof final long[] arr) {
             if (arr.length == 2) { // big-endian, cuz we're java
                 return new UUID(arr[0], arr[1]);

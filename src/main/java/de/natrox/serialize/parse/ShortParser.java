@@ -14,40 +14,35 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
 import de.natrox.serialize.exception.CoercionFailedException;
 import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
-
-final class ByteDeserializer extends NumericDeserializer<Byte> {
-
-    ByteDeserializer(Class<Byte> type) {
-        super(type);
-    }
+final class ShortParser extends NumericParser<Short> {
 
     @Override
-    public @NotNull Byte deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
+    public @NotNull Short parse(@NotNull Object obj) throws SerializeException {
         if (obj instanceof Float || obj instanceof Double) {
             double absValue = Math.abs(((Number) obj).doubleValue());
-            if ((absValue - Math.floor(absValue)) < EPSILON && absValue <= Byte.MAX_VALUE) {
-                return (byte) absValue;
+            if ((absValue - Math.floor(absValue)) < EPSILON && absValue <= Short.MAX_VALUE) {
+                return (short) absValue;
             }
         }
 
         if (obj instanceof Number) {
             long full = ((Number) obj).longValue();
-            if (full > Byte.MAX_VALUE || full < Byte.MIN_VALUE) {
-                throw new SerializeException("Value " + full + " is out of range for a byte ([" + Byte.MIN_VALUE + "," + Byte.MAX_VALUE + "])");
+            if (full > Short.MAX_VALUE || full < Short.MIN_VALUE) {
+                throw new SerializeException("Value " + full + " is out of range for a short ([" + Short.MIN_VALUE + "," + Short.MAX_VALUE + "])");
             }
+            return (short) full;
         }
 
         if (obj instanceof CharSequence) {
-            return parseNumber(obj.toString(), Byte::parseByte, Byte::parseByte, "b");
+            return parseNumber(obj.toString(), Short::parseShort, Short::parseShort, "s");
         }
 
-        throw new CoercionFailedException(obj, "byte");
+        throw new CoercionFailedException(obj, "short");
     }
 }

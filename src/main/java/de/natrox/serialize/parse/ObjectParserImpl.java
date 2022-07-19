@@ -14,31 +14,28 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
-import de.natrox.common.validate.Check;
 import de.natrox.serialize.exception.SerializeException;
-import io.leangen.geantyref.TypeToken;
+import de.natrox.serialize.objectmapping.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class TypeDeserializer<T> implements Deserializer<T> {
+import java.lang.reflect.Type;
+import java.util.Map;
 
-    private final TypeToken<T> typeToken;
+@SuppressWarnings({"unchecked"})
+final class ObjectParserImpl<T> implements ObjectParser<T> {
 
-    protected TypeDeserializer(TypeToken<T> typeToken) {
-        this.typeToken = typeToken;
+    private final Type type;
+    private final ObjectMapper.Factory objectMapperFactory;
+
+    ObjectParserImpl(Type type, ObjectMapper.Factory objectMapperFactory) {
+        this.type = type;
+        this.objectMapperFactory = objectMapperFactory;
     }
 
-    protected TypeDeserializer(Class<T> type) {
-        this.typeToken = TypeToken.get(type);
-    }
-
-    public TypeToken<T> type() {
-        return this.typeToken;
-    }
-
-    public @NotNull T deserialize(@NotNull Object obj) throws SerializeException {
-        Check.notNull(obj, "object");
-        return this.deserialize(obj, this.typeToken);
+    @Override
+    public @NotNull T parse(@NotNull Map<String, Object> obj) throws SerializeException {
+        return (T) this.objectMapperFactory.get(type).load(obj);
     }
 }

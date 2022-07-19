@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
 import de.natrox.serialize.exception.CoercionFailedException;
 import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
 import java.util.Locale;
 
-final class BooleanDeserializer extends TypeDeserializer<Boolean> {
-
-    BooleanDeserializer(Class<Boolean> typeToken) {
-        super(typeToken);
-    }
+final class BooleanParser implements Parser<Boolean, Object> {
 
     @Override
-    public @NotNull Boolean deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
+    public @NotNull Boolean parse(@NotNull Object obj) throws SerializeException {
         if (obj instanceof Number) {
             return !obj.equals(0);
         }
@@ -50,6 +45,6 @@ final class BooleanDeserializer extends TypeDeserializer<Boolean> {
             return false;
         }
 
-        throw new CoercionFailedException(type, obj, "boolean");
+        throw new CoercionFailedException(obj, "boolean");
     }
 }

@@ -14,41 +14,31 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
 import de.natrox.serialize.exception.CoercionFailedException;
 import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
-
-final class ShortDeserializer extends NumericDeserializer<Short> {
-
-    ShortDeserializer(Class<Short> type) {
-        super(type);
-    }
+final class LongParser extends NumericParser<Long> {
 
     @Override
-    public @NotNull Short deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
+    public @NotNull Long parse(@NotNull Object obj) throws SerializeException {
         if (obj instanceof Float || obj instanceof Double) {
             double absValue = Math.abs(((Number) obj).doubleValue());
-            if ((absValue - Math.floor(absValue)) < EPSILON && absValue <= Short.MAX_VALUE) {
-                return (short) absValue;
+            if ((absValue - Math.floor(absValue)) < EPSILON && absValue <= Long.MAX_VALUE) {
+                return (long) absValue;
             }
         }
 
         if (obj instanceof Number) {
-            long full = ((Number) obj).longValue();
-            if (full > Short.MAX_VALUE || full < Short.MIN_VALUE) {
-                throw new SerializeException("Value " + full + " is out of range for a short ([" + Short.MIN_VALUE + "," + Short.MAX_VALUE + "])");
-            }
-            return (short) full;
+            return ((Number) obj).longValue();
         }
 
         if (obj instanceof CharSequence) {
-            return parseNumber(obj.toString(), Short::parseShort, Short::parseShort, "s");
+            return parseNumber(obj.toString(), Long::parseLong, Long::parseUnsignedLong, "l");
         }
 
-        throw new CoercionFailedException(obj, "short");
+        throw new CoercionFailedException(obj, "long");
     }
 }

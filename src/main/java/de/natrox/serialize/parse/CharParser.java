@@ -14,26 +14,25 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
+import de.natrox.serialize.exception.CoercionFailedException;
 import de.natrox.serialize.exception.SerializeException;
-import de.natrox.serialize.objectmapping.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
-import java.util.Map;
-
-@SuppressWarnings({"unchecked", "ClassCanBeRecord"})
-public final class ObjectDeserializer<T> implements SpecificDeserializer<T, Map<String, Object>> {
-
-    private final ObjectMapper.Factory objectMapperFactory;
-
-    public ObjectDeserializer(ObjectMapper.Factory objectMapperFactory) {
-        this.objectMapperFactory = objectMapperFactory;
-    }
+final class CharParser implements Parser<Character, Object> {
 
     @Override
-    public @NotNull T deserialize(@NotNull Map<String, Object> obj, @NotNull Type type) throws SerializeException {
-        return (T) this.objectMapperFactory.get(type).load(obj);
+    public @NotNull Character parse(@NotNull Object obj) throws SerializeException {
+        if (obj instanceof final String strValue) {
+            if (strValue.length() == 1) {
+                return strValue.charAt(0);
+            }
+            throw new SerializeException("Only single character expected, but received " + strValue);
+        } else if (obj instanceof Number numValue) {
+            return (char) numValue.shortValue();
+        }
+
+        throw new CoercionFailedException(obj, "char");
     }
 }

@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
+import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
+@FunctionalInterface
+public interface Parser<T, U> {
 
-final class StringDeserializer extends TypeDeserializer<String> {
+    @NotNull T parse(@NotNull U obj) throws SerializeException;
 
-    StringDeserializer() {
-        super(String.class);
-    }
-
-    @Override
-    public @NotNull String deserialize(@NotNull Object obj, @NotNull Type type) {
-        return obj.toString();
-    }
 }
