@@ -25,6 +25,7 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,6 +45,7 @@ final class ParserCollectionImpl implements ParserCollection {
             .registerExact(Character.class, type -> Parsers.CHAR)
             .registerExact(char.class, type -> Parsers.CHAR)
             .registerExact(String.class, type -> Parsers.STRING)
+            .registerExact(URI.class, type -> Parsers.URI)
             .registerExact(URL.class, type -> Parsers.URL)
             .registerExact(UUID.class, type -> Parsers.UUID)
             .registerExact(File.class, type -> Parsers.FILE)
