@@ -19,7 +19,6 @@ package de.natrox.serialize;
 import de.natrox.common.validate.Check;
 import de.natrox.serialize.parse.*;
 import io.leangen.geantyref.GenericTypeReflector;
-import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -31,12 +30,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 @SuppressWarnings({"unchecked"})
-final class SerializerCollectionImpl implements SerializerCollection {
+final class ParserCollectionImpl implements ParserCollection {
 
-    final static SerializerCollection DEFAULT;
+    final static ParserCollection DEFAULT;
 
     static {
-        DEFAULT = SerializerCollection
+        DEFAULT = ParserCollection
             .builder()
             .registerExact(Boolean.class, type -> Parsers.BOOLEAN)
             .registerExact(boolean.class, type -> Parsers.BOOLEAN)
@@ -63,10 +62,10 @@ final class SerializerCollectionImpl implements SerializerCollection {
     }
 
     final List<RegisteredSerializer> serializers;
-    private final @Nullable SerializerCollection parent;
+    private final @Nullable ParserCollection parent;
     private final Map<Type, Function<Type, Parser<?>>> typeMatches = new ConcurrentHashMap<>();
 
-    SerializerCollectionImpl(@Nullable SerializerCollection parent, List<RegisteredSerializer> serializers) {
+    ParserCollectionImpl(@Nullable ParserCollection parent, List<RegisteredSerializer> serializers) {
         this.parent = parent;
         this.serializers = Collections.unmodifiableList(serializers);
     }
@@ -95,12 +94,12 @@ final class SerializerCollectionImpl implements SerializerCollection {
         return (Parser<T>) supplier.apply(type);
     }
 
-    final static class BuilderImpl implements SerializerCollection.Builder {
+    final static class BuilderImpl implements ParserCollection.Builder {
 
-        private final @Nullable SerializerCollection parent;
+        private final @Nullable ParserCollection parent;
         private final List<RegisteredSerializer> serializers = new ArrayList<>();
 
-        BuilderImpl(@Nullable SerializerCollection parent) {
+        BuilderImpl(@Nullable ParserCollection parent) {
             this.parent = parent;
         }
 
@@ -113,8 +112,8 @@ final class SerializerCollectionImpl implements SerializerCollection {
         }
 
         @Override
-        public @UnknownNullability SerializerCollection build() {
-            return new SerializerCollectionImpl(this.parent, this.serializers);
+        public @UnknownNullability ParserCollection build() {
+            return new ParserCollectionImpl(this.parent, this.serializers);
         }
     }
 

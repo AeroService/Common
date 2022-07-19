@@ -16,7 +16,7 @@
 
 package de.natrox.serialize.parse;
 
-import de.natrox.serialize.SerializerCollection;
+import de.natrox.serialize.ParserCollection;
 import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,9 +28,9 @@ import java.util.Map;
 final class MapParserImpl<T, U> implements MapParser<T, U> {
 
     private final Type type;
-    private final SerializerCollection collection;
+    private final ParserCollection collection;
 
-    MapParserImpl(Type type, SerializerCollection collection) {
+    MapParserImpl(Type type, ParserCollection collection) {
         this.type = type;
         this.collection = collection;
     }

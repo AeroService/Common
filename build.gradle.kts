@@ -51,3 +51,7 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.isIncremental = true
 }
+
+tasks.withType<Jar> {
+    archiveFileName.set("serialize.jar")
+}

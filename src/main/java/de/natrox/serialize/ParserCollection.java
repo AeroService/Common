@@ -26,22 +26,21 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public sealed interface SerializerCollection permits SerializerCollectionImpl {
+public sealed interface ParserCollection permits ParserCollectionImpl {
 
-    static @NotNull SerializerCollection.Builder builder() {
-        return new SerializerCollectionImpl.BuilderImpl(null);
+    static @NotNull ParserCollection.Builder builder() {
+        return new ParserCollectionImpl.BuilderImpl(null);
     }
 
-    static @NotNull SerializerCollection defaults() {
-        return SerializerCollectionImpl.DEFAULT;
+    static @NotNull ParserCollection defaults() {
+        return ParserCollectionImpl.DEFAULT;
     }
 
-    default SerializerCollection.Builder childBuilder() {
-        return new SerializerCollectionImpl.BuilderImpl(this);
+    default ParserCollection.Builder childBuilder() {
+        return new ParserCollectionImpl.BuilderImpl(this);
     }
 
     <T> @Nullable Parser<T> get(@NotNull Type type);
@@ -56,29 +55,29 @@ public sealed interface SerializerCollection permits SerializerCollectionImpl {
         return this.get(typeToken.getType());
     }
 
-    interface Builder extends IBuilder<SerializerCollection> {
+    interface Builder extends IBuilder<ParserCollection> {
 
-        SerializerCollection.@NotNull Builder register(@NotNull Predicate<Type> test, @NotNull Function<Type, Parser<?>> supplier);
+        ParserCollection.@NotNull Builder register(@NotNull Predicate<Type> test, @NotNull Function<Type, Parser<?>> supplier);
 
-        default <T> SerializerCollection.@NotNull Builder register(@NotNull Class<T> type, @NotNull Function<Type, Parser<T>> parser) {
+        default <T> ParserCollection.@NotNull Builder register(@NotNull Class<T> type, @NotNull Function<Type, Parser<T>> parser) {
             Check.notNull(type, "type");
             Check.notNull(parser, "parser");
             return this.register(test -> this.testType(test, type), parser::apply);
         }
 
-        default <T> SerializerCollection.@NotNull Builder register(@NotNull TypeToken<T> typeToken, @NotNull Function<Type, Parser<T>> parser) {
+        default <T> ParserCollection.@NotNull Builder register(@NotNull TypeToken<T> typeToken, @NotNull Function<Type, Parser<T>> parser) {
             Check.notNull(typeToken, "typeToken");
             Check.notNull(parser, "parser");
             return this.register(test -> this.testType(test, typeToken.getType()), parser::apply);
         }
 
-        default <T> SerializerCollection.@NotNull Builder registerExact(@NotNull Class<T> type, @NotNull Function<Type, Parser<T>> parser) {
+        default <T> ParserCollection.@NotNull Builder registerExact(@NotNull Class<T> type, @NotNull Function<Type, Parser<T>> parser) {
             Check.notNull(type, "type");
             Check.notNull(parser, "parser");
             return this.register(test -> test.equals(type), parser::apply);
         }
 
-        default <T> SerializerCollection.@NotNull Builder registerExact(@NotNull TypeToken<T> typeToken, @NotNull Function<Type, Parser<T>> parser) {
+        default <T> ParserCollection.@NotNull Builder registerExact(@NotNull TypeToken<T> typeToken, @NotNull Function<Type, Parser<T>> parser) {
             Check.notNull(typeToken, "typeToken");
             Check.notNull(parser, "parser");
             return this.register(test -> test.equals(typeToken.getType()), parser::apply);

@@ -18,7 +18,7 @@ package de.natrox.serialize.objectmapping;
 
 import de.natrox.common.function.ThrowableFunction;
 import de.natrox.common.validate.Check;
-import de.natrox.serialize.SerializerCollection;
+import de.natrox.serialize.ParserCollection;
 import de.natrox.serialize.exception.SerializeException;
 import de.natrox.serialize.parse.Parser;
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +62,7 @@ final class ObjectMapperImpl<T, U> implements ObjectMapper<T> {
         U intermediate = this.instanceFactory.begin();
 
         for (FieldInfo<T, U> field : this.fields) {
-            Parser<?> parser = SerializerCollection.defaults().get(field.type());
+            Parser<?> parser = ParserCollection.defaults().get(field.type());
             if (parser == null) {
                 throw new SerializeException("No TypeSerializer found for field " + field.name() + " of type " + field.type());
             }

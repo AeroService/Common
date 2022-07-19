@@ -17,7 +17,7 @@
 package de.natrox.serialize.parse;
 
 import de.natrox.common.validate.Check;
-import de.natrox.serialize.SerializerCollection;
+import de.natrox.serialize.ParserCollection;
 import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,20 +27,20 @@ import java.util.Map;
 public interface MapParser<T, U> extends Parser<Map<T, U>> {
 
     static <T, U> @NotNull MapParser<T, U> create(@NotNull TypeToken<Map<T, U>> typeToken) {
-        return new MapParserImpl<>(typeToken.getType(), SerializerCollection.defaults());
+        return new MapParserImpl<>(typeToken.getType(), ParserCollection.defaults());
     }
 
     static <T, U> @NotNull MapParser<T, U> create(@NotNull Type type) {
         Check.notNull(type, "type");
-        return new MapParserImpl<>(type, SerializerCollection.defaults());
+        return new MapParserImpl<>(type, ParserCollection.defaults());
     }
 
-    static <T, U> @NotNull MapParser<T, U> create(@NotNull TypeToken<Map<T, U>> typeToken, @NotNull SerializerCollection collection) {
+    static <T, U> @NotNull MapParser<T, U> create(@NotNull TypeToken<Map<T, U>> typeToken, @NotNull ParserCollection collection) {
         Check.notNull(collection, "collection");
         return new MapParserImpl<>(typeToken.getType(), collection);
     }
 
-    static <T, U> @NotNull MapParser<T, U> create(@NotNull Type type, @NotNull SerializerCollection collection) {
+    static <T, U> @NotNull MapParser<T, U> create(@NotNull Type type, @NotNull ParserCollection collection) {
         Check.notNull(type, "type");
         Check.notNull(collection, "collection");
         return new MapParserImpl<>(type, collection);

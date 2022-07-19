@@ -49,8 +49,7 @@ class ExampleTest {
 
     @Test
     void collectionTest() throws SerializeException {
-        SerializerCollection collection = SerializerCollection
-            .defaults();
+        ParserCollection collection = ParserCollection.defaults();
 
         Parser<Boolean> booleanParser = collection.get(Boolean.class);
         assertNotNull(booleanParser);
