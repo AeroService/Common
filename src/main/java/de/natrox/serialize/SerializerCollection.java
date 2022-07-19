@@ -17,13 +17,18 @@
 package de.natrox.serialize;
 
 import de.natrox.common.builder.IBuilder;
-import de.natrox.common.function.SingleTypeFunction;
 import de.natrox.common.validate.Check;
+import de.natrox.serialize.parse.Parser;
+import io.leangen.geantyref.GenericTypeReflector;
 import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public sealed interface SerializerCollection permits SerializerCollectionImpl {
 
@@ -39,42 +44,58 @@ public sealed interface SerializerCollection permits SerializerCollectionImpl {
         return new SerializerCollectionImpl.BuilderImpl(this);
     }
 
-    <T> @Nullable Deserializer<T> get(@NotNull Type type);
+    <T> @Nullable Parser<T> get(@NotNull Type type);
 
-    default <T> @Nullable Deserializer<T> get(@NotNull Class<T> type) {
+    default <T> @Nullable Parser<T> get(@NotNull Class<T> type) {
         Check.notNull(type, "type");
         return this.get((Type) type);
     }
 
-    default <T> @Nullable Deserializer<T> get(@NotNull TypeToken<T> typeToken) {
+    default <T> @Nullable Parser<T> get(@NotNull TypeToken<T> typeToken) {
         Check.notNull(typeToken, "typeToken");
         return this.get(typeToken.getType());
     }
 
-    <T, U> @Nullable SpecificDeserializer<T, U> get(@NotNull Type firstType, @NotNull Type secondType);
-
-    default <T, U> @Nullable SpecificDeserializer<T, U> get(@NotNull Class<T> firstType, @NotNull Class<U> secondType) {
-        Check.notNull(firstType, "firstType");
-        Check.notNull(secondType, "secondType");
-        return this.get(firstType, (Type) secondType);
-    }
-
-    default <T, U> @Nullable SpecificDeserializer<T, U> get(@NotNull TypeToken<T> firstType, @NotNull TypeToken<U> secondType) {
-        Check.notNull(firstType, "firstType");
-        Check.notNull(secondType, "secondType");
-        return this.get(firstType.getType(), secondType.getType());
-    }
-
     interface Builder extends IBuilder<SerializerCollection> {
 
-        <T, U> SerializerCollection.@NotNull Builder register(@NotNull SpecificDeserializer<T, U> deserializer, @NotNull Registrable<T, U> registrable);
+        SerializerCollection.@NotNull Builder register(@NotNull Predicate<Type> test, @NotNull Function<Type, Parser<?>> supplier);
 
-        default <T, U> SerializerCollection.@NotNull Builder register(@NotNull SpecificDeserializer<T, U> deserializer, @NotNull SingleTypeFunction<Registrable<T, U>> function) {
-            return this.register(deserializer, function.apply(Registrable.create()));
+        default <T> SerializerCollection.@NotNull Builder register(@NotNull Class<T> type, @NotNull Function<Type, Parser<T>> parser) {
+            Check.notNull(type, "type");
+            Check.notNull(parser, "parser");
+            return this.register(test -> this.testType(test, type), parser::apply);
         }
 
-        default SerializerCollection.@NotNull Builder register(@NotNull TypeDeserializer<?> deserializer) {
-            return this.register(deserializer, registrable -> registrable.typeExact(deserializer.type().getType()).inputType(Object.class));
+        default <T> SerializerCollection.@NotNull Builder register(@NotNull TypeToken<T> typeToken, @NotNull Function<Type, Parser<T>> parser) {
+            Check.notNull(typeToken, "typeToken");
+            Check.notNull(parser, "parser");
+            return this.register(test -> this.testType(test, typeToken.getType()), parser::apply);
+        }
+
+        default <T> SerializerCollection.@NotNull Builder registerExact(@NotNull Class<T> type, @NotNull Function<Type, Parser<T>> parser) {
+            Check.notNull(type, "type");
+            Check.notNull(parser, "parser");
+            return this.register(test -> test.equals(type), parser::apply);
+        }
+
+        default <T> SerializerCollection.@NotNull Builder registerExact(@NotNull TypeToken<T> typeToken, @NotNull Function<Type, Parser<T>> parser) {
+            Check.notNull(typeToken, "typeToken");
+            Check.notNull(parser, "parser");
+            return this.register(test -> test.equals(typeToken.getType()), parser::apply);
+        }
+
+        private boolean testType(Type test, Type type) {
+            if (GenericTypeReflector.isSuperType(type, test)) {
+                return true;
+            }
+
+            if (test instanceof WildcardType) {
+                Type[] upperBounds = ((WildcardType) test).getUpperBounds();
+                if (upperBounds.length == 1) {
+                    return GenericTypeReflector.isSuperType(type, upperBounds[0]);
+                }
+            }
+            return false;
         }
     }
 }
