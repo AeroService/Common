@@ -18,9 +18,9 @@ package de.natrox.serialize.objectmapping;
 
 import de.natrox.common.function.ThrowableFunction;
 import de.natrox.common.validate.Check;
-import de.natrox.serialize.Serializer;
 import de.natrox.serialize.SerializerCollection;
 import de.natrox.serialize.exception.SerializeException;
+import de.natrox.serialize.parse.Parser;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
@@ -62,18 +62,18 @@ final class ObjectMapperImpl<T, U> implements ObjectMapper<T> {
         U intermediate = this.instanceFactory.begin();
 
         for (FieldInfo<T, U> field : this.fields) {
-            Serializer<?> serial = SerializerCollection.defaults().get(field.type());
-            if (serial == null) {
+            Parser<?> parser = SerializerCollection.defaults().get(field.type());
+            if (parser == null) {
                 throw new SerializeException("No TypeSerializer found for field " + field.name() + " of type " + field.type());
             }
 
             Object value = source.get(field.name());
-            Object newValue = null;
 
-            if (value != null) {
-                newValue = serial.deserialize(value, field.type());
+            if (value == null) {
+                continue;
             }
 
+            Object newValue = parser.parse(value);
             field.validateValue(newValue);
 
             field.deserializer().accept(intermediate, newValue);
@@ -97,14 +97,12 @@ final class ObjectMapperImpl<T, U> implements ObjectMapper<T> {
         Check.notNull(target, "target");
         Check.notNull(value, "value");
         for (FieldInfo<T, U> field : this.fields) {
-            Object fieldValue = null;
             try {
-                fieldValue = field.serializer().apply(value);
+                Object fieldValue = field.serializer().apply(value);
+                target.put(field.name(), fieldValue);
             } catch (Exception exception) {
                 throw new SerializeException(field.type(), exception);
             }
-
-            target.put(field.name(), fieldValue);
         }
     }
 }

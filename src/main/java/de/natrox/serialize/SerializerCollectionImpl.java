@@ -17,22 +17,20 @@
 package de.natrox.serialize;
 
 import de.natrox.common.validate.Check;
-import de.natrox.serialize.exception.SerializeException;
-import de.natrox.serialize.exception.SerializerNotFoundException;
-import de.natrox.serialize.objectmapping.ObjectMapper;
+import de.natrox.serialize.parse.*;
+import io.leangen.geantyref.GenericTypeReflector;
+import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked"})
 final class SerializerCollectionImpl implements SerializerCollection {
 
     final static SerializerCollection DEFAULT;
@@ -40,16 +38,33 @@ final class SerializerCollectionImpl implements SerializerCollection {
     static {
         DEFAULT = SerializerCollection
             .builder()
-            .registerExact(TypeSerializers.BOOLEAN)
-            .registerExact(boolean.class, TypeSerializers.BOOLEAN)
-            .registerExact(TypeSerializers.STRING)
-            .register(ObjectMapper.factory())
+            .registerExact(Boolean.class, type -> Parsers.BOOLEAN)
+            .registerExact(boolean.class, type -> Parsers.BOOLEAN)
+            .registerExact(Character.class, type -> Parsers.CHAR)
+            .registerExact(char.class, type -> Parsers.CHAR)
+            .registerExact(String.class, type -> Parsers.STRING)
+            .registerExact(UUID.class, type -> Parsers.UUID)
+            .registerExact(Byte.class, type -> Parsers.BYTE)
+            .registerExact(byte.class, type -> Parsers.BYTE)
+            .registerExact(Short.class, type -> Parsers.SHORT)
+            .registerExact(short.class, type -> Parsers.SHORT)
+            .registerExact(Integer.class, type -> Parsers.INTEGER)
+            .registerExact(int.class, type -> Parsers.INTEGER)
+            .registerExact(Long.class, type -> Parsers.LONG)
+            .registerExact(long.class, type -> Parsers.LONG)
+            .registerExact(Float.class, type -> Parsers.FLOAT)
+            .registerExact(float.class, type -> Parsers.FLOAT)
+            .registerExact(Double.class, type -> Parsers.DOUBLE)
+            .registerExact(double.class, type -> Parsers.DOUBLE)
+            .register(Enum.class, EnumParser::create)
+            .register(type -> GenericTypeReflector.isSuperType(type, Map.class), MapParser::create)
+            .register(type -> true, ObjectParser::create)
             .build();
     }
 
     final List<RegisteredSerializer> serializers;
     private final @Nullable SerializerCollection parent;
-    private final Map<Type, Serializer<?>> typeMatches = new ConcurrentHashMap<>();
+    private final Map<Type, Function<Type, Parser<?>>> typeMatches = new ConcurrentHashMap<>();
 
     SerializerCollectionImpl(@Nullable SerializerCollection parent, List<RegisteredSerializer> serializers) {
         this.parent = parent;
@@ -57,50 +72,27 @@ final class SerializerCollectionImpl implements SerializerCollection {
     }
 
     @Override
-    public @Nullable <T> Serializer<T> get(@NotNull Type type) {
+    public <T> @Nullable Parser<T> get(@NotNull Type type) {
         Check.notNull(type, "type");
-        Serializer<?> serial = this.typeMatches.computeIfAbsent(type, param -> {
+        Function<Type, Parser<?>> supplier = this.typeMatches.computeIfAbsent(type, param -> {
             for (RegisteredSerializer ent : this.serializers) {
                 if (ent.matches(param)) {
-                    return ent.serializer();
+                    return ent.parser();
                 }
             }
 
             return null;
         });
 
-        if (serial == null && this.parent != null) {
-            serial = this.parent.get(type);
-        }
-        return (Serializer<T>) serial;
-    }
-
-    @Override
-    public @NotNull <T> T deserialize(@NotNull Object obj, Type @NotNull ... types) throws SerializeException {
-        for (Type type : types) {
-            try {
-                Serializer<Object> serializer = this.get(type);
-
-                if (serializer != null) {
-                    return (T) serializer.deserialize(obj, type);
-                }
-            } catch (SerializeException ignored) {
-
+        if (supplier == null) {
+            if (this.parent == null) {
+                return null;
             }
+
+            return this.parent.get(type);
         }
 
-        throw new SerializerNotFoundException(obj, types);
-    }
-
-    @Override
-    public @NotNull <T> T deserialize(@NotNull Object obj, @NotNull Type type) throws SerializeException {
-        Serializer<Object> serializer = this.get(type);
-
-        if (serializer != null) {
-            return (T) serializer.deserialize(obj, type);
-        }
-
-        throw new SerializerNotFoundException(obj, type);
+        return (Parser<T>) supplier.apply(type);
     }
 
     final static class BuilderImpl implements SerializerCollection.Builder {
@@ -113,18 +105,10 @@ final class SerializerCollectionImpl implements SerializerCollection {
         }
 
         @Override
-        public @NotNull Builder register(@NotNull Predicate<Type> test, @NotNull Serializer<?> serializer) {
+        public @NotNull Builder register(@NotNull Predicate<Type> test, @NotNull Function<Type, Parser<?>> supplier) {
             Check.notNull(test, "test");
-            Check.notNull(serializer, "serializer");
-            this.serializers.add(new RegisteredSerializer(test, serializer));
-            return this;
-        }
-
-        @Override
-        public @NotNull Builder register(@NotNull ChildSerializer serializer) {
-            Check.notNull(serializer, "serializer");
-            // FIXME: 12.07.2022 Predicate test
-            this.serializers.add(new RegisteredSerializer(test -> true, serializer::deserialize));
+            Check.notNull(supplier, "supplier");
+            this.serializers.add(new RegisteredSerializer(test, supplier));
             return this;
         }
 
@@ -138,19 +122,19 @@ final class SerializerCollectionImpl implements SerializerCollection {
     static final class RegisteredSerializer {
 
         private final Predicate<Type> predicate;
-        private final Serializer<?> serializer;
+        private final Function<Type, Parser<?>> parser;
 
-        RegisteredSerializer(Predicate<Type> predicate, Serializer<?> serializer) {
+        RegisteredSerializer(Predicate<Type> predicate, Function<Type, Parser<?>> parser) {
             this.predicate = predicate;
-            this.serializer = serializer;
+            this.parser = parser;
         }
 
         public boolean matches(Type test) {
             return this.predicate.test(test);
         }
 
-        public Serializer<?> serializer() {
-            return this.serializer;
+        public Function<Type, Parser<?>> parser() {
+            return this.parser;
         }
     }
 }

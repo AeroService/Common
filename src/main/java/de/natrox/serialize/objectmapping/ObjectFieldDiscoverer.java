@@ -20,11 +20,7 @@ import de.natrox.common.function.ThrowableFunction;
 import de.natrox.serialize.exception.SerializeException;
 import io.leangen.geantyref.GenericTypeReflector;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

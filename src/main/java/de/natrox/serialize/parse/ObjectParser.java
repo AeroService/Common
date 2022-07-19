@@ -14,31 +14,22 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.parse;
 
-import de.natrox.common.validate.Check;
-import de.natrox.serialize.exception.SerializeException;
+import de.natrox.serialize.objectmapping.ObjectMapper;
 import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class TypeSerializer<T> implements Serializer<T> {
+import java.lang.reflect.Type;
 
-    private final TypeToken<T> typeToken;
+public interface ObjectParser<T> extends Parser<T> {
 
-    protected TypeSerializer(TypeToken<T> typeToken) {
-        this.typeToken = typeToken;
+    static <T> @NotNull ObjectParser<T> create(@NotNull TypeToken<T> typeToken) {
+        return new ObjectParserImpl<>(typeToken.getType(), ObjectMapper.factory());
     }
 
-    protected TypeSerializer(Class<T> type) {
-        this.typeToken = TypeToken.get(type);
+    static <T> @NotNull ObjectParser<T> create(Type type) {
+        return new ObjectParserImpl<>(type, ObjectMapper.factory());
     }
 
-    public TypeToken<T> type() {
-        return this.typeToken;
-    }
-
-    public @NotNull T deserialize(@NotNull Object obj) throws SerializeException {
-        Check.notNull(obj, "object");
-        return this.deserialize(obj, this.typeToken);
-    }
 }

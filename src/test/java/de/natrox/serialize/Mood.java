@@ -16,9 +16,9 @@
 
 package de.natrox.serialize;
 
-final class TestObject {
+public enum Mood {
 
-    public String name;
-    public boolean test;
+    HAPPY,
+    SAD
 
 }
