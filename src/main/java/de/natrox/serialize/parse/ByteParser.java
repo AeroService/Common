@@ -24,6 +24,10 @@ final class ByteParser extends NumericParser<Byte> {
 
     @Override
     public @NotNull Byte parse(@NotNull Object obj) throws SerializeException {
+        if(obj instanceof Byte byteValue) {
+            return byteValue;
+        }
+
         if (obj instanceof Float || obj instanceof Double) {
             double absValue = Math.abs(((Number) obj).doubleValue());
             if ((absValue - Math.floor(absValue)) < EPSILON && absValue <= Byte.MAX_VALUE) {
@@ -36,6 +40,7 @@ final class ByteParser extends NumericParser<Byte> {
             if (full > Byte.MAX_VALUE || full < Byte.MIN_VALUE) {
                 throw new SerializeException("Value " + full + " is out of range for a byte ([" + Byte.MIN_VALUE + "," + Byte.MAX_VALUE + "])");
             }
+            return (byte) full;
         }
 
         if (obj instanceof CharSequence) {
