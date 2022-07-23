@@ -65,6 +65,8 @@ final class ParserCollectionImpl implements ParserCollection {
             .registerExact(double.class, type -> Parsers.DOUBLE)
             .register(Enum.class, EnumParser::create)
             .register(type -> GenericTypeReflector.isSuperType(type, Map.class), MapParser::create)
+            .register(type -> GenericTypeReflector.isSuperType(type, Set.class), SetParser::create)
+            .register(type -> GenericTypeReflector.isSuperType(type, List.class), ListParser::create)
             .register(type -> true, ObjectParser::create)
             .build();
     }

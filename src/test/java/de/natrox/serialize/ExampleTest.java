@@ -21,7 +21,9 @@ import de.natrox.serialize.parse.*;
 import io.leangen.geantyref.TypeToken;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,6 +67,12 @@ class ExampleTest {
 
         Parser<Map<String, Integer>> mapParser = collection.get(new TypeToken<>() {});
         assertNotNull(mapParser);
+
+        Parser<Set<String>> setParser = collection.get(new TypeToken<>() {});
+        assertNotNull(setParser);
+
+        Parser<List<String>> listParser = collection.get(new TypeToken<>() {});
+        assertNotNull(listParser);
 
         Map<String, Integer> map = mapParser.parse(Map.of("Test", 5L));
         assertEquals(Map.of("Test", 5), map);

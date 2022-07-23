@@ -1,0 +1,68 @@
+/*
+ * Copyright 2020-2022 NatroxMC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package de.natrox.serialize.parse;
+
+import de.natrox.common.consumer.ThrowableConsumer;
+import de.natrox.serialize.ParserCollection;
+import de.natrox.serialize.exception.SerializeException;
+import io.leangen.geantyref.GenericTypeReflector;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.EnumSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+final class SetParserImpl<T> extends AbstractListChildParser<Set<T>> implements SetParser<T> {
+
+    SetParserImpl(Type type, ParserCollection collection) {
+        super(type, collection);
+    }
+
+    @SuppressWarnings("PMD")
+    static boolean accepts(final Type type) {
+        final Class<?> erased = GenericTypeReflector.erase(type);
+        return Set.class.isAssignableFrom(erased) && (erased.isAssignableFrom(EnumSet.class) || erased.isAssignableFrom(LinkedHashSet.class));
+    }
+
+    @Override
+    protected Type elementType(Type containerType) throws SerializeException {
+        if (!(containerType instanceof ParameterizedType)) {
+            throw new SerializeException("Raw types are not supported for collections");
+        }
+        return ((ParameterizedType) containerType).getActualTypeArguments()[0];
+    }
+
+    @Override
+    protected Set<T> createNew(int length, Type elementType) {
+        return new LinkedHashSet<>(length);
+    }
+
+    @Override
+    protected void forEachElement(Set<T> collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException {
+        for (final Object el : collection) {
+            action.accept(el);
+        }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    protected void deserializeSingle(int index, Set<T> collection, Object deserialized) {
+        ((Set) collection).add(deserialized);
+    }
+
+}
