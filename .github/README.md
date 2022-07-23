@@ -8,7 +8,6 @@ A simple event bus for Java
 
 # Table of contents
 - [Usage](#usage)
-- [Why EventBus?](#why-eventbus)
 - [Advantages & Disadvantages](#advantages-and-disadvantages)
 - [API](#api)
 - [Contributing](#contributing)
@@ -17,11 +16,8 @@ A simple event bus for Java
 # Usage
 Comming soon.
 
-# Why EventBus?
-Coming soon
-
 # Advantages and Disadvantages
-The EventBus library isn't perfect, our choices make it much better for some cases, worse for some others.
+This library isn't perfect, our choices make it much better for some cases, worse for some others.
 
 ## Advantages
 * Coming soon
