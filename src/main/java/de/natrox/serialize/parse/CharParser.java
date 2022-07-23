@@ -24,12 +24,18 @@ final class CharParser implements Parser<Character> {
 
     @Override
     public @NotNull Character parse(@NotNull Object obj) throws SerializeException {
-        if (obj instanceof String strValue) {
-            if (strValue.length() == 1) {
-                return strValue.charAt(0);
+        if (obj instanceof Character charValue) {
+            return charValue;
+        }
+
+        if (obj instanceof CharSequence charSequence) {
+            if (charSequence.length() == 1) {
+                return charSequence.charAt(0);
             }
-            throw new SerializeException("Only single character expected, but received " + strValue);
-        } else if (obj instanceof Number numValue) {
+            throw new SerializeException("Only single character expected, but received " + charSequence);
+        }
+
+        if (obj instanceof Number numValue) {
             return (char) numValue.shortValue();
         }
 
