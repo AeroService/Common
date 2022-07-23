@@ -19,6 +19,7 @@ package de.natrox.serialize.parse;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
 
 public final class Parsers {
 
@@ -33,6 +34,8 @@ public final class Parsers {
     public final static Parser<URL> URL = new UrlParser();
 
     public final static Parser<java.util.UUID> UUID = new UuidParser();
+
+    public final static Parser<Path> PATH = new PathParser();
 
     public final static Parser<File> FILE = new FileParser();
 

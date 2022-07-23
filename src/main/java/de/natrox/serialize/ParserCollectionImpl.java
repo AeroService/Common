@@ -27,6 +27,7 @@ import java.io.File;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -48,6 +49,7 @@ final class ParserCollectionImpl implements ParserCollection {
             .registerExact(URI.class, type -> Parsers.URI)
             .registerExact(URL.class, type -> Parsers.URL)
             .registerExact(UUID.class, type -> Parsers.UUID)
+            .registerExact(Path.class, type -> Parsers.PATH)
             .registerExact(File.class, type -> Parsers.FILE)
             .registerExact(Byte.class, type -> Parsers.BYTE)
             .registerExact(byte.class, type -> Parsers.BYTE)
