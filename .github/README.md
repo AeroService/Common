@@ -4,7 +4,7 @@
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=for-the-badge)](https://github.com/RichardLitt/standard-readme)
 [![discord-banner](https://shields.io/discord/718476275022299157?label=discord&style=for-the-badge&color=7289da)](https://discord.natrox.de)
 
-A simple event bus for Java.
+A simple event bus for Java
 
 # Table of contents
 - [Usage](#usage)
@@ -32,43 +32,31 @@ The EventBus library isn't perfect, our choices make it much better for some cas
 * Coming soon
 
 # API
-Adding the EventBus library to your project is really simple, you only need to add a few repositories. The EventBus library needs Java 17 or newer. If you are using Gradle, you must use version 7.2 or higher.
 
-## Gradle
-
-#### Repository
+Gradle:
 ```java
 repositories {
-    mavenCentral()
-    maven("https://repo.natrox.de")
+    maven("https://repo.natrox.de/repository/maven-public/")
 }
-```
 
-#### Dependency
-```java
 dependencies {
-    implementation("de.natrox:eventbus:LATEST")
+    implementation("de.natrox:eventbus:VERSION")
 }
 ```
-## Maven
-
-#### Repository
+Maven:
 ```xml
 <repositories>
     <repository>
         <id>natrox</id>
-        <url>https://repo.natrox.de</url>
+        <url>https://repo.natrox.de/repository/maven-public/</url>
     </repository>
 </repositories>
-```
 
-#### Dependency
-```xml
 <dependencies>
     <dependency>
         <groupId>de.natrox</groupId>
         <artifactId>eventbus</artifactId>
-        <version>LATEST</version>
+        <version>VERSION</version>
     </dependency>
 </dependencies>
 ```
