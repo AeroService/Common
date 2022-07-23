@@ -21,18 +21,27 @@ import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 final class UrlParser implements Parser<URL> {
 
     @Override
     public @NotNull URL parse(@NotNull Object obj) throws SerializeException {
-        if (obj instanceof String strValue) {
-            try {
-                return new URL(strValue);
-            } catch (MalformedURLException ignored) {
-
+        try {
+            if (obj instanceof URL urlValue) {
+                return urlValue;
             }
+
+            if (obj instanceof URI uriValue) {
+                return uriValue.toURL();
+            }
+
+            if (obj instanceof String strValue) {
+                return new URL(strValue);
+            }
+        } catch (MalformedURLException ignored) {
+
         }
 
         throw new CoercionFailedException(obj, "URL");
