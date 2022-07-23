@@ -22,6 +22,7 @@ import de.natrox.serialize.exception.SerializeException;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -34,14 +35,14 @@ final class SetParserImpl<T> extends AbstractListChildParser<Set<T>> implements 
     @Override
     protected Type elementType(Type containerType) throws SerializeException {
         if (!(containerType instanceof ParameterizedType)) {
-            throw new SerializeException("Raw types are not supported for collections");
+            throw new SerializeException(containerType, "Raw types are not supported for collections");
         }
         return ((ParameterizedType) containerType).getActualTypeArguments()[0];
     }
 
     @Override
     protected Set<T> createNew(int length, Type elementType) {
-        return new LinkedHashSet<>(length);
+        return new HashSet<>(length);
     }
 
     @Override
@@ -53,7 +54,7 @@ final class SetParserImpl<T> extends AbstractListChildParser<Set<T>> implements 
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    protected void deserializeSingle(int index, Set<T> collection, Object deserialized) {
+    protected void deserializeSingle(Set<T> collection, Object deserialized) {
         ((Set) collection).add(deserialized);
     }
 

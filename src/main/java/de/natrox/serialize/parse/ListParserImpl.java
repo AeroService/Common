@@ -52,7 +52,7 @@ final class ListParserImpl<T> extends AbstractListChildParser<List<T>> implement
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    protected void deserializeSingle(int index, List<T> collection, Object deserialized) {
+    protected void deserializeSingle(List<T> collection, Object deserialized) {
         ((List) collection).add(deserialized);
     }
 }

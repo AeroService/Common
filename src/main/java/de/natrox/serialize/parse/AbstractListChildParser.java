@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.List;
 
 public abstract class AbstractListChildParser<T> implements Parser<T> {
@@ -37,34 +38,31 @@ public abstract class AbstractListChildParser<T> implements Parser<T> {
 
     @Override
     public @NotNull T parse(@NotNull Object value) throws SerializeException {
-        @Nullable Parser<?> entrySerial = this.collection.get(this.type);
+        Type entryType = this.elementType(this.type);
+        @Nullable Parser<?> entrySerial = this.collection.get(entryType);
         if (entrySerial == null) {
-            throw new SerializeException(this.type, "No applicable type serializer for type");
+            throw new SerializeException(entryType, "No applicable type serializer for type");
         }
 
-        if (value instanceof List<?> values) {
-            final T ret = this.createNew(values.size(), this.type);
-            for (int i = 0; i < values.size(); ++i) {
-                this.deserializeSingle(i, ret, entrySerial.parse(values.get(i)));
+        if (value instanceof Collection<?> values) {
+            final T ret = this.createNew(values.size(), entryType);
+            for (Object objValue : values) {
+                this.deserializeSingle(ret, entrySerial.parse(objValue));
             }
             return ret;
         } else {
-            final T ret = this.createNew(1, this.type);
-            this.deserializeSingle(0, ret, entrySerial.parse(value));
+            final T ret = this.createNew(1, entryType);
+            this.deserializeSingle(ret, entrySerial.parse(value));
             return ret;
         }
     }
 
-    protected Type elementType(final Type containerType) throws SerializeException {
-        throw new IllegalStateException("AbstractListChildSerializer implementations should override elementType(AnnotatedType)");
-    }
+    protected abstract Type elementType(final Type containerType) throws SerializeException;
 
-    protected T createNew(final int length, final Type elementType) throws SerializeException {
-        throw new IllegalStateException("AbstractListChildSerializer implementations should override createNew(int, AnnotatedType)");
-    }
+    protected abstract T createNew(final int length, final Type elementType) throws SerializeException;
 
     protected abstract void forEachElement(T collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException;
 
-    protected abstract void deserializeSingle(int index, T collection, @Nullable Object deserialized) throws SerializeException;
+    protected abstract void deserializeSingle(T collection, @Nullable Object deserialized) throws SerializeException;
 
 }
