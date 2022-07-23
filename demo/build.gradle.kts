@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
-
-public enum Mood {
-
-    HAPPY,
-    SAD
-
+dependencies {
+    implementation(rootProject)
 }

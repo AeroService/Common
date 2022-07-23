@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
-rootProject.name = "Serialize"
+package de.natrox.serialize.demo.util;
 
-include(":demo")
+public enum Mood {
+
+    HAPPY,
+    SAD
+
+}

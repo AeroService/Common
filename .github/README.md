@@ -14,7 +14,7 @@ A parser which coerces an input value to another type
 - [License](#license)
 
 # Usage
-Comming soon.
+An example of how to use this library is available [here](/demo).
 
 # Advantages and Disadvantages
 This library isn't perfect, our choices make it much better for some cases, worse for some others.

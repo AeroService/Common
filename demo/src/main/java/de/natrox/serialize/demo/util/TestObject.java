@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize;
+package de.natrox.serialize.demo.util;
 
-final class TestObject {
+public class TestObject {
 
     public String name;
     public boolean test;
