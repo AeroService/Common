@@ -29,6 +29,9 @@ class EnumParserTest {
     void testEnumParser() throws SerializeException {
         Parser<TestEnum> enumParser = EnumParser.create(TestEnum.class);
 
+        // round trip value
+        assertEquals(TestEnum.FIRST, enumParser.parse(TestEnum.FIRST));
+
         // lowercase input
         assertEquals(TestEnum.FIRST, enumParser.parse("first"));
 
