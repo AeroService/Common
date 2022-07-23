@@ -28,10 +28,10 @@ public interface EnumParser<T extends Enum<T>> extends Parser<T> {
     }
 
     static <T extends Enum<T>> @NotNull EnumParser<T> create(Class<T> type) {
-        return new EnumParserImpl<>(type);
+        return create((Type) type);
     }
 
     static <T extends Enum<T>> @NotNull EnumParser<T> create(TypeToken<T> typeToken) {
-        return new EnumParserImpl<>(typeToken.getType());
+        return create(typeToken.getType());
     }
 }
