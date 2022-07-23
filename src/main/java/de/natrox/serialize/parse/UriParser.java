@@ -20,19 +20,33 @@ import de.natrox.serialize.exception.CoercionFailedException;
 import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 final class UriParser implements Parser<URI> {
 
     @Override
     public @NotNull URI parse(@NotNull Object obj) throws SerializeException {
-        if (obj instanceof String strValue) {
-            try {
-                return new URI(strValue);
-            } catch (URISyntaxException e) {
-                throw new CoercionFailedException(obj, "URI");
+        try {
+            if (obj instanceof URI uriValue) {
+                return uriValue;
             }
+
+            if (obj instanceof URL urlValue) {
+                return urlValue.toURI();
+            }
+
+            if(obj instanceof File fileValue) {
+                return fileValue.toURI();
+            }
+
+            if (obj instanceof String strValue) {
+                return new URI(strValue);
+            }
+        } catch (URISyntaxException ignored) {
+
         }
 
         throw new CoercionFailedException(obj, "URI");
