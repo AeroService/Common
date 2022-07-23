@@ -21,14 +21,27 @@ import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.net.URI;
 import java.nio.file.Path;
 
 final class FileParser implements Parser<File> {
 
     @Override
     public @NotNull File parse(@NotNull Object obj) throws SerializeException {
+        if (obj instanceof File fileValue) {
+            return fileValue;
+        }
+
         if (obj instanceof Path pathValue) {
             return pathValue.toFile();
+        }
+
+        if (obj instanceof URI uriValue) {
+            return new File(uriValue);
+        }
+
+        if (obj instanceof String strValue) {
+            return new File(strValue);
         }
 
         throw new CoercionFailedException(obj, "File");
