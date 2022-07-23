@@ -39,7 +39,7 @@ final class MapParserImpl<T, U> implements MapParser<T, U> {
     public @NotNull Map<T, U> parse(@NotNull Object obj) throws SerializeException {
         Map<T, U> ret = new LinkedHashMap<>();
         if (obj instanceof Map<?, ?> map) {
-            if (!(this.type instanceof final ParameterizedType param)) {
+            if (!(this.type instanceof ParameterizedType param)) {
                 throw new SerializeException(this.type, "Raw types are not supported for collections");
             }
 

@@ -30,7 +30,7 @@ final class UriParser implements Parser<URI> {
         if (obj instanceof String strValue) {
             try {
                 return new URI(strValue);
-            } catch (final URISyntaxException e) {
+            } catch (URISyntaxException e) {
                 throw new CoercionFailedException(obj, "URI");
             }
         }

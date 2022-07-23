@@ -24,7 +24,7 @@ final class CharParser implements Parser<Character> {
 
     @Override
     public @NotNull Character parse(@NotNull Object obj) throws SerializeException {
-        if (obj instanceof final String strValue) {
+        if (obj instanceof String strValue) {
             if (strValue.length() == 1) {
                 return strValue.charAt(0);
             }

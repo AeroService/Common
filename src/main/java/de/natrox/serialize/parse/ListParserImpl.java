@@ -45,7 +45,7 @@ final class ListParserImpl<T> extends AbstractListChildParser<List<T>> implement
 
     @Override
     protected void forEachElement(List<T> collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException {
-        for (final Object el: collection) {
+        for (Object el : collection) {
             action.accept(el);
         }
     }

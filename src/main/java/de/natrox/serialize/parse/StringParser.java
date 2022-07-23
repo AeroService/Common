@@ -22,7 +22,7 @@ final class StringParser implements Parser<String> {
 
     @Override
     public @NotNull String parse(@NotNull Object obj) {
-        if(obj instanceof Enum<?> enumValue) {
+        if (obj instanceof Enum<?> enumValue) {
             return enumValue.name();
         }
 

@@ -25,9 +25,7 @@ abstract class NumericParser<T> implements Parser<T> {
 
     protected final static float EPSILON = Float.MIN_NORMAL;
 
-    static <T extends Number> T parseNumber(String input,
-                                            final BiFunction<String, Integer, T> parseFunc, final BiFunction<String, Integer, T> unsignedParseFunc,
-                                            final String suffix) throws SerializeException {
+    static <T extends Number> T parseNumber(String input, BiFunction<String, Integer, T> parseFunc, BiFunction<String, Integer, T> unsignedParseFunc, String suffix) throws SerializeException {
         boolean unsigned = false;
         boolean negative = false;
 
@@ -75,7 +73,7 @@ abstract class NumericParser<T> implements Parser<T> {
         }
         try {
             return (unsigned ? unsignedParseFunc : parseFunc).apply(input, radix);
-        } catch (final IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             throw new SerializeException(ex);
         }
     }

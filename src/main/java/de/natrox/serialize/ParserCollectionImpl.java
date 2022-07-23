@@ -71,9 +71,9 @@ final class ParserCollectionImpl implements ParserCollection {
             .build();
     }
 
-    final List<RegisteredSerializer> serializers;
     private final @Nullable ParserCollection parent;
     private final Map<Type, Function<Type, Parser<?>>> typeMatches = new ConcurrentHashMap<>();
+    List<RegisteredSerializer> serializers;
 
     ParserCollectionImpl(@Nullable ParserCollection parent, List<RegisteredSerializer> serializers) {
         this.parent = parent;

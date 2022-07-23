@@ -36,7 +36,7 @@ final class EnumParserImpl<T extends Enum<T>> implements EnumParser<T> {
 
     @Override
     public @NotNull T parse(@NotNull Object obj) throws SerializeException {
-        final String enumConstant = obj.toString();
+        String enumConstant = obj.toString();
         T ret = lookupEnum(enumConstant);
         if (ret == null) {
             throw new CoercionFailedException(this.type, "Invalid enum constant provided, expected a value of enum, got " + enumConstant);
@@ -45,8 +45,8 @@ final class EnumParserImpl<T extends Enum<T>> implements EnumParser<T> {
     }
 
     private T lookupEnum(String key) {
-        final Map<String, Enum<?>> vals = ENUM_FIELD_CACHE.computeIfAbsent((Class<? extends Enum<?>>) GenericTypeReflector.erase(this.type).asSubclass(Enum.class), c2 -> {
-            final Map<String, Enum<?>> ret = new HashMap<>();
+        Map<String, Enum<?>> vals = ENUM_FIELD_CACHE.computeIfAbsent((Class<? extends Enum<?>>) GenericTypeReflector.erase(this.type).asSubclass(Enum.class), c2 -> {
+            Map<String, Enum<?>> ret = new HashMap<>();
             for (Enum<?> field : c2.getEnumConstants()) {
                 ret.put(field.name(), field);
                 ret.putIfAbsent(processKey(field.name()), field);
@@ -55,7 +55,7 @@ final class EnumParserImpl<T extends Enum<T>> implements EnumParser<T> {
         });
 
 
-        final Enum<?> possibleRet = vals.get(key);
+        Enum<?> possibleRet = vals.get(key);
         if (possibleRet != null) {
             return (T) possibleRet;
         }

@@ -32,7 +32,7 @@ final class IntegerParser extends NumericParser<Integer> {
         }
 
         if (obj instanceof Number) {
-            final long full = ((Number) obj).longValue();
+            long full = ((Number) obj).longValue();
             if (full > Integer.MAX_VALUE || full < Integer.MIN_VALUE) {
                 throw new SerializeException("Value " + full + " is out of range for an integer ([" + Integer.MIN_VALUE + "," + Integer.MAX_VALUE + "])");
             }

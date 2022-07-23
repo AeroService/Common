@@ -27,7 +27,7 @@ final class FileParser implements Parser<File> {
 
     @Override
     public @NotNull File parse(@NotNull Object obj) throws SerializeException {
-        if(obj instanceof Path pathValue) {
+        if (obj instanceof Path pathValue) {
             return pathValue.toFile();
         }
 

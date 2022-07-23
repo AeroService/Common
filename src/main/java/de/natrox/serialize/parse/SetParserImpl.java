@@ -19,11 +19,9 @@ package de.natrox.serialize.parse;
 import de.natrox.common.consumer.ThrowableConsumer;
 import de.natrox.serialize.ParserCollection;
 import de.natrox.serialize.exception.SerializeException;
-import io.leangen.geantyref.GenericTypeReflector;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.EnumSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -31,12 +29,6 @@ final class SetParserImpl<T> extends AbstractListChildParser<Set<T>> implements 
 
     SetParserImpl(Type type, ParserCollection collection) {
         super(type, collection);
-    }
-
-    @SuppressWarnings("PMD")
-    static boolean accepts(final Type type) {
-        final Class<?> erased = GenericTypeReflector.erase(type);
-        return Set.class.isAssignableFrom(erased) && (erased.isAssignableFrom(EnumSet.class) || erased.isAssignableFrom(LinkedHashSet.class));
     }
 
     @Override
@@ -54,7 +46,7 @@ final class SetParserImpl<T> extends AbstractListChildParser<Set<T>> implements 
 
     @Override
     protected void forEachElement(Set<T> collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException {
-        for (final Object el : collection) {
+        for (Object el : collection) {
             action.accept(el);
         }
     }

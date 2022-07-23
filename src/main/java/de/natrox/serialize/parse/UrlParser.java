@@ -30,7 +30,7 @@ final class UrlParser implements Parser<URL> {
         if (obj instanceof String strValue) {
             try {
                 return new URL(strValue);
-            } catch (final MalformedURLException ignored) {
+            } catch (MalformedURLException ignored) {
 
             }
         }

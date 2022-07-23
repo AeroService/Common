@@ -65,13 +65,19 @@ class ExampleTest {
         Mood mood = enumParser.parse("HAPPY");
         assertEquals(Mood.HAPPY, mood);
 
-        Parser<Map<String, Integer>> mapParser = collection.get(new TypeToken<>() {});
+        Parser<Map<String, Integer>> mapParser = collection.get(new TypeToken<>() {
+
+        });
         assertNotNull(mapParser);
 
-        Parser<Set<String>> setParser = collection.get(new TypeToken<>() {});
+        Parser<Set<String>> setParser = collection.get(new TypeToken<>() {
+
+        });
         assertNotNull(setParser);
 
-        Parser<List<String>> listParser = collection.get(new TypeToken<>() {});
+        Parser<List<String>> listParser = collection.get(new TypeToken<>() {
+
+        });
         assertNotNull(listParser);
 
         Map<String, Integer> map = mapParser.parse(Map.of("Test", 5L));
