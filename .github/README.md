@@ -8,7 +8,6 @@ A basic and common library for the development of Java projects
 
 # Table of contents
 - [Usage](#usage)
-- [Why Common?](#why-common)
 - [Advantages & Disadvantages](#advantages-and-disadvantages)
 - [API](#api)
 - [Contributing](#contributing)
@@ -17,11 +16,8 @@ A basic and common library for the development of Java projects
 # Usage
 Comming soon.
 
-# Why Common?
-Coming soon
-
 # Advantages and Disadvantages
-The Common library isn't perfect, our choices make it much better for some cases, worse for some others.
+This library isn't perfect, our choices make it much better for some cases, worse for some others.
 
 ## Advantages
 * Coming soon
@@ -32,7 +28,6 @@ The Common library isn't perfect, our choices make it much better for some cases
 * Coming soon
 
 # API
-
 Gradle:
 ```java
 repositories {
