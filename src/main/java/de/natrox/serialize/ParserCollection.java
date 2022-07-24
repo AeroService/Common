@@ -57,30 +57,47 @@ public sealed interface ParserCollection permits ParserCollectionImpl {
 
     interface Builder extends IBuilder<ParserCollection> {
 
-        ParserCollection.@NotNull Builder register(@NotNull Predicate<Type> test, @NotNull Function<Type, Parser<?>> supplier);
+        ParserCollection.@NotNull Builder registerProvider(@NotNull Predicate<Type> test, @NotNull Function<Type, Parser<?>> supplier);
 
-        default <T> ParserCollection.@NotNull Builder register(@NotNull Class<T> type, @NotNull Function<Type, Parser<T>> parser) {
+        default <T> ParserCollection.@NotNull Builder registerProvider(@NotNull Class<T> type, @NotNull Function<Type, Parser<T>> parser) {
             Check.notNull(type, "type");
             Check.notNull(parser, "parser");
-            return this.register(test -> this.testType(test, type), parser::apply);
+            return this.registerProvider(test -> this.testType(test, type), parser::apply);
         }
 
-        default <T> ParserCollection.@NotNull Builder register(@NotNull TypeToken<T> typeToken, @NotNull Function<Type, Parser<T>> parser) {
+        default <T> ParserCollection.@NotNull Builder registerProvider(@NotNull TypeToken<T> typeToken, @NotNull Function<Type, Parser<T>> parser) {
             Check.notNull(typeToken, "typeToken");
             Check.notNull(parser, "parser");
-            return this.register(test -> this.testType(test, typeToken.getType()), parser::apply);
+            return this.registerProvider(test -> this.testType(test, typeToken.getType()), parser::apply);
         }
 
-        default <T> ParserCollection.@NotNull Builder registerExact(@NotNull Class<T> type, @NotNull Function<Type, Parser<T>> parser) {
+        default <T> ParserCollection.@NotNull Builder register(@NotNull Predicate<Type> test, @NotNull Parser<T> parser) {
+            Check.notNull(test, "test");
+            Check.notNull(parser, "parser");
+            return this.registerProvider(test, type -> parser);
+        }
+        default <T> ParserCollection.@NotNull Builder register(@NotNull Class<T> type, @NotNull Parser<T> parser) {
             Check.notNull(type, "type");
             Check.notNull(parser, "parser");
-            return this.register(test -> test.equals(type), parser::apply);
+            return this.registerProvider(test -> this.testType(test, type), test -> parser);
         }
 
-        default <T> ParserCollection.@NotNull Builder registerExact(@NotNull TypeToken<T> typeToken, @NotNull Function<Type, Parser<T>> parser) {
+        default <T> ParserCollection.@NotNull Builder register(@NotNull TypeToken<T> typeToken, @NotNull Parser<T> parser) {
             Check.notNull(typeToken, "typeToken");
             Check.notNull(parser, "parser");
-            return this.register(test -> test.equals(typeToken.getType()), parser::apply);
+            return this.registerProvider(test -> this.testType(test, typeToken.getType()), test -> parser);
+        }
+
+        default <T> ParserCollection.@NotNull Builder registerExact(@NotNull Class<T> type, @NotNull Parser<T> parser) {
+            Check.notNull(type, "type");
+            Check.notNull(parser, "parser");
+            return this.register(test -> test.equals(type), parser);
+        }
+
+        default <T> ParserCollection.@NotNull Builder registerExact(@NotNull TypeToken<T> typeToken, @NotNull Parser<T> parser) {
+            Check.notNull(typeToken, "typeToken");
+            Check.notNull(parser, "parser");
+            return this.register(test -> test.equals(typeToken.getType()), parser);
         }
 
         private boolean testType(Type test, Type type) {

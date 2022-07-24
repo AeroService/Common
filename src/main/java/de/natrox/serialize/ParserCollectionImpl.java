@@ -18,6 +18,9 @@ package de.natrox.serialize;
 
 import de.natrox.common.validate.Check;
 import de.natrox.serialize.parse.*;
+import de.natrox.serialize.parse.collection.ListParser;
+import de.natrox.serialize.parse.collection.SetParser;
+import de.natrox.serialize.parse.collection.array.ArrayParser;
 import io.leangen.geantyref.GenericTypeReflector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,33 +44,42 @@ final class ParserCollectionImpl implements ParserCollection {
     static {
         DEFAULT = ParserCollection
             .builder()
-            .registerExact(Boolean.class, type -> Parsers.BOOLEAN)
-            .registerExact(boolean.class, type -> Parsers.BOOLEAN)
-            .registerExact(Character.class, type -> Parsers.CHAR)
-            .registerExact(char.class, type -> Parsers.CHAR)
-            .registerExact(String.class, type -> Parsers.STRING)
-            .registerExact(URI.class, type -> Parsers.URI)
-            .registerExact(URL.class, type -> Parsers.URL)
-            .registerExact(UUID.class, type -> Parsers.UUID)
-            .registerExact(Path.class, type -> Parsers.PATH)
-            .registerExact(File.class, type -> Parsers.FILE)
-            .registerExact(Byte.class, type -> Parsers.BYTE)
-            .registerExact(byte.class, type -> Parsers.BYTE)
-            .registerExact(Short.class, type -> Parsers.SHORT)
-            .registerExact(short.class, type -> Parsers.SHORT)
-            .registerExact(Integer.class, type -> Parsers.INTEGER)
-            .registerExact(int.class, type -> Parsers.INTEGER)
-            .registerExact(Long.class, type -> Parsers.LONG)
-            .registerExact(long.class, type -> Parsers.LONG)
-            .registerExact(Float.class, type -> Parsers.FLOAT)
-            .registerExact(float.class, type -> Parsers.FLOAT)
-            .registerExact(Double.class, type -> Parsers.DOUBLE)
-            .registerExact(double.class, type -> Parsers.DOUBLE)
-            .register(Enum.class, EnumParser::create)
-            .register(type -> GenericTypeReflector.isSuperType(type, Map.class), MapParser::create)
-            .register(type -> GenericTypeReflector.isSuperType(type, Set.class), SetParser::create)
-            .register(type -> GenericTypeReflector.isSuperType(type, List.class), ListParser::create)
-            .register(type -> true, ObjectParser::create)
+            .registerExact(Boolean.class, Parsers.BOOLEAN)
+            .registerExact(boolean.class, Parsers.BOOLEAN)
+            .registerExact(Character.class, Parsers.CHAR)
+            .registerExact(char.class, Parsers.CHAR)
+            .registerExact(String.class, Parsers.STRING)
+            .registerExact(URI.class, Parsers.URI)
+            .registerExact(URL.class, Parsers.URL)
+            .registerExact(UUID.class, Parsers.UUID)
+            .registerExact(Path.class, Parsers.PATH)
+            .registerExact(File.class, Parsers.FILE)
+            .registerExact(Byte.class, Parsers.BYTE)
+            .registerExact(byte.class, Parsers.BYTE)
+            .registerExact(Short.class, Parsers.SHORT)
+            .registerExact(short.class, Parsers.SHORT)
+            .registerExact(Integer.class, Parsers.INTEGER)
+            .registerExact(int.class, Parsers.INTEGER)
+            .registerExact(Long.class, Parsers.LONG)
+            .registerExact(long.class, Parsers.LONG)
+            .registerExact(Float.class, Parsers.FLOAT)
+            .registerExact(float.class, Parsers.FLOAT)
+            .registerExact(Double.class, Parsers.DOUBLE)
+            .registerExact(double.class, Parsers.DOUBLE)
+            .registerProvider(Enum.class, EnumParser::create)
+            .registerProvider(type -> true, ArrayParser::createObject)
+            .registerExact(boolean[].class, ArrayParser.createBoolean())
+            .registerExact(byte[].class, ArrayParser.createByte())
+            .registerExact(char[].class, ArrayParser.createChar())
+            .registerExact(double[].class, ArrayParser.createDouble())
+            .registerExact(float[].class, ArrayParser.createFloat())
+            .registerExact(int[].class, ArrayParser.createInteger())
+            .registerExact(long[].class, ArrayParser.createLong())
+            .registerExact(short[].class, ArrayParser.createShort())
+            .registerProvider(type -> GenericTypeReflector.isSuperType(type, Map.class), MapParser::create)
+            .registerProvider(type -> GenericTypeReflector.isSuperType(type, Set.class), SetParser::create)
+            .registerProvider(type -> GenericTypeReflector.isSuperType(type, List.class), ListParser::create)
+            .registerProvider(type -> true, ObjectParser::create)
             .build();
     }
 
@@ -114,7 +126,7 @@ final class ParserCollectionImpl implements ParserCollection {
         }
 
         @Override
-        public @NotNull Builder register(@NotNull Predicate<Type> test, @NotNull Function<Type, Parser<?>> supplier) {
+        public @NotNull Builder registerProvider(@NotNull Predicate<Type> test, @NotNull Function<Type, Parser<?>> supplier) {
             Check.notNull(test, "test");
             Check.notNull(supplier, "supplier");
             this.serializers.add(new RegisteredSerializer(test, supplier));
