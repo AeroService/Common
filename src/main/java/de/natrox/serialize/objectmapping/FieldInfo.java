@@ -37,7 +37,7 @@ record FieldInfo<T, U>(String name, Type type, Deserializer<U> deserializer, Ser
 
     }
 
-    interface Serializer<T> extends ThrowableFunction<T, Object, Exception> {
+    interface Serializer<T> extends ThrowableFunction<T, Object, IllegalAccessException> {
 
     }
 

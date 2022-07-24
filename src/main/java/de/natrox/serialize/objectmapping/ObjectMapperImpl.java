@@ -99,8 +99,19 @@ final class ObjectMapperImpl<T, U> implements ObjectMapper<T> {
         for (FieldInfo<T, U> field : this.fields) {
             try {
                 Object fieldValue = field.serializer().apply(value);
-                target.put(field.name(), fieldValue);
-            } catch (Exception exception) {
+
+                if (fieldValue == null) {
+                    target.put(field.name(), null);
+                    continue;
+                }
+
+                Parser<Object> parser = ParserCollection.defaults().get(field.type());
+                if (parser == null) {
+                    throw new SerializeException("No TypeSerializer found for field " + field.name() + " of type " + field.type());
+                }
+
+                target.put(field.name(), parser.serialize(fieldValue));
+            } catch (IllegalAccessException exception) {
                 throw new SerializeException(field.type(), exception);
             }
         }
