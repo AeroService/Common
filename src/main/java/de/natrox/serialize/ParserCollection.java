@@ -57,7 +57,7 @@ public sealed interface ParserCollection permits ParserCollectionImpl {
 
     interface Builder extends IBuilder<ParserCollection> {
 
-        ParserCollection.@NotNull Builder registerProvider(@NotNull Predicate<Type> test, @NotNull Function<Type, Parser<?>> supplier);
+        ParserCollection.@NotNull Builder registerProvider(@NotNull Predicate<Type> test, @NotNull Function<Type, Parser<?>> function);
 
         default <T> ParserCollection.@NotNull Builder registerProvider(@NotNull Class<T> type, @NotNull Function<Type, Parser<T>> parser) {
             Check.notNull(type, "type");
@@ -76,6 +76,7 @@ public sealed interface ParserCollection permits ParserCollectionImpl {
             Check.notNull(parser, "parser");
             return this.registerProvider(test, type -> parser);
         }
+
         default <T> ParserCollection.@NotNull Builder register(@NotNull Class<T> type, @NotNull Parser<T> parser) {
             Check.notNull(type, "type");
             Check.notNull(parser, "parser");
@@ -86,6 +87,18 @@ public sealed interface ParserCollection permits ParserCollectionImpl {
             Check.notNull(typeToken, "typeToken");
             Check.notNull(parser, "parser");
             return this.registerProvider(test -> this.testType(test, typeToken.getType()), test -> parser);
+        }
+
+        default <T> ParserCollection.@NotNull Builder registerExactProvider(@NotNull Class<T> type, @NotNull Function<Type, Parser<T>> parser) {
+            Check.notNull(type, "type");
+            Check.notNull(parser, "parser");
+            return this.registerProvider(test -> test.equals(type), parser::apply);
+        }
+
+        default <T> ParserCollection.@NotNull Builder registerExactProvider(@NotNull TypeToken<T> typeToken, @NotNull Function<Type, Parser<T>> parser) {
+            Check.notNull(typeToken, "typeToken");
+            Check.notNull(parser, "parser");
+            return this.registerProvider(test -> test.equals(typeToken.getType()), parser::apply);
         }
 
         default <T> ParserCollection.@NotNull Builder registerExact(@NotNull Class<T> type, @NotNull Parser<T> parser) {
