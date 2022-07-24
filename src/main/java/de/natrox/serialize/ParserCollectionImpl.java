@@ -21,6 +21,7 @@ import de.natrox.serialize.parse.*;
 import de.natrox.serialize.parse.ListParser;
 import de.natrox.serialize.parse.SetParser;
 import de.natrox.serialize.parse.array.ArrayParser;
+import de.natrox.serialize.util.Types;
 import io.leangen.geantyref.GenericTypeReflector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,7 +68,14 @@ final class ParserCollectionImpl implements ParserCollection {
             .registerExact(Double.class, Parsers.DOUBLE)
             .registerExact(double.class, Parsers.DOUBLE)
             .registerProvider(Enum.class, EnumParser::create)
-            .registerProvider(type -> true, ArrayParser::createObject)
+            .registerProvider(type -> {
+                if(!Types.isArray(type)) {
+                    return false;
+                }
+
+                final Type componentType = GenericTypeReflector.getArrayComponentType(type);
+                return componentType.equals(GenericTypeReflector.box(componentType));
+            }, ArrayParser::createObject)
             .registerExactProvider(boolean[].class, type -> ArrayParser.createBoolean())
             .registerExactProvider(byte[].class, type ->  ArrayParser.createByte())
             .registerExactProvider(char[].class, type ->  ArrayParser.createChar())
