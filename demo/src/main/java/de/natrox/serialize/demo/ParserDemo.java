@@ -20,6 +20,8 @@ import de.natrox.serialize.demo.util.Mood;
 import de.natrox.serialize.demo.util.TestObject;
 import de.natrox.serialize.exception.SerializeException;
 import de.natrox.serialize.parse.*;
+import de.natrox.serialize.parse.collection.ListParser;
+import de.natrox.serialize.parse.collection.SetParser;
 import io.leangen.geantyref.TypeToken;
 
 import java.util.List;
