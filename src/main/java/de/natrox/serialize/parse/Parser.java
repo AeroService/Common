@@ -24,4 +24,8 @@ public interface Parser<T> {
 
     @NotNull T parse(@NotNull Object obj) throws SerializeException;
 
+    default @NotNull Object serialize(@NotNull T value) throws SerializeException {
+        return value;
+    }
+
 }

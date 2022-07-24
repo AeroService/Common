@@ -22,12 +22,15 @@ import io.leangen.geantyref.GenericTypeReflector;
 import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings({"unchecked"})
 final class ObjectParserImpl<T> implements ObjectParser<T> {
 
+    public static final String CLASS_KEY = "__class__";
     private final Type type;
     private final ObjectMapper.Factory objectMapperFactory;
 
@@ -44,6 +47,46 @@ final class ObjectParserImpl<T> implements ObjectParser<T> {
             throw new SerializeException(this.type, "Only map types are supported");
         }
 
-        return (T) this.objectMapperFactory.get(type).load((Map<String, Object>) obj);
+        Map<String, Object> mapValue = (Map<String, Object>) obj;
+
+        final Type clazz = this.instantiableType((String) mapValue.get(CLASS_KEY));
+        return (T) this.objectMapperFactory.get(clazz).load((Map<String, Object>) obj);
+    }
+
+    @Override
+    public @NotNull Object serialize(@NotNull T value) throws SerializeException {
+        Map<String, Object> mapValue = new HashMap<>();
+        Class<?> rawType = GenericTypeReflector.erase(this.type);
+        ObjectMapper<?> mapper;
+        if (rawType.isInterface() || Modifier.isAbstract(rawType.getModifiers())) {
+            mapValue.put(CLASS_KEY, value.getClass().getName());
+            mapper = ObjectMapper.factory().get(value.getClass());
+        } else {
+            mapper = ObjectMapper.factory().get(this.type);
+        }
+        ((ObjectMapper<Object>) mapper).save(mapValue, value);
+        return mapValue;
+    }
+
+    private Type instantiableType(String configuredName) throws SerializeException {
+        final Type retClass;
+        final Class<?> rawType = GenericTypeReflector.erase(this.type);
+        if (rawType.isInterface() || Modifier.isAbstract(rawType.getModifiers())) {
+            if (configuredName == null) {
+                throw new SerializeException(this.type, "No available configured type for instances of this type");
+            } else {
+                try {
+                    retClass = Class.forName(configuredName);
+                } catch (final ClassNotFoundException e) {
+                    throw new SerializeException(this.type, "Unknown class of object " + configuredName, e);
+                }
+                if (!GenericTypeReflector.isSuperType(this.type, retClass)) {
+                    throw new SerializeException(this.type, "Configured type " + configuredName + " does not extend " + rawType.getCanonicalName());
+                }
+            }
+        } else {
+            retClass = this.type;
+        }
+        return retClass;
     }
 }

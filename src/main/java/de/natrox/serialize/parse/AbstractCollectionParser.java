@@ -19,7 +19,6 @@ package de.natrox.serialize.parse;
 import de.natrox.common.consumer.ThrowableConsumer;
 import de.natrox.serialize.ParserCollection;
 import de.natrox.serialize.exception.SerializeException;
-import de.natrox.serialize.parse.Parser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +26,7 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Iterator;
 
+@SuppressWarnings("unchecked")
 public abstract class AbstractCollectionParser<T> implements Parser<T> {
 
     private final Type type;
@@ -55,6 +55,29 @@ public abstract class AbstractCollectionParser<T> implements Parser<T> {
         } else {
             final T ret = this.createNew(1, entryType);
             this.deserializeSingle(0, ret, entrySerial.parse(value));
+            return ret;
+        }
+    }
+
+    @Override
+    public @NotNull Object serialize(@NotNull T value) throws SerializeException {
+        Type entryType = this.elementType(this.type);
+        @Nullable Parser<Object> entrySerial = this.collection.get(entryType);
+        if (entrySerial == null) {
+            throw new SerializeException(entryType, "No applicable type serializer for type");
+        }
+
+        if (value instanceof Collection<?> values) {
+            Collection<Object> val = (Collection<Object>) values;
+            final T ret = this.createNew(values.size(), Object.class);
+            Iterator<Object> iterator = val.iterator();
+            for (int i = 0; iterator.hasNext(); i++) {
+                this.deserializeSingle(i, ret, entrySerial.serialize(iterator.next()));
+            }
+            return ret;
+        } else {
+            final T ret = this.createNew(1, Object.class);
+            this.deserializeSingle(0, ret, entrySerial.serialize(value));
             return ret;
         }
     }

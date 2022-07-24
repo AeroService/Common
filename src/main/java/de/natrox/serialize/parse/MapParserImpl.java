@@ -16,6 +16,7 @@
 
 package de.natrox.serialize.parse;
 
+import de.natrox.common.container.Pair;
 import de.natrox.serialize.ParserCollection;
 import de.natrox.serialize.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
@@ -39,27 +40,9 @@ final class MapParserImpl<T, U> implements MapParser<T, U> {
     public @NotNull Map<T, U> parse(@NotNull Object obj) throws SerializeException {
         Map<T, U> ret = new LinkedHashMap<>();
         if (obj instanceof Map<?, ?> map) {
-            if (!(this.type instanceof ParameterizedType param)) {
-                throw new SerializeException(this.type, "Raw types are not supported for collections");
-            }
-
-            Type[] typeArgs = param.getActualTypeArguments();
-            if (typeArgs.length != 2) {
-                throw new SerializeException(this.type, "Map expected two type arguments!");
-            }
-
-            Type key = typeArgs[0];
-            Type value = typeArgs[1];
-            Parser<T> keyParser = this.collection.get(key);
-            Parser<U> valueParser = this.collection.get(value);
-
-            if (keyParser == null) {
-                throw new SerializeException(this.type, "No type serializer available for key type " + key);
-            }
-
-            if (valueParser == null) {
-                throw new SerializeException(this.type, "No type serializer available for value type " + value);
-            }
+            var parsers = this.parsers();
+            Parser<T> keyParser = parsers.first();
+            Parser<U> valueParser = parsers.second();
 
             for (Map.Entry<?, ?> ent : map.entrySet()) {
                 ret.put(keyParser.parse(ent.getKey()), valueParser.parse(ent.getValue()));
@@ -67,5 +50,46 @@ final class MapParserImpl<T, U> implements MapParser<T, U> {
         }
 
         return ret;
+    }
+
+    @Override
+    public @NotNull Object serialize(@NotNull Map<T, U> mapValue) throws SerializeException {
+        Map<Object, Object> ret = new LinkedHashMap<>();
+
+        var parsers = this.parsers();
+        Parser<T> keyParser = parsers.first();
+        Parser<U> valueParser = parsers.second();
+
+        for (Map.Entry<T, U> ent : mapValue.entrySet()) {
+            ret.put(keyParser.serialize(ent.getKey()), valueParser.serialize(ent.getValue()));
+        }
+
+        return ret;
+    }
+
+    private Pair<Parser<T>, Parser<U>> parsers() throws SerializeException {
+        if (!(this.type instanceof ParameterizedType param)) {
+            throw new SerializeException(this.type, "Raw types are not supported for collections");
+        }
+
+        Type[] typeArgs = param.getActualTypeArguments();
+        if (typeArgs.length != 2) {
+            throw new SerializeException(this.type, "Map expected two type arguments!");
+        }
+
+        Type key = typeArgs[0];
+        Type value = typeArgs[1];
+        Parser<T> keyParser = this.collection.get(key);
+        Parser<U> valueParser = this.collection.get(value);
+
+        if (keyParser == null) {
+            throw new SerializeException(this.type, "No type serializer available for key type " + key);
+        }
+
+        if (valueParser == null) {
+            throw new SerializeException(this.type, "No type serializer available for value type " + value);
+        }
+
+        return Pair.of(keyParser, valueParser);
     }
 }
