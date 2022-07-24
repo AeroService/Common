@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize.parse.collection.array;
+package de.natrox.serialize.parse.array;
 
 import de.natrox.common.consumer.ThrowableConsumer;
 import de.natrox.serialize.ParserCollection;
@@ -24,26 +24,26 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 
-final class ShortArrayParser extends AbstractArrayParser<short[]> implements ArrayParser<short[]> {
+final class LongArrayParser extends AbstractArrayParser<long[]> implements ArrayParser<long[]> {
 
-    ShortArrayParser(ParserCollection collection) {
-        super(short[].class, collection);
+    LongArrayParser(ParserCollection collection) {
+        super(long[].class, collection);
     }
 
     @Override
-    protected short[] createNew(int length, Type elementType) {
-        return new short[length];
+    protected long[] createNew(int length, Type elementType) {
+        return new long[length];
     }
 
     @Override
-    protected void forEachElement(short[] collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException {
-        for (short b : collection) {
+    protected void forEachElement(long[] collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException {
+        for (long b : collection) {
             action.accept(b);
         }
     }
 
     @Override
-    protected void deserializeSingle(int index, short[] collection, @Nullable Object deserialized) throws SerializeException {
-        collection[index] = deserialized == null ? 0 : Parsers.SHORT.parse(deserialized);
+    protected void deserializeSingle(int index, long[] collection, @Nullable Object deserialized) throws SerializeException {
+        collection[index] = deserialized == null ? 0 : Parsers.LONG.parse(deserialized);
     }
 }

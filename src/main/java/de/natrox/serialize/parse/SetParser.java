@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize.parse.collection;
+package de.natrox.serialize.parse;
 
 import de.natrox.common.validate.Check;
 import de.natrox.serialize.ParserCollection;
-import de.natrox.serialize.parse.Parser;
 import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 

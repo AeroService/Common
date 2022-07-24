@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize.parse.collection.array;
+package de.natrox.serialize.parse.array;
 
 import de.natrox.common.consumer.ThrowableConsumer;
 import de.natrox.serialize.ParserCollection;
@@ -24,26 +24,26 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 
-final class BooleanArrayParser extends AbstractArrayParser<boolean[]> implements ArrayParser<boolean[]> {
+final class ShortArrayParser extends AbstractArrayParser<short[]> implements ArrayParser<short[]> {
 
-    BooleanArrayParser(ParserCollection collection) {
-        super(boolean[].class, collection);
+    ShortArrayParser(ParserCollection collection) {
+        super(short[].class, collection);
     }
 
     @Override
-    protected boolean[] createNew(int length, Type elementType) throws SerializeException {
-        return new boolean[length];
+    protected short[] createNew(int length, Type elementType) {
+        return new short[length];
     }
 
     @Override
-    protected void forEachElement(boolean[] collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException {
-        for (boolean b : collection) {
+    protected void forEachElement(short[] collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException {
+        for (short b : collection) {
             action.accept(b);
         }
     }
 
     @Override
-    protected void deserializeSingle(int index, boolean[] collection, @Nullable Object deserialized) throws SerializeException {
-        collection[index] = deserialized != null && Parsers.BOOLEAN.parse(deserialized);
+    protected void deserializeSingle(int index, short[] collection, @Nullable Object deserialized) throws SerializeException {
+        collection[index] = deserialized == null ? 0 : Parsers.SHORT.parse(deserialized);
     }
 }

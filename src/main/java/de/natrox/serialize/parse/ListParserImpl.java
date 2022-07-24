@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize.parse.collection;
+package de.natrox.serialize.parse;
 
 import de.natrox.common.consumer.ThrowableConsumer;
 import de.natrox.serialize.ParserCollection;

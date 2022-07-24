@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize.parse.collection.array;
+package de.natrox.serialize.parse.array;
 
 import de.natrox.common.consumer.ThrowableConsumer;
 import de.natrox.serialize.ParserCollection;
@@ -24,26 +24,26 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 
-final class ByteArrayParser extends AbstractArrayParser<byte[]> implements ArrayParser<byte[]> {
+final class BooleanArrayParser extends AbstractArrayParser<boolean[]> implements ArrayParser<boolean[]> {
 
-    ByteArrayParser(ParserCollection collection) {
-        super(byte[].class, collection);
+    BooleanArrayParser(ParserCollection collection) {
+        super(boolean[].class, collection);
     }
 
     @Override
-    protected byte[] createNew(int length, Type elementType) throws SerializeException {
-        return new byte[length];
+    protected boolean[] createNew(int length, Type elementType) {
+        return new boolean[length];
     }
 
     @Override
-    protected void forEachElement(byte[] collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException {
-        for (byte b : collection) {
+    protected void forEachElement(boolean[] collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException {
+        for (boolean b : collection) {
             action.accept(b);
         }
     }
 
     @Override
-    protected void deserializeSingle(int index, byte[] collection, @Nullable Object deserialized) throws SerializeException {
-        collection[index] = deserialized == null ? 0 : Parsers.BYTE.parse(deserialized);
+    protected void deserializeSingle(int index, boolean[] collection, @Nullable Object deserialized) throws SerializeException {
+        collection[index] = deserialized != null && Parsers.BOOLEAN.parse(deserialized);
     }
 }

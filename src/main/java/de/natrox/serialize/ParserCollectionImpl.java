@@ -18,9 +18,9 @@ package de.natrox.serialize;
 
 import de.natrox.common.validate.Check;
 import de.natrox.serialize.parse.*;
-import de.natrox.serialize.parse.collection.ListParser;
-import de.natrox.serialize.parse.collection.SetParser;
-import de.natrox.serialize.parse.collection.array.ArrayParser;
+import de.natrox.serialize.parse.ListParser;
+import de.natrox.serialize.parse.SetParser;
+import de.natrox.serialize.parse.array.ArrayParser;
 import io.leangen.geantyref.GenericTypeReflector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

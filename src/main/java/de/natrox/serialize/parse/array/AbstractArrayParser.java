@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize.parse.collection.array;
+package de.natrox.serialize.parse.array;
 
 import de.natrox.serialize.ParserCollection;
 import de.natrox.serialize.exception.SerializeException;
-import de.natrox.serialize.parse.collection.AbstractCollectionParser;
+import de.natrox.serialize.parse.AbstractCollectionParser;
 import io.leangen.geantyref.GenericTypeReflector;
 
 import java.lang.reflect.Type;

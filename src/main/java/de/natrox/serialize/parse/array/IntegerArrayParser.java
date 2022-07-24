@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize.parse.collection.array;
+package de.natrox.serialize.parse.array;
 
 import de.natrox.common.consumer.ThrowableConsumer;
 import de.natrox.serialize.ParserCollection;
@@ -24,26 +24,26 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 
-final class DoubleArrayParser extends AbstractArrayParser<double[]> implements ArrayParser<double[]> {
+final class IntegerArrayParser extends AbstractArrayParser<int[]> implements ArrayParser<int[]> {
 
-    DoubleArrayParser(ParserCollection collection) {
-        super(double[].class, collection);
+    IntegerArrayParser(ParserCollection collection) {
+        super(int[].class, collection);
     }
 
     @Override
-    protected double[] createNew(int length, Type elementType) {
-        return new double[length];
+    protected int[] createNew(int length, Type elementType) {
+        return new int[length];
     }
 
     @Override
-    protected void forEachElement(double[] collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException {
-        for (double b : collection) {
+    protected void forEachElement(int[] collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException {
+        for (int b : collection) {
             action.accept(b);
         }
     }
 
     @Override
-    protected void deserializeSingle(int index, double[] collection, @Nullable Object deserialized) throws SerializeException {
-        collection[index] = deserialized == null ? 0 : Parsers.DOUBLE.parse(deserialized);
+    protected void deserializeSingle(int index, int[] collection, @Nullable Object deserialized) throws SerializeException {
+        collection[index] = deserialized == null ? 0 : Parsers.INTEGER.parse(deserialized);
     }
 }
