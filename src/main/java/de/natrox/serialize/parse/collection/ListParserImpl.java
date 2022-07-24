@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize.parse;
+package de.natrox.serialize.parse.collection;
 
 import de.natrox.common.consumer.ThrowableConsumer;
 import de.natrox.serialize.ParserCollection;
@@ -22,17 +22,15 @@ import de.natrox.serialize.exception.SerializeException;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-final class SetParserImpl<T> extends AbstractListChildParser<Set<T>> implements SetParser<T> {
+final class ListParserImpl<T> extends AbstractCollectionParser<List<T>> implements ListParser<T> {
 
-    SetParserImpl(Type type, ParserCollection collection) {
+    ListParserImpl(Type type, ParserCollection collection) {
         super(type, collection);
     }
 
-    @Override
     protected Type elementType(Type containerType) throws SerializeException {
         if (!(containerType instanceof ParameterizedType)) {
             throw new SerializeException(containerType, "Raw types are not supported for collections");
@@ -41,12 +39,12 @@ final class SetParserImpl<T> extends AbstractListChildParser<Set<T>> implements 
     }
 
     @Override
-    protected Set<T> createNew(int length, Type elementType) {
-        return new HashSet<>(length);
+    protected List<T> createNew(int length, Type elementType) {
+        return new ArrayList<>(length);
     }
 
     @Override
-    protected void forEachElement(Set<T> collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException {
+    protected void forEachElement(List<T> collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException {
         for (Object el : collection) {
             action.accept(el);
         }
@@ -54,8 +52,7 @@ final class SetParserImpl<T> extends AbstractListChildParser<Set<T>> implements 
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    protected void deserializeSingle(Set<T> collection, Object deserialized) {
-        ((Set) collection).add(deserialized);
+    protected void deserializeSingle(int index, List<T> collection, Object deserialized) {
+        ((List) collection).add(deserialized);
     }
-
 }

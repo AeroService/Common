@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package de.natrox.serialize.parse;
+package de.natrox.serialize.parse.collection;
 
 import de.natrox.common.consumer.ThrowableConsumer;
 import de.natrox.serialize.ParserCollection;
 import de.natrox.serialize.exception.SerializeException;
+import de.natrox.serialize.parse.Parser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.List;
+import java.util.Iterator;
 
-public abstract class AbstractListChildParser<T> implements Parser<T> {
+public abstract class AbstractCollectionParser<T> implements Parser<T> {
 
     private final Type type;
     private final ParserCollection collection;
 
-    protected AbstractListChildParser(Type type, ParserCollection collection) {
+    protected AbstractCollectionParser(Type type, ParserCollection collection) {
         this.type = type;
         this.collection = collection;
     }
@@ -46,13 +47,14 @@ public abstract class AbstractListChildParser<T> implements Parser<T> {
 
         if (value instanceof Collection<?> values) {
             final T ret = this.createNew(values.size(), entryType);
-            for (Object objValue : values) {
-                this.deserializeSingle(ret, entrySerial.parse(objValue));
+            Iterator<?> iterator = values.iterator();
+            for (int i = 0; iterator.hasNext(); i++) {
+                this.deserializeSingle(i, ret, entrySerial.parse(iterator.next()));
             }
             return ret;
         } else {
             final T ret = this.createNew(1, entryType);
-            this.deserializeSingle(ret, entrySerial.parse(value));
+            this.deserializeSingle(0, ret, entrySerial.parse(value));
             return ret;
         }
     }
@@ -63,6 +65,6 @@ public abstract class AbstractListChildParser<T> implements Parser<T> {
 
     protected abstract void forEachElement(T collection, ThrowableConsumer<Object, SerializeException> action) throws SerializeException;
 
-    protected abstract void deserializeSingle(T collection, @Nullable Object deserialized) throws SerializeException;
+    protected abstract void deserializeSingle(int index, T collection, @Nullable Object deserialized) throws SerializeException;
 
 }
