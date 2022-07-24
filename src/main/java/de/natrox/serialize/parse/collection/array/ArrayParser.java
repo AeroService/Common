@@ -16,47 +16,100 @@
 
 package de.natrox.serialize.parse.collection.array;
 
+import de.natrox.common.validate.Check;
 import de.natrox.serialize.ParserCollection;
 import de.natrox.serialize.parse.Parser;
+import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
 public interface ArrayParser<T> extends Parser<T> {
 
-    static <T> @NotNull ArrayParser<T[]> createObject(Type type) {
+    static <T> @NotNull ArrayParser<T[]> createObject(@NotNull Type type) {
+        Check.notNull(type, "type");
         return new ObjectArrayParser<>(type, ParserCollection.defaults());
     }
 
+    static <T> @NotNull ArrayParser<T[]> createObject(@NotNull Class<T> type) {
+        Check.notNull(type, "type");
+        return createObject((Type) type);
+    }
+
+    static <T> @NotNull ArrayParser<T[]> createObject(@NotNull TypeToken<T> typeToken) {
+        Check.notNull(typeToken, "typeToken");
+        return createObject(typeToken.getType());
+    }
+
+    static @NotNull ArrayParser<boolean[]> createBoolean(@NotNull ParserCollection collection) {
+        Check.notNull(collection, "collection");
+        return new BooleanArrayParser(collection);
+    }
+
     static @NotNull ArrayParser<boolean[]> createBoolean() {
-        return new BooleanArrayParser(ParserCollection.defaults());
+        return createBoolean(ParserCollection.defaults());
+    }
+
+    static @NotNull ArrayParser<byte[]> createByte(@NotNull ParserCollection collection) {
+        Check.notNull(collection, "collection");
+        return new ByteArrayParser(collection);
     }
 
     static @NotNull ArrayParser<byte[]> createByte() {
-        return new ByteArrayParser(ParserCollection.defaults());
+        return createByte(ParserCollection.defaults());
+    }
+
+    static @NotNull ArrayParser<char[]> createChar(@NotNull ParserCollection collection) {
+        Check.notNull(collection, "collection");
+        return new CharArrayParser(collection);
     }
 
     static @NotNull ArrayParser<char[]> createChar() {
-        return new CharArrayParser(ParserCollection.defaults());
+        return createChar(ParserCollection.defaults());
+    }
+
+    static @NotNull ArrayParser<double[]> createDouble(@NotNull ParserCollection collection) {
+        Check.notNull(collection, "collection");
+        return new DoubleArrayParser(collection);
     }
 
     static @NotNull ArrayParser<double[]> createDouble() {
-        return new DoubleArrayParser(ParserCollection.defaults());
+        return createDouble(ParserCollection.defaults());
+    }
+
+    static @NotNull ArrayParser<float[]> createFloat(@NotNull ParserCollection collection) {
+        Check.notNull(collection, "collection");
+        return new FloatArrayParser(collection);
     }
 
     static @NotNull ArrayParser<float[]> createFloat() {
-        return new FloatArrayParser(ParserCollection.defaults());
+        return createFloat(ParserCollection.defaults());
+    }
+
+    static @NotNull ArrayParser<int[]> createInteger(@NotNull ParserCollection collection) {
+        Check.notNull(collection, "collection");
+        return new IntegerArrayParser(collection);
     }
 
     static @NotNull ArrayParser<int[]> createInteger() {
         return new IntegerArrayParser(ParserCollection.defaults());
     }
 
+    static @NotNull ArrayParser<long[]> createLong(@NotNull ParserCollection collection) {
+        Check.notNull(collection, "collection");
+        return new LongArrayParser(collection);
+    }
+
     static @NotNull ArrayParser<long[]> createLong() {
-        return new LongArrayParser(ParserCollection.defaults());
+        return createLong(ParserCollection.defaults());
+    }
+
+    static @NotNull ArrayParser<short[]> createShort(@NotNull ParserCollection collection) {
+        Check.notNull(collection, "collection");
+        return new ShortArrayParser(collection);
     }
 
     static @NotNull ArrayParser<short[]> createShort() {
-        return new ShortArrayParser(ParserCollection.defaults());
+        return createShort(ParserCollection.defaults());
     }
 }

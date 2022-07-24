@@ -26,23 +26,25 @@ import java.util.Map;
 
 public interface MapParser<T, U> extends Parser<Map<T, U>> {
 
-    static <T, U> @NotNull MapParser<T, U> create(@NotNull TypeToken<Map<T, U>> typeToken) {
-        return new MapParserImpl<>(typeToken.getType(), ParserCollection.defaults());
-    }
-
-    static <T, U> @NotNull MapParser<T, U> create(@NotNull Type type) {
-        Check.notNull(type, "type");
-        return new MapParserImpl<>(type, ParserCollection.defaults());
-    }
-
-    static <T, U> @NotNull MapParser<T, U> create(@NotNull TypeToken<Map<T, U>> typeToken, @NotNull ParserCollection collection) {
-        Check.notNull(collection, "collection");
-        return new MapParserImpl<>(typeToken.getType(), collection);
-    }
-
     static <T, U> @NotNull MapParser<T, U> create(@NotNull Type type, @NotNull ParserCollection collection) {
         Check.notNull(type, "type");
         Check.notNull(collection, "collection");
         return new MapParserImpl<>(type, collection);
+    }
+
+    static <T, U> @NotNull MapParser<T, U> create(@NotNull TypeToken<Map<T, U>> typeToken, @NotNull ParserCollection collection) {
+        Check.notNull(typeToken, "typeToken");
+        Check.notNull(collection, "collection");
+        return create(typeToken.getType(), collection);
+    }
+
+    static <T, U> @NotNull MapParser<T, U> create(@NotNull TypeToken<Map<T, U>> typeToken) {
+        Check.notNull(typeToken, "typeToken");
+        return create(typeToken.getType(), ParserCollection.defaults());
+    }
+
+    static <T, U> @NotNull MapParser<T, U> create(@NotNull Type type) {
+        Check.notNull(type, "type");
+        return create(type, ParserCollection.defaults());
     }
 }

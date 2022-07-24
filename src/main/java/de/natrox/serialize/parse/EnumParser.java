@@ -16,6 +16,7 @@
 
 package de.natrox.serialize.parse;
 
+import de.natrox.common.validate.Check;
 import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,15 +24,18 @@ import java.lang.reflect.Type;
 
 public interface EnumParser<T extends Enum<T>> extends Parser<T> {
 
-    static <T extends Enum<T>> @NotNull EnumParser<T> create(Type type) {
+    static <T extends Enum<T>> @NotNull EnumParser<T> create(@NotNull Type type) {
+        Check.notNull(type, "type");
         return new EnumParserImpl<>(type);
     }
 
-    static <T extends Enum<T>> @NotNull EnumParser<T> create(Class<T> type) {
+    static <T extends Enum<T>> @NotNull EnumParser<T> create(@NotNull Class<T> type) {
+        Check.notNull(type, "type");
         return create((Type) type);
     }
 
-    static <T extends Enum<T>> @NotNull EnumParser<T> create(TypeToken<T> typeToken) {
+    static <T extends Enum<T>> @NotNull EnumParser<T> create(@NotNull TypeToken<T> typeToken) {
+        Check.notNull(typeToken, "typeToken");
         return create(typeToken.getType());
     }
 }

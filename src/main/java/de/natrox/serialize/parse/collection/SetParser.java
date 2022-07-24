@@ -27,23 +27,25 @@ import java.util.Set;
 
 public interface SetParser<T> extends Parser<Set<T>> {
 
-    static <T> @NotNull SetParser<T> create(@NotNull TypeToken<Set<T>> typeToken) {
-        return new SetParserImpl<>(typeToken.getType(), ParserCollection.defaults());
-    }
-
-    static <T> @NotNull SetParser<T> create(@NotNull Type type) {
-        Check.notNull(type, "type");
-        return new SetParserImpl<>(type, ParserCollection.defaults());
-    }
-
-    static <T> @NotNull SetParser<T> create(@NotNull TypeToken<Set<T>> typeToken, @NotNull ParserCollection collection) {
-        Check.notNull(collection, "collection");
-        return new SetParserImpl<>(typeToken.getType(), collection);
-    }
-
     static <T> @NotNull SetParser<T> create(@NotNull Type type, @NotNull ParserCollection collection) {
         Check.notNull(type, "type");
         Check.notNull(collection, "collection");
         return new SetParserImpl<>(type, collection);
+    }
+
+    static <T> @NotNull SetParser<T> create(@NotNull TypeToken<Set<T>> typeToken, @NotNull ParserCollection collection) {
+        Check.notNull(typeToken, "typeToken");
+        Check.notNull(collection, "collection");
+        return create(typeToken.getType(), collection);
+    }
+
+    static <T> @NotNull SetParser<T> create(@NotNull Type type) {
+        Check.notNull(type, "type");
+        return create(type, ParserCollection.defaults());
+    }
+
+    static <T> @NotNull SetParser<T> create(@NotNull TypeToken<Set<T>> typeToken) {
+        Check.notNull(typeToken, "typeToken");
+        return create(typeToken.getType(), ParserCollection.defaults());
     }
 }

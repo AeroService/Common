@@ -27,23 +27,25 @@ import java.util.List;
 
 public interface ListParser<T> extends Parser<List<T>> {
 
-    static <T> @NotNull ListParser<T> create(@NotNull TypeToken<List<T>> typeToken) {
-        return new ListParserImpl<>(typeToken.getType(), ParserCollection.defaults());
-    }
-
-    static <T> @NotNull ListParser<T> create(@NotNull Type type) {
-        Check.notNull(type, "type");
-        return new ListParserImpl<>(type, ParserCollection.defaults());
-    }
-
-    static <T> @NotNull ListParser<T> create(@NotNull TypeToken<List<T>> typeToken, @NotNull ParserCollection collection) {
-        Check.notNull(collection, "collection");
-        return new ListParserImpl<>(typeToken.getType(), collection);
-    }
-
     static <T> @NotNull ListParser<T> create(@NotNull Type type, @NotNull ParserCollection collection) {
         Check.notNull(type, "type");
         Check.notNull(collection, "collection");
         return new ListParserImpl<>(type, collection);
+    }
+
+    static <T> @NotNull ListParser<T> create(@NotNull TypeToken<List<T>> typeToken, @NotNull ParserCollection collection) {
+        Check.notNull(typeToken, "typeToken");
+        Check.notNull(collection, "collection");
+        return create(typeToken.getType(), collection);
+    }
+
+    static <T> @NotNull ListParser<T> create(@NotNull Type type) {
+        Check.notNull(type, "type");
+        return create(type, ParserCollection.defaults());
+    }
+
+    static <T> @NotNull ListParser<T> create(@NotNull TypeToken<List<T>> typeToken) {
+        Check.notNull(typeToken, "typeToken");
+        return create(typeToken.getType(), ParserCollection.defaults());
     }
 }
