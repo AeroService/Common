@@ -31,12 +31,12 @@ public interface ArrayParser<T> extends Parser<T> {
         return new ObjectArrayParser<>(type, ParserCollection.defaults());
     }
 
-    static <T> @NotNull ArrayParser<T[]> createObject(@NotNull Class<T> type) {
+    static <T> @NotNull ArrayParser<T[]> createObject(@NotNull Class<T[]> type) {
         Check.notNull(type, "type");
         return createObject((Type) type);
     }
 
-    static <T> @NotNull ArrayParser<T[]> createObject(@NotNull TypeToken<T> typeToken) {
+    static <T> @NotNull ArrayParser<T[]> createObject(@NotNull TypeToken<T[]> typeToken) {
         Check.notNull(typeToken, "typeToken");
         return createObject(typeToken.getType());
     }
