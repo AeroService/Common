@@ -16,5 +16,10 @@
 
 package de.natrox.common.taskchain.exception;
 
+import de.natrox.common.taskchain.TaskChain;
+
+/**
+ * Exception thrown when a {@link TaskChain} gets aborted.
+ */
 public class AbortException extends RuntimeException {
 }

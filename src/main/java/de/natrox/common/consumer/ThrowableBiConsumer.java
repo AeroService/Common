@@ -27,7 +27,7 @@ import de.natrox.common.validate.Check;
  * whose functional method is {@link #accept(T, U)}.
  *
  * @param <T> the type of the first argument to the operation
- * @param <T> the type of the second argument to the operation
+ * @param <U> the type of the second argument to the operation
  * @param <V> the type of the potentially thrown {@link Throwable}
  */
 @FunctionalInterface

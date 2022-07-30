@@ -78,6 +78,8 @@ public interface TaskExecutor {
 
     /**
      * Shutdowns the executor.
+     *
+     * @return true if this executor terminated and false if the timeout elapsed before termination
      */
     boolean shutdown();
 
