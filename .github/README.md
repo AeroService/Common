@@ -2,7 +2,6 @@
 
 [![license](https://img.shields.io/github/license/NatroxMC/Common?style=for-the-badge&color=b2204c)](../LICENSE)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=for-the-badge)](https://github.com/RichardLitt/standard-readme)
-[![discord-banner](https://shields.io/discord/718476275022299157?label=discord&style=for-the-badge&color=7289da)](https://discord.natrox.de)
 
 A basic and common library for the development of Java projects
 
