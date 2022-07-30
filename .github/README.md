@@ -28,33 +28,7 @@ This library isn't perfect, our choices make it much better for some cases, wors
 * Coming soon
 
 # API
-Gradle:
-```java
-repositories {
-    maven("https://repo.natrox.de/repository/maven-public/")
-}
-
-dependencies {
-    implementation("de.natrox:common:VERSION")
-}
-```
-Maven:
-```xml
-<repositories>
-    <repository>
-        <id>natrox</id>
-        <url>https://repo.natrox.de/repository/maven-public/</url>
-    </repository>
-</repositories>
-
-<dependencies>
-    <dependency>
-        <groupId>de.natrox</groupId>
-        <artifactId>common</artifactId>
-        <version>VERSION</version>
-    </dependency>
-</dependencies>
-```
+The newest version can be found [here: ![](https://jitpack.io/v/NatroxMC/Common.svg)](https://jitpack.io/#NatroxMC/Common)
 
 # Contributing
 See [the contributing file](CONTRIBUTING.md)!
