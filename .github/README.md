@@ -6,28 +6,16 @@
 A basic and common library for the development of Java projects
 
 # Table of contents
+- [Install](#install)
 - [Usage](#usage)
-- [Advantages & Disadvantages](#advantages-and-disadvantages)
-- [API](#api)
 - [Contributing](#contributing)
 - [License](#license)
 
-# Usage
-Comming soon.
-
-# Advantages and Disadvantages
-This library isn't perfect, our choices make it much better for some cases, worse for some others.
-
-## Advantages
-* Coming soon
-* Coming soon
-
-## Disadvantages
-* Coming soon
-* Coming soon
-
-# API
+# Install
 The newest version can be found [here: ![](https://jitpack.io/v/NatroxMC/Common.svg)](https://jitpack.io/#NatroxMC/Common)
+
+# Usage
+Coming soon.
 
 # Contributing
 See [the contributing file](CONTRIBUTING.md)!
