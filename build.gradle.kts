@@ -1,5 +1,3 @@
-import com.palantir.gradle.gitversion.VersionDetails
-
 /*
  * Copyright 2020-2022 NatroxMC
  *
@@ -18,20 +16,17 @@ import com.palantir.gradle.gitversion.VersionDetails
 plugins {
     id("java")
     id("maven-publish")
-    id("com.palantir.git-version") version "0.15.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 defaultTasks("build", "shadowJar")
 
-allprojects {
-    group = "de.natrox"
-    version = "1.0"
-    description = "A common core library"
+group = "de.natrox"
+version = "1.0"
+description = "A common core library"
 
-    repositories {
-        mavenCentral()
-    }
+repositories {
+    mavenCentral()
 }
 
 dependencies {
@@ -45,46 +40,15 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:1.8.2")
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 tasks.withType<JavaCompile> {
     sourceCompatibility = JavaVersion.VERSION_17.toString()
     targetCompatibility = JavaVersion.VERSION_17.toString()
-    // options
     options.encoding = "UTF-8"
     options.isIncremental = true
 
-}
-
-if (System.getProperty("publishName") != null && System.getProperty("publishPassword") != null) {
-    val versionDetails: groovy.lang.Closure<VersionDetails> by extra
-    publishing {
-        (components["java"] as AdhocComponentWithVariants).withVariantsFromConfiguration(configurations["shadowRuntimeElements"]) {
-            skip()
-        }
-        publications {
-            create<MavenPublication>(project.name) {
-                groupId = project.properties["group"] as? String?
-                artifactId = project.name
-                version = versionDetails().gitHash
-                from(components.findByName("java"))
-                pom {
-                    name.set(project.name)
-                    licenses {
-                        license {
-                            name.set("The Apache License, Version 2.0")
-                            url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                        }
-                    }
-                }
-            }
-            repositories {
-                maven("https://repo.natrox.de/repository/maven-public/") {
-                    this.name = "natrox-public"
-                    credentials {
-                        this.password = System.getProperty("publishPassword")
-                        this.username = System.getProperty("publishName")
-                    }
-                }
-            }
-        }
-    }
 }
