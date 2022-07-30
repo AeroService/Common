@@ -24,20 +24,21 @@ defaultTasks("build", "shadowJar")
 
 allprojects {
     group = "de.natrox"
-    version = "1.0.0-SNAPSHOT"
-    description = "A parser which coerces an input value to another type"
-
-    repositories {
-        mavenCentral()
-    }
+    version = "1.0"
+    description = "A collection of parsers which coerces an input value to another type"
 
     apply(plugin = "java")
     apply(plugin = "maven-publish")
     apply(plugin = "com.github.johnrengelman.shadow")
 
+    repositories {
+        mavenCentral()
+    }
+
     dependencies {
+        implementation("com.github.NatroxMC:Common:2f49ff1e0f")
+
         implementation("org.jetbrains:annotations:23.0.0")
-        implementation(files("D:\\workspace\\NatroxMC\\Common\\build\\libs\\common.jar"))
         implementation("io.leangen.geantyref:geantyref:1.3.13")
 
         testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
@@ -46,16 +47,25 @@ allprojects {
         testImplementation("org.junit.platform:junit-platform-suite-api:1.8.2")
         testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:1.8.2")
     }
-
-    tasks.withType<JavaCompile> {
-        sourceCompatibility = JavaVersion.VERSION_17.toString()
-        targetCompatibility = JavaVersion.VERSION_17.toString()
-        // options
-        options.encoding = "UTF-8"
-        options.isIncremental = true
-    }
 }
 
-tasks.withType<Jar> {
-    archiveFileName.set("serialize.jar")
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+tasks.withType<JavaCompile> {
+    sourceCompatibility = JavaVersion.VERSION_17.toString()
+    targetCompatibility = JavaVersion.VERSION_17.toString()
+    options.encoding = "UTF-8"
+    options.isIncremental = true
+
+}
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            from(components.findByName("java"))
+        }
+    }
 }
