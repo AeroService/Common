@@ -24,17 +24,17 @@ defaultTasks("build", "shadowJar")
 
 allprojects {
     group = "de.natrox"
-    version = "1.0.0-SNAPSHOT"
+    version = "1.0"
     description = "A simple event bus"
 
     repositories {
         mavenCentral()
-        maven("https://repo.natrox.de/repository/maven-public/")
+        maven(url = "https://jitpack.io")
     }
 }
 
 dependencies {
-    implementation("de.natrox:Common:1308097")
+    implementation("com.github.Natroxmc:common:9b5bbf5fd2")
 
     implementation("org.jetbrains:annotations:23.0.0")
     implementation("org.slf4j:slf4j-api:2.0.0-alpha7")
@@ -46,14 +46,23 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:1.9.0")
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 tasks.withType<JavaCompile> {
     sourceCompatibility = JavaVersion.VERSION_17.toString()
     targetCompatibility = JavaVersion.VERSION_17.toString()
-    // options
     options.encoding = "UTF-8"
     options.isIncremental = true
+
 }
 
-tasks.withType<Jar> {
-    archiveFileName.set("eventbus.jar")
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            from(components.findByName("java"))
+        }
+    }
 }
