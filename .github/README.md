@@ -2,60 +2,20 @@
 
 [![license](https://img.shields.io/github/license/NatroxMC/EventBus?style=for-the-badge&color=b2204c)](../LICENSE)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=for-the-badge)](https://github.com/RichardLitt/standard-readme)
-[![discord-banner](https://shields.io/discord/718476275022299157?label=discord&style=for-the-badge&color=7289da)](https://discord.natrox.de)
 
 A simple event bus for Java
 
 # Table of contents
+- [Install](#install)
 - [Usage](#usage)
-- [Advantages & Disadvantages](#advantages-and-disadvantages)
-- [API](#api)
 - [Contributing](#contributing)
 - [License](#license)
 
+# Install
+The newest version can be found [here: ![](https://jitpack.io/v/NatroxMC/EventBus.svg)](https://jitpack.io/#NatroxMC/EventBus)
+
 # Usage
-Comming soon.
-
-# Advantages and Disadvantages
-This library isn't perfect, our choices make it much better for some cases, worse for some others.
-
-## Advantages
-* Coming soon
-* Coming soon
-
-## Disadvantages
-* Coming soon
-* Coming soon
-
-# API
-
-Gradle:
-```java
-repositories {
-    maven("https://repo.natrox.de/repository/maven-public/")
-}
-
-dependencies {
-    implementation("de.natrox:eventbus:VERSION")
-}
-```
-Maven:
-```xml
-<repositories>
-    <repository>
-        <id>natrox</id>
-        <url>https://repo.natrox.de/repository/maven-public/</url>
-    </repository>
-</repositories>
-
-<dependencies>
-    <dependency>
-        <groupId>de.natrox</groupId>
-        <artifactId>eventbus</artifactId>
-        <version>VERSION</version>
-    </dependency>
-</dependencies>
-```
+Coming soon.
 
 # Contributing
 See [the contributing file](CONTRIBUTING.md)!
