@@ -14,6 +14,21 @@
  * limitations under the License.
  */
 
-rootProject.name = "ConversionBus"
+package de.natrox.conversionbus.convert;
 
-include(":demo")
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+final class ListConverterImpl<T> extends AbstractCollectionConverter<T, List<T>> implements ListConverter<T> {
+
+    ListConverterImpl(Type entryType, Converter<Object, T> entryConverter) {
+        super(entryType, entryConverter);
+    }
+
+    @Override
+    protected <F> Collection<F> createNew(int length, Type elementType) {
+        return new ArrayList<>();
+    }
+}

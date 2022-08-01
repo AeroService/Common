@@ -14,6 +14,17 @@
  * limitations under the License.
  */
 
-rootProject.name = "ConversionBus"
+package de.natrox.conversionbus.exception;
 
-include(":demo")
+import java.lang.reflect.Type;
+
+public class ConversionFailedException extends SerializeException {
+
+    public ConversionFailedException(Object inputValue, String typeDescription) {
+        super("Failed to convert input value of type " + inputValue.getClass() + " to " + typeDescription);
+    }
+
+    public ConversionFailedException(Type target, Object inputValue, String typeDescription) {
+        super(target, "Failed to convert input value of type " + inputValue.getClass() + " to " + typeDescription);
+    }
+}

@@ -14,6 +14,23 @@
  * limitations under the License.
  */
 
-rootProject.name = "ConversionBus"
+package de.natrox.conversionbus.convert;
 
-include(":demo")
+import de.natrox.conversionbus.exception.SerializeException;
+
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+final class SetConverterImpl<T> extends AbstractCollectionConverter<T, Set<T>> implements SetConverter<T> {
+
+    SetConverterImpl(Type entryType, Converter<Object, T> entryConverter) {
+        super(entryType, entryConverter);
+    }
+
+    @Override
+    protected <U> Collection<U> createNew(int length, Type elementType) {
+        return new HashSet<>();
+    }
+}

@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
-rootProject.name = "ConversionBus"
+package de.natrox.conversionbus.demo.util;
 
-include(":demo")
+public enum Mood {
+
+    HAPPY,
+    SAD
+
+}

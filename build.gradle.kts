@@ -25,7 +25,7 @@ defaultTasks("build", "shadowJar")
 allprojects {
     group = "de.natrox"
     version = "1.0"
-    description = "A collection of parsers which coerces an input value to another type"
+    description = "A library to coerce an input value to another type"
 
     apply(plugin = "java")
     apply(plugin = "maven-publish")

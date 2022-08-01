@@ -14,6 +14,18 @@
  * limitations under the License.
  */
 
-rootProject.name = "ConversionBus"
+package de.natrox.conversionbus.convert;
 
-include(":demo")
+import de.natrox.conversionbus.exception.SerializeException;
+import org.jetbrains.annotations.NotNull;
+
+@FunctionalInterface
+public interface Converter<T, U> {
+
+    @NotNull U read(@NotNull T obj) throws SerializeException;
+
+    default @NotNull Object write(@NotNull U value) throws SerializeException {
+        return value;
+    }
+
+}
