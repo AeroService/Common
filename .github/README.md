@@ -1,6 +1,6 @@
-# CoversionBus
+# ConversionBus
 
-[![license](https://img.shields.io/github/license/NatroxMC/CoversionBus?style=for-the-badge&color=b2204c)](../LICENSE)
+[![license](https://img.shields.io/github/license/NatroxMC/ConversionBus?style=for-the-badge&color=b2204c)](../LICENSE)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=for-the-badge)](https://github.com/RichardLitt/standard-readme)
 
 A library to coerce an input value to another type
@@ -12,7 +12,7 @@ A library to coerce an input value to another type
 - [License](#license)
 
 # Install
-The newest version can be found [here: ![](https://jitpack.io/v/CoversionBus/CoversionBus.svg)](https://jitpack.io/#NatroxMC/CoversionBus)
+The newest version can be found [here: ![](https://jitpack.io/v/ConversionBus/ConversionBus.svg)](https://jitpack.io/#NatroxMC/ConversionBus)
 
 # Usage
 An example of how to use this library is available [here](/demo).
