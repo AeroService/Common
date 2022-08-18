@@ -1,4 +1,4 @@
-## How to contribute to the Serialize project
+## How to contribute to the Conversion project
 
 #### Did you find a bug?
 
@@ -17,9 +17,9 @@
 
 #### **Do you have questions about the source code?**
 
-* Ask any question about how to use Serialize in the GitHub issues section.
+* Ask any question about how to use Conversion in the GitHub issues section.
 
 ## General Contribution Rules
 
-* By contributing to the Serialize project your code/contribution will be licensed under
+* By contributing to the Conversion project your code/contribution will be licensed under
   the [Apache Version 2.0](../LICENSE) license.

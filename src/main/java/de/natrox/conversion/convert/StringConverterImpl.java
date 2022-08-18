@@ -14,6 +14,18 @@
  * limitations under the License.
  */
 
-rootProject.name = "Conversion"
+package de.natrox.conversion.convert;
 
-include(":demo")
+import org.jetbrains.annotations.NotNull;
+
+final class StringConverterImpl implements Converter<Object, String> {
+
+    @Override
+    public @NotNull String read(@NotNull Object obj) {
+        if (obj instanceof Enum<?> enumValue) {
+            return enumValue.name();
+        }
+
+        return obj.toString();
+    }
+}

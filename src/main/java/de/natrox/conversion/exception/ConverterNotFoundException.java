@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
-rootProject.name = "Conversion"
+package de.natrox.conversion.exception;
 
-include(":demo")
+import java.lang.reflect.Type;
+
+public class ConverterNotFoundException extends SerializeException {
+
+    public ConverterNotFoundException(Type input, Type output) {
+        super("Failed to find converter which converts the input value of type " + input + " to a value of type " + output);
+    }
+}

@@ -14,6 +14,21 @@
  * limitations under the License.
  */
 
-rootProject.name = "Conversion"
+package de.natrox.conversion.convert;
 
-include(":demo")
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+final class SetConverterImpl<T> extends AbstractCollectionConverter<T, Set<T>> implements SetConverter<T> {
+
+    SetConverterImpl(Type entryType, Converter<Object, T> entryConverter) {
+        super(entryType, entryConverter);
+    }
+
+    @Override
+    protected <U> Collection<U> createNew(int length, Type elementType) {
+        return new HashSet<>();
+    }
+}
