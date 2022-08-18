@@ -27,23 +27,27 @@ allprojects {
     version = "1.0"
     description = "A simple event bus"
 
+    apply(plugin = "java")
+    apply(plugin = "maven-publish")
+    apply(plugin = "com.github.johnrengelman.shadow")
+
     repositories {
         mavenCentral()
         maven(url = "https://jitpack.io")
     }
-}
 
-dependencies {
-    implementation("com.github.Natroxmc:common:9b5bbf5fd2")
+    dependencies {
+        implementation("com.github.Natroxmc:common:9b5bbf5fd2")
 
-    implementation("org.jetbrains:annotations:23.0.0")
-    implementation("org.slf4j:slf4j-api:2.0.0-beta1")
+        implementation("org.jetbrains:annotations:23.0.0")
+        implementation("org.slf4j:slf4j-api:2.0.0-beta1")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-params:5.9.0")
-    testImplementation("org.junit.platform:junit-platform-suite-api:1.9.0")
-    testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:1.9.0")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
+        testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.0")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-params:5.9.0")
+        testImplementation("org.junit.platform:junit-platform-suite-api:1.9.0")
+        testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:1.9.0")
+    }
 }
 
 java {
