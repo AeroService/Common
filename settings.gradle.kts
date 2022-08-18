@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-rootProject.name = "EventBus"
+rootProject.name = "Event"
 
 include(":demo")

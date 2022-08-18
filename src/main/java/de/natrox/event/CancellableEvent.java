@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
-package de.natrox.eventbus;
+package de.natrox.event;
 
-public abstract class AbstractCancellableEvent implements CancellableEvent {
+/**
+ * Represents an event which can be cancelled.
+ */
+public interface CancellableEvent {
 
-    private boolean cancelled = false;
+    /**
+     * Gets if the event should be cancelled or not.
+     *
+     * @return true if the event should be cancelled
+     */
+    boolean isCancelled();
 
-    @Override
-    public boolean isCancelled() {
-        return this.cancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        this.cancelled = cancel;
-    }
+    /**
+     * Marks the event as cancelled or not.
+     *
+     * @param cancel true if the event should be cancelled, false otherwise
+     */
+    void setCancelled(boolean cancel);
 }

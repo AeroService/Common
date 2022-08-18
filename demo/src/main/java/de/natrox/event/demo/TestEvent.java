@@ -1,6 +1,6 @@
-package de.natrox.eventbus.demo;
+package de.natrox.event.demo;
 
-import de.natrox.eventbus.AbstractCancellableEvent;
+import de.natrox.event.AbstractCancellableEvent;
 
 public final class TestEvent extends AbstractCancellableEvent {
 

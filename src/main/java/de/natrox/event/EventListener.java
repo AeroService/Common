@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.natrox.eventbus;
+package de.natrox.event;
 
 import de.natrox.common.builder.IBuilder;
 import de.natrox.common.validate.Check;

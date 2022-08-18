@@ -1,4 +1,4 @@
-package de.natrox.eventbus;
+package de.natrox.event;
 
 import org.junit.jupiter.api.Test;
 

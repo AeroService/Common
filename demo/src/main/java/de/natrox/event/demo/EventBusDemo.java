@@ -1,7 +1,7 @@
-package de.natrox.eventbus.demo;
+package de.natrox.event.demo;
 
-import de.natrox.eventbus.EventBus;
-import de.natrox.eventbus.EventListener;
+import de.natrox.event.EventBus;
+import de.natrox.event.EventListener;
 
 public class EventBusDemo {
 
