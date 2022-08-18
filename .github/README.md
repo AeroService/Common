@@ -1,6 +1,6 @@
-# EventBus
+# Event
 
-[![license](https://img.shields.io/github/license/NatroxMC/EventBus?style=for-the-badge&color=b2204c)](../LICENSE)
+[![license](https://img.shields.io/github/license/NatroxMC/Event?style=for-the-badge&color=b2204c)](../LICENSE)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=for-the-badge)](https://github.com/RichardLitt/standard-readme)
 
 A simple event bus for Java
@@ -12,7 +12,7 @@ A simple event bus for Java
 - [License](#license)
 
 # Install
-The newest version can be found [here: ![](https://jitpack.io/v/NatroxMC/EventBus.svg)](https://jitpack.io/#NatroxMC/EventBus)
+The newest version can be found [here: ![](https://jitpack.io/v/NatroxMC/Event.svg)](https://jitpack.io/#NatroxMC/Event)
 
 # Usage
 An example of how to use this library is available [here](/demo).
