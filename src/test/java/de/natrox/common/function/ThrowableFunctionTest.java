@@ -1,12 +1,9 @@
 /*
  * Copyright 2020-2022 NatroxMC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,12 +13,13 @@
 
 package de.natrox.common.function;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class ThrowableFunctionTest {
 
@@ -86,14 +84,16 @@ class ThrowableFunctionTest {
     }
 
     private int value(int a) {
-        if (a <= 0)
+        if (a <= 0) {
             throw new IllegalArgumentException();
+        }
         return a;
     }
 
     private int exceptionValue(int a) throws Exception {
-        if (a <= 0)
+        if (a <= 0) {
             throw new Exception();
+        }
         return a;
     }
 }

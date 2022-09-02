@@ -1,12 +1,9 @@
 /*
  * Copyright 2020-2022 NatroxMC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +14,6 @@
 package de.natrox.common.function;
 
 import de.natrox.common.validate.Check;
-
 import java.util.function.Function;
 
 /**
@@ -46,16 +42,13 @@ public interface TriFunction<T, U, V, R> {
     R apply(T t, U u, V v);
 
     /**
-     * Returns a composed {@code TriFunction} that first applies this function to
-     * its input, and then applies the {@code after} function to the result.
-     * If evaluation of either function throws an exception, it is relayed to
-     * the caller of the composed function.
+     * Returns a composed {@code TriFunction} that first applies this function to its input, and then applies the
+     * {@code after} function to the result. If evaluation of either function throws an exception, it is relayed to the
+     * caller of the composed function.
      *
-     * @param <X>   the type of output of the {@code after} function, and of the
-     *              composed function
+     * @param <X>   the type of output of the {@code after} function, and of the composed function
      * @param after the function to apply after this function is applied
-     * @return a composed function that first applies this function and then
-     * applies the {@code after} function
+     * @return a composed function that first applies this function and then applies the {@code after} function
      * @throws NullPointerException if after is null
      */
     default <X> TriFunction<T, U, V, X> andThen(Function<? super R, ? extends X> after) {

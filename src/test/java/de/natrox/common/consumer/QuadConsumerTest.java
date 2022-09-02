@@ -1,12 +1,9 @@
 /*
  * Copyright 2020-2022 NatroxMC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,12 +13,11 @@
 
 package de.natrox.common.consumer;
 
-import org.junit.jupiter.api.Test;
-
-import java.util.concurrent.atomic.AtomicInteger;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.concurrent.atomic.AtomicInteger;
+import org.junit.jupiter.api.Test;
 
 class QuadConsumerTest {
 
@@ -39,19 +35,24 @@ class QuadConsumerTest {
     void nullAcceptTest() {
         QuadConsumer<Integer, Integer, Integer, Integer> consumer = this::sum;
         assertThrows(NullPointerException.class, () ->
-            consumer.accept(null, null, null, null), "Consumer should throw a NullPointerException if the arguments are null");
+                consumer.accept(null, null, null, null),
+            "Consumer should throw a NullPointerException if the arguments are null");
     }
 
     @Test
     void andThenAcceptTest() {
         AtomicInteger indicator = new AtomicInteger();
-        QuadConsumer<Integer, Integer, Integer, Integer> andThenConsumer = (a, b, c, d) -> indicator.addAndGet(-this.sum(a, b, c, d));
-        QuadConsumer<Integer, Integer, Integer, Integer> operation = (a, b, c, d) -> indicator.set(this.sum(a, b, c, d));
+        QuadConsumer<Integer, Integer, Integer, Integer> andThenConsumer = (a, b, c, d) -> indicator.addAndGet(
+            -this.sum(a, b, c, d));
+        QuadConsumer<Integer, Integer, Integer, Integer> operation = (a, b, c, d) -> indicator.set(
+            this.sum(a, b, c, d));
         QuadConsumer<Integer, Integer, Integer, Integer> consumer = operation.andThen(andThenConsumer);
         consumer.accept(1, 2, 3, 4);
-        assertEquals(0, indicator.get(), "Indicator should indicate the input sum minus the input sum, which equals zero");
+        assertEquals(0, indicator.get(),
+            "Indicator should indicate the input sum minus the input sum, which equals zero");
         consumer.accept(5, 4, 3, 2);
-        assertEquals(0, indicator.get(), "Indicator should indicate the input sum minus the input sum, which equals zero");
+        assertEquals(0, indicator.get(),
+            "Indicator should indicate the input sum minus the input sum, which equals zero");
     }
 
     @Test

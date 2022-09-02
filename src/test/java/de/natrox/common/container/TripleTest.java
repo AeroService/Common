@@ -1,12 +1,9 @@
 /*
  * Copyright 2020-2022 NatroxMC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,10 +13,10 @@
 
 package de.natrox.common.container;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+import org.junit.jupiter.api.Test;
 
 class TripleTest {
 
@@ -49,7 +46,8 @@ class TripleTest {
     @Test
     void equalsTest5() {
         Triple<String, String, Triple<?, ?, ?>> triple = Triple.of("first", "second", Triple.empty());
-        assertNotEquals(Triple.of("first", "second", "third"), triple, "Two Triples should only equal if both items of each are equal");
+        assertNotEquals(Triple.of("first", "second", "third"), triple,
+            "Two Triples should only equal if both items of each are equal");
     }
 
     @Test
@@ -68,20 +66,23 @@ class TripleTest {
     void setFirstTest() {
         Triple<String, String, String> triple = Triple.empty();
         triple.setFirst("first");
-        assertEquals("first", triple.first(), "Two Triples should equal also if the first item is set after initialisation");
+        assertEquals("first", triple.first(),
+            "Two Triples should equal also if the first item is set after initialisation");
     }
 
     @Test
     void setSecondTest() {
         Triple<String, String, String> triple = Triple.empty();
         triple.setSecond("second");
-        assertEquals("second", triple.second(), "Two Triples should equal also if the second item is set after initialisation");
+        assertEquals("second", triple.second(),
+            "Two Triples should equal also if the second item is set after initialisation");
     }
 
     @Test
     void setThirdTest() {
         Triple<String, String, String> triple = Triple.empty();
         triple.setThird("third");
-        assertEquals("third", triple.third(), "Two Triples should equal also if the second item is set after initialisation");
+        assertEquals("third", triple.third(),
+            "Two Triples should equal also if the second item is set after initialisation");
     }
 }

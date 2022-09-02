@@ -1,12 +1,9 @@
 /*
  * Copyright 2020-2022 NatroxMC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,12 +14,11 @@
 package de.natrox.common.scheduler;
 
 import de.natrox.common.validate.Check;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.time.Duration;
 import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a task that is scheduled to run on a {@link Scheduler}.
@@ -44,8 +40,8 @@ public sealed interface Task permits TaskImpl {
     @NotNull TaskStatus status();
 
     /**
-     * Cancels this task. If the task is already running, the thread in which it is running will be
-     * interrupted. If the task is not currently running, the scheduler will terminate it safely.
+     * Cancels this task. If the task is already running, the thread in which it is running will be interrupted. If the
+     * task is not currently running, the scheduler will terminate it safely.
      */
     void cancel();
 
@@ -87,8 +83,7 @@ public sealed interface Task permits TaskImpl {
         }
 
         /**
-         * Sets that the task should continue running after waiting for the specified amount, until
-         * it is cancelled.
+         * Sets that the task should continue running after waiting for the specified amount, until it is cancelled.
          *
          * @param time     the time to delay by
          * @param timeUnit the unit of time for {@code time}
@@ -97,8 +92,7 @@ public sealed interface Task permits TaskImpl {
         @NotNull Builder repeat(long time, @NotNull TimeUnit timeUnit);
 
         /**
-         * Sets that the task should continue running after waiting for the specified amount, until
-         * it is cancelled.
+         * Sets that the task should continue running after waiting for the specified amount, until it is cancelled.
          *
          * @param duration the duration of the delay
          * @return this builder, for chaining
@@ -109,8 +103,7 @@ public sealed interface Task permits TaskImpl {
         }
 
         /**
-         * Sets that the task should continue running after waiting for the specified amount, until
-         * it is cancelled.
+         * Sets that the task should continue running after waiting for the specified amount, until it is cancelled.
          *
          * @param time         the time to delay by
          * @param temporalUnit the unit of time for {@code time}

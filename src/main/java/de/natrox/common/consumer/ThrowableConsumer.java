@@ -1,12 +1,9 @@
 /*
  * Copyright 2020-2022 NatroxMC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,9 +16,9 @@ package de.natrox.common.consumer;
 import de.natrox.common.validate.Check;
 
 /**
- * Represents an operation that accepts one input argument and returns no
- * result. Unlike most other functional interfaces, {@code Consumer} is expected
- * to operate via side-effects. Function might throw a checked {@link Throwable}.
+ * Represents an operation that accepts one input argument and returns no result. Unlike most other functional
+ * interfaces, {@code Consumer} is expected to operate via side-effects. Function might throw a checked
+ * {@link Throwable}.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
  * whose functional method is {@link #accept(T)}.
@@ -41,15 +38,14 @@ public interface ThrowableConsumer<T, U extends Throwable> {
     void accept(T t) throws U;
 
     /**
-     * Returns a composed {@code ThrowableConsumer} that performs, in sequence, this
-     * operation followed by the {@code after} operation. If performing either
-     * operation throws an exception, it is relayed to the caller of the
-     * composed operation. If performing this operation throws an exception,
-     * the {@code after} operation will not be performed.
+     * Returns a composed {@code ThrowableConsumer} that performs, in sequence, this operation followed by the
+     * {@code after} operation. If performing either operation throws an exception, it is relayed to the caller of the
+     * composed operation. If performing this operation throws an exception, the {@code after} operation will not be
+     * performed.
      *
      * @param after the operation to perform after this operation
-     * @return a composed {@code ThrowableConsumer} that performs in sequence this
-     * operation followed by the {@code after} operation
+     * @return a composed {@code ThrowableConsumer} that performs in sequence this operation followed by the
+     * {@code after} operation
      * @throws NullPointerException if {@code after} is null
      */
     default ThrowableConsumer<T, U> andThen(ThrowableConsumer<? super T, ? extends U> after) {

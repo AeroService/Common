@@ -1,12 +1,9 @@
 /*
  * Copyright 2020-2022 NatroxMC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,11 +13,12 @@
 
 package de.natrox.common.consumer;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class ThrowableConsumerTest {
 
@@ -38,9 +36,11 @@ class ThrowableConsumerTest {
     void defaultAcceptTest2() {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableConsumer<Integer, Exception> consumer = (a) -> indicator.set(exceptionValue(a));
-        assertDoesNotThrow(() -> consumer.accept(1), "Consumer should not throw an exception as the arguments are valid");
+        assertDoesNotThrow(() -> consumer.accept(1),
+            "Consumer should not throw an exception as the arguments are valid");
         assertEquals(1, indicator.get(), "Indicator should indicate the input of 1");
-        assertDoesNotThrow(() -> consumer.accept(2), "Consumer should not throw an exception as the arguments are valid");
+        assertDoesNotThrow(() -> consumer.accept(2),
+            "Consumer should not throw an exception as the arguments are valid");
         assertEquals(2, indicator.get(), "Indicator should indicate the input of 2");
     }
 
@@ -61,7 +61,8 @@ class ThrowableConsumerTest {
     @Test
     void andThenAcceptTest() {
         AtomicInteger indicator = new AtomicInteger();
-        ThrowableConsumer<Integer, IllegalArgumentException> andThenConsumer = (a) -> indicator.addAndGet(-this.value(a));
+        ThrowableConsumer<Integer, IllegalArgumentException> andThenConsumer = (a) -> indicator.addAndGet(
+            -this.value(a));
         ThrowableConsumer<Integer, IllegalArgumentException> operation = (a) -> indicator.set(this.value(a));
         ThrowableConsumer<Integer, IllegalArgumentException> consumer = operation.andThen(andThenConsumer);
         consumer.accept(1);
@@ -90,14 +91,16 @@ class ThrowableConsumerTest {
     }
 
     private int value(int a) {
-        if (a <= 0)
+        if (a <= 0) {
             throw new IllegalArgumentException();
+        }
         return a;
     }
 
     private int exceptionValue(int a) throws Exception {
-        if (a <= 0)
+        if (a <= 0) {
             throw new Exception();
+        }
         return a;
     }
 }

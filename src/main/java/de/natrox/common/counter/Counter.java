@@ -1,12 +1,9 @@
 /*
  * Copyright 2020-2022 NatroxMC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,13 +16,12 @@ package de.natrox.common.counter;
 import de.natrox.common.builder.IBuilder;
 import de.natrox.common.task.TaskExecutor;
 import de.natrox.common.validate.Check;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
-
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 /**
  * Represents a clocked Counter, for example a countdown.
@@ -44,40 +40,40 @@ public sealed interface Counter permits CounterImpl {
     }
 
     /**
-     * Starts this counter if its status is {@link CounterStatus#IDLING}
-     * and sets the status to {@link CounterStatus#RUNNING}.
+     * Starts this counter if its status is {@link CounterStatus#IDLING} and sets the status to
+     * {@link CounterStatus#RUNNING}.
      */
     void start();
 
     /**
-     * Pauses this counter if its status is {@link CounterStatus#RUNNING}
-     * and sets the status to {@link CounterStatus#PAUSED}.
+     * Pauses this counter if its status is {@link CounterStatus#RUNNING} and sets the status to
+     * {@link CounterStatus#PAUSED}.
      */
     void pause();
 
     /**
-     * Resumes this counter if its status is {@link CounterStatus#PAUSED}
-     * and sets the status to {@link CounterStatus#RUNNING}.
+     * Resumes this counter if its status is {@link CounterStatus#PAUSED} and sets the status to
+     * {@link CounterStatus#RUNNING}.
      */
     void resume();
 
     /**
-     * Stops this counter if its status not {@link CounterStatus#IDLING}
-     * and sets the status to {@link CounterStatus#IDLING}.
+     * Stops this counter if its status not {@link CounterStatus#IDLING} and sets the status to
+     * {@link CounterStatus#IDLING}.
      */
     void stop();
 
     /**
-     * Returns whether this counter is paused or not, respectively
-     * if the status of this counter is {@link CounterStatus#PAUSED}.
+     * Returns whether this counter is paused or not, respectively if the status of this counter is
+     * {@link CounterStatus#PAUSED}.
      *
      * @return true, if this counter is paused, false, if not
      */
     boolean isPaused();
 
     /**
-     * Returns whether this counter is running or not, respectively
-     * if the status of this counter is {@link CounterStatus#RUNNING}.
+     * Returns whether this counter is running or not, respectively if the status of this counter is
+     * {@link CounterStatus#RUNNING}.
      *
      * @return true, if this counter is running, false, if not
      */

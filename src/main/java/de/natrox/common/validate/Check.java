@@ -1,12 +1,9 @@
 /*
  * Copyright 2020-2022 NatroxMC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,12 +13,11 @@
 
 package de.natrox.common.validate;
 
+import java.text.MessageFormat;
+import java.util.Objects;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.text.MessageFormat;
-import java.util.Objects;
 
 /**
  * Represents a convenient class to check for common exceptions.
@@ -34,29 +30,33 @@ public final class Check {
 
     @Contract("null, _ -> fail")
     public static void notNull(@Nullable Object object, @NotNull String reason) {
-        if (!Objects.isNull(object))
+        if (!Objects.isNull(object)) {
             return;
+        }
         throw new NullPointerException(reason);
     }
 
     @Contract("null, _, _ -> fail")
     public static void notNull(@Nullable Object object, @NotNull String reason, Object... arguments) {
-        if (!Objects.isNull(object))
+        if (!Objects.isNull(object)) {
             return;
+        }
         throw new NullPointerException(MessageFormat.format(reason, arguments));
     }
 
     @Contract("true, _ -> fail")
     public static void argCondition(boolean condition, @NotNull String reason) {
-        if (!condition)
+        if (!condition) {
             return;
+        }
         throw new IllegalArgumentException(reason);
     }
 
     @Contract("true, _, _ -> fail")
     public static void argCondition(boolean condition, @NotNull String reason, Object... arguments) {
-        if (!condition)
+        if (!condition) {
             return;
+        }
         throw new IllegalArgumentException(MessageFormat.format(reason, arguments));
     }
 
@@ -67,15 +67,17 @@ public final class Check {
 
     @Contract("true, _ -> fail")
     public static void stateCondition(boolean condition, @NotNull String reason) {
-        if (!condition)
+        if (!condition) {
             return;
+        }
         throw new IllegalStateException(reason);
     }
 
     @Contract("true, _, _ -> fail")
     public static void stateCondition(boolean condition, @NotNull String reason, Object... arguments) {
-        if (!condition)
+        if (!condition) {
             return;
+        }
         throw new IllegalStateException(MessageFormat.format(reason, arguments));
     }
 }

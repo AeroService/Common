@@ -1,12 +1,9 @@
 /*
  * Copyright 2020-2022 NatroxMC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,11 +17,10 @@ import de.natrox.common.runnable.CatchingRunnable;
 import de.natrox.common.task.Task;
 import de.natrox.common.task.TaskExecutor;
 import de.natrox.common.validate.Check;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 final class CounterImpl implements Counter {
 
@@ -75,12 +71,14 @@ final class CounterImpl implements Counter {
 
     @Override
     public void start() {
-        if (this.task != null)
+        if (this.task != null) {
             throw new IllegalStateException("This counter is already running");
+        }
 
         this.currentCount = this.startCount - step;
 
-        this.task = this.taskExecutor.executeInRepeat(new CatchingRunnable(this::tick), this.tick, this.tick, this.tickUnit);
+        this.task = this.taskExecutor.executeInRepeat(new CatchingRunnable(this::tick), this.tick, this.tick,
+            this.tickUnit);
 
         this.status = CounterStatus.RUNNING;
 
@@ -90,22 +88,25 @@ final class CounterImpl implements Counter {
 
     @Override
     public void pause() {
-        if (this.status != CounterStatus.RUNNING)
+        if (this.status != CounterStatus.RUNNING) {
             return;
+        }
         this.status = CounterStatus.PAUSED;
     }
 
     @Override
     public void resume() {
-        if (this.status != CounterStatus.PAUSED)
+        if (this.status != CounterStatus.PAUSED) {
             return;
+        }
         this.status = CounterStatus.RUNNING;
     }
 
     @Override
     public void stop() {
-        if (this.status == CounterStatus.IDLING)
+        if (this.status == CounterStatus.IDLING) {
             return;
+        }
         this.cancel(this::handleCancel);
     }
 
@@ -159,43 +160,50 @@ final class CounterImpl implements Counter {
     }
 
     private void handleStart() {
-        if (this.startHandler == null)
+        if (this.startHandler == null) {
             return;
+        }
         this.startHandler.accept(this);
     }
 
     private void handleTick() {
-        if (this.tickHandler == null)
+        if (this.tickHandler == null) {
             return;
+        }
         this.tickHandler.accept(this);
     }
 
     private void handleFinish() {
-        if (this.finishHandler == null)
+        if (this.finishHandler == null) {
             return;
+        }
         this.finishHandler.accept(this);
     }
 
     private void handleCancel() {
-        if (this.cancelHandler == null)
+        if (this.cancelHandler == null) {
             return;
+        }
         this.cancelHandler.accept(this);
     }
 
     private void cancel(Runnable callback) {
         this.status = CounterStatus.IDLING;
-        if (this.task == null)
+        if (this.task == null) {
             return;
+        }
         this.task.cancel();
         this.task = null;
-        if (callback == null)
+        if (callback == null) {
             return;
+        }
         callback.run();
     }
 
     private void tick() {
-        if (this.status != CounterStatus.RUNNING)
+        if (this.status != CounterStatus.RUNNING) {
             return;
+        }
 
         if (this.currentCount * this.step < this.stopCount * this.step) {
             this.currentCount += this.step;

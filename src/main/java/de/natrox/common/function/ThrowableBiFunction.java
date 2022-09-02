@@ -1,12 +1,9 @@
 /*
  * Copyright 2020-2022 NatroxMC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,8 +17,8 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * Represents a function that accepts two arguments and produces a result.
- * Function might throw a checked {@link Throwable}.
+ * Represents a function that accepts two arguments and produces a result. Function might throw a checked
+ * {@link Throwable}.
  *
  * <p>This is a <a href="package-summary.html">functional interface</a>
  * whose functional method is {@link #apply(Object, Object)}.
@@ -46,16 +43,13 @@ public interface ThrowableBiFunction<T, U, R, V extends Throwable> {
     R apply(T t, U u) throws V;
 
     /**
-     * Returns a composed {@code ThrowableBiFunction} that first applies this function to
-     * its input, and then applies the {@code after} function to the result.
-     * If evaluation of either function throws an exception, it is relayed to
+     * Returns a composed {@code ThrowableBiFunction} that first applies this function to its input, and then applies
+     * the {@code after} function to the result. If evaluation of either function throws an exception, it is relayed to
      * the caller of the composed function.
      *
-     * @param <W>   the type of output of the {@code after} function, and of the
-     *              composed function
+     * @param <W>   the type of output of the {@code after} function, and of the composed function
      * @param after the function to apply after this function is applied
-     * @return a composed function that first applies this function and then
-     * applies the {@code after} function
+     * @return a composed function that first applies this function and then applies the {@code after} function
      * @throws NullPointerException if after is null
      */
     default <W> ThrowableBiFunction<T, U, W, V> andThen(Function<? super R, ? extends W> after) {
