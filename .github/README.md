@@ -8,7 +8,6 @@ A basic and common library for the development of Java projects
 # Table of contents
 
 - [Install](#install)
-- [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -16,10 +15,6 @@ A basic and common library for the development of Java projects
 
 The newest version can be
 found [here: ![](https://jitpack.io/v/NatroxMC/Common.svg)](https://jitpack.io/#NatroxMC/Common)
-
-# Usage
-
-Coming soon.
 
 # Contributing
 
