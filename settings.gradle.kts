@@ -15,5 +15,3 @@
  */
 
 rootProject.name = "Event"
-
-include(":demo")

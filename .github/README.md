@@ -7,15 +7,11 @@ A simple event bus for Java
 
 # Table of contents
 - [Install](#install)
-- [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
 
 # Install
 The newest version can be found [here: ![](https://jitpack.io/v/NatroxMC/Event.svg)](https://jitpack.io/#NatroxMC/Event)
-
-# Usage
-An example of how to use this library is available [here](/demo).
 
 # Contributing
 See [the contributing file](CONTRIBUTING.md)!
