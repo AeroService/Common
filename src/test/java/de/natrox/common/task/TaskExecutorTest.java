@@ -35,7 +35,7 @@ class TaskExecutorTest {
     }
 
     @BeforeEach
-    private void reinit() {
+    private void reset() {
         taskExecutor.shutdown();
         taskExecutor = CachedTaskExecutor.create();
     }

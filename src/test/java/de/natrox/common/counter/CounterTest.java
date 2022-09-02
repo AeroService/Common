@@ -33,40 +33,40 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class CounterTest {
 
-    private final static Set<Counter> counter = new HashSet<>();
-    private final static Set<Counter.Builder> counterBuilder = new HashSet<>();
+    private final static Set<Counter> counters = new HashSet<>();
+    private final static Set<Counter.Builder> builders = new HashSet<>();
 
     @BeforeAll
     private static void init() {
         TaskExecutor executor = CachedTaskExecutor.create();
-        counterBuilder.add(
+        builders.add(
             Counter.builder(executor)
                 .tick(100, ChronoUnit.MILLIS)
                 .startCount(10)
                 .stopCount(1)
         );
-        counterBuilder.add(
+        builders.add(
             Counter.builder(executor)
                 .tick(100, ChronoUnit.MILLIS)
                 .startCount(1)
                 .stopCount(10)
         );
-        for (Counter.Builder builder : counterBuilder) {
-            counter.add(builder.build());
+        for (Counter.Builder builder : builders) {
+            counters.add(builder.build());
         }
     }
 
     private static Collection<Counter> counter() {
-        return counter;
+        return counters;
     }
 
     private static Collection<Counter.Builder> counterBuilder() {
-        return counterBuilder;
+        return builders;
     }
 
     @BeforeEach
     private void resetCounters() {
-        counter.forEach(Counter::stop);
+        counters.forEach(Counter::stop);
     }
 
     @ParameterizedTest

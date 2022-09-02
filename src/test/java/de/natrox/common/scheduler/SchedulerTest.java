@@ -47,7 +47,8 @@ class SchedulerTest {
     @Test
     void cancelTest() throws InterruptedException {
         AtomicInteger indicator = new AtomicInteger(0);
-        Task task = scheduler.buildTask(indicator::incrementAndGet)
+        Task task = scheduler
+            .buildTask(indicator::incrementAndGet)
             .delay(100, TimeUnit.SECONDS)
             .schedule();
         task.cancel();
@@ -59,7 +60,8 @@ class SchedulerTest {
     @Test
     void repeatTaskTest() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(3);
-        Task task = scheduler.buildTask(latch::countDown)
+        Task task = scheduler
+            .buildTask(latch::countDown)
             .delay(100, TimeUnit.MILLISECONDS)
             .repeat(100, TimeUnit.MILLISECONDS)
             .schedule();
