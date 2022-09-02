@@ -1,12 +1,9 @@
 /*
  * Copyright 2020-2022 NatroxMC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,11 +15,10 @@ package de.natrox.event;
 
 import de.natrox.common.container.Pair;
 import de.natrox.common.validate.Check;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Predicate;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings({"rawtypes"})
 final class EventBusImpl implements EventBus {
@@ -55,8 +51,9 @@ final class EventBusImpl implements EventBus {
     public boolean has(@NotNull EventListener<?> listener) {
         Check.notNull(listener, "listener");
         for (var entry : this.listeners) {
-            if (entry.second().equals(listener))
+            if (entry.second().equals(listener)) {
                 return true;
+            }
         }
         return false;
     }
@@ -66,8 +63,9 @@ final class EventBusImpl implements EventBus {
     public void call(@NotNull Object event) {
         Check.notNull(event, "event");
         for (var entry : this.listeners) {
-            if (!entry.first().isAssignableFrom(event.getClass()))
+            if (!entry.first().isAssignableFrom(event.getClass())) {
                 continue;
+            }
             entry.second().handle(event);
         }
     }

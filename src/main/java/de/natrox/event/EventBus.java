@@ -1,12 +1,9 @@
 /*
  * Copyright 2020-2022 NatroxMC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,10 +14,9 @@
 package de.natrox.event;
 
 import de.natrox.common.validate.Check;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents an event bus.
@@ -44,8 +40,8 @@ public sealed interface EventBus permits EventBusImpl {
     void register(@NotNull EventListener<?> listener);
 
     /**
-     * Registers an {@link EventListener} without any special options. The given listener will be executed
-     * if the event passes all parent filtering.
+     * Registers an {@link EventListener} without any special options. The given listener will be executed if the event
+     * passes all parent filtering.
      *
      * @param type    the event type to handle
      * @param handler the handler function
@@ -87,8 +83,8 @@ public sealed interface EventBus permits EventBusImpl {
     void call(@NotNull Object event);
 
     /**
-     * Execute a cancellable event with a callback to execute if the event is successful.
-     * Event conditions and propagation is the same as {@link #call(Object)}.
+     * Execute a cancellable event with a callback to execute if the event is successful. Event conditions and
+     * propagation is the same as {@link #call(Object)}.
      *
      * @param event    the event to execute
      * @param callback a callback if the event is not cancelled
@@ -97,8 +93,9 @@ public sealed interface EventBus permits EventBusImpl {
         Check.notNull(event, "event");
         Check.notNull(callback, "callback");
         this.call(event);
-        if (event instanceof CancellableEvent cancellableEvent && cancellableEvent.isCancelled())
+        if (event instanceof CancellableEvent cancellableEvent && cancellableEvent.isCancelled()) {
             return;
+        }
         callback.run();
     }
 }

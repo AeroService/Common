@@ -6,16 +6,20 @@
 A simple event bus for Java
 
 # Table of contents
+
 - [Install](#install)
 - [Contributing](#contributing)
 - [License](#license)
 
 # Install
+
 The newest version can be found [here: ![](https://jitpack.io/v/NatroxMC/Event.svg)](https://jitpack.io/#NatroxMC/Event)
 
 # Contributing
+
 See [the contributing file](CONTRIBUTING.md)!
 All WIP features are previewed as Draft PRs!
 
 # License
+
 This project is licensed under the [Apache License Version 2.0](../LICENSE).

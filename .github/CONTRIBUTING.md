@@ -21,4 +21,5 @@
 
 ## General Contribution Rules
 
-* By contributing to the Event project your code/contribution will be licensed under the [Apache Version 2.0](../LICENSE) license.
+* By contributing to the Event project your code/contribution will be licensed under
+  the [Apache Version 2.0](../LICENSE) license.
