@@ -13,60 +13,80 @@
 
 package de.natrox.event;
 
-import de.natrox.common.container.Pair;
 import de.natrox.common.validate.Check;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings({"rawtypes"})
 final class EventBusImpl implements EventBus {
 
-    private final Set<Pair<Class, EventListener>> listeners;
+    private final Map<Class, SortedSet<EventListener>> listeners;
 
     EventBusImpl() {
-        this.listeners = new CopyOnWriteArraySet<>();
+        this.listeners = new ConcurrentHashMap<>();
     }
 
     @Override
     public void register(@NotNull EventListener<?> listener) {
         Check.notNull(listener, "listener");
-        this.listeners.add(Pair.of(listener.eventType(), listener));
+        SortedSet<EventListener> typeListeners = this.listeners.computeIfAbsent(
+            listener.eventType(),
+            type -> new TreeSet<>()
+        );
+        typeListeners.add(listener);
     }
 
     @Override
     public void unregister(@NotNull EventListener<?> listener) {
         Check.notNull(listener, "listener");
-        this.listeners.removeIf(entry -> entry.second().equals(listener));
+        SortedSet<EventListener> typeListeners = this.listeners.get(listener.eventType());
+
+        if (typeListeners == null) {
+            return;
+        }
+
+        typeListeners.remove(listener);
     }
 
     @Override
     public void unregisterIf(@NotNull Predicate<EventListener<?>> predicate) {
         Check.notNull(predicate, "predicate");
-        this.listeners.removeIf(entry -> predicate.test(entry.second()));
+        for (SortedSet<EventListener> typeListeners : this.listeners.values()) {
+            typeListeners.removeIf(predicate::test);
+        }
     }
 
     @Override
     public boolean has(@NotNull EventListener<?> listener) {
         Check.notNull(listener, "listener");
-        for (var entry : this.listeners) {
-            if (entry.second().equals(listener)) {
-                return true;
-            }
+        SortedSet<EventListener> typeListeners = this.listeners.get(listener.eventType());
+
+        if (typeListeners == null) {
+            return false;
         }
-        return false;
+
+        return typeListeners.contains(listener);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void call(@NotNull Object event) {
         Check.notNull(event, "event");
-        for (var entry : this.listeners) {
-            if (!entry.first().isAssignableFrom(event.getClass())) {
+
+        for (var entry : this.listeners.entrySet()) {
+            if (!entry.getKey().isAssignableFrom(event.getClass())) {
                 continue;
             }
-            entry.second().handle(event);
+
+            SortedSet<EventListener> typeListeners = entry.getValue();
+
+            for (EventListener listener : typeListeners) {
+                listener.handle(event);
+            }
         }
     }
 }

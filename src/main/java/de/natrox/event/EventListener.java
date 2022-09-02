@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the event type being handled
  */
-public interface EventListener<T> {
+public interface EventListener<T> extends Comparable<EventListener<T>> {
 
     /**
      * Created a new {@link Builder} for an event listener.
@@ -62,6 +62,13 @@ public interface EventListener<T> {
      */
     @NotNull Class<T> eventType();
 
+    /**
+     * Returns the priority of the event listener
+     *
+     * @return the priority
+     */
+    int priority();
+
     @ApiStatus.Internal
     void handle(@NotNull T event);
 
@@ -75,11 +82,26 @@ public interface EventListener<T> {
         /**
          * Adds a filter to the executor of this listener. The executor will only be called if this condition passes on
          * the given event.
+         *
+         * @param condition the condition used to filter
+         * @return this builder, for chaining
          */
         @NotNull Builder<T> condition(@NotNull Predicate<T> condition);
 
         /**
+         * Add a priority to this listener. Executors with higher priorities will receive events before others with a
+         * lower priority. The default priority is 0.
+         *
+         * @param priority the priority
+         * @return this builder, for chaining
+         */
+        @NotNull Builder<T> priority(int priority);
+
+        /**
          * Sets the handler for this event listener. This will be executed if the listener passes all conditions.
+         *
+         * @param handler the handler that gets executed
+         * @return this builder, for chaining
          */
         @NotNull Builder<T> handler(@NotNull Consumer<T> handler);
 

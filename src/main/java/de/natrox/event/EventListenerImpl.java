@@ -15,6 +15,7 @@ package de.natrox.event;
 
 import de.natrox.common.validate.Check;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -23,19 +24,28 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("ClassCanBeRecord")
 final class EventListenerImpl<T> implements EventListener<T> {
 
+    static int DEFAULT_PRIORITY = 0;
+
     private final Class<T> type;
     private final List<Predicate<T>> conditions;
+    private final int priority;
     private final Consumer<T> handler;
 
-    public EventListenerImpl(Class<T> type, List<Predicate<T>> conditions, Consumer<T> handler) {
+    public EventListenerImpl(Class<T> type, List<Predicate<T>> conditions, int priority, Consumer<T> handler) {
         this.type = type;
         this.conditions = conditions;
+        this.priority = priority;
         this.handler = handler;
     }
 
     @Override
     public @NotNull Class<T> eventType() {
         return this.type;
+    }
+
+    @Override
+    public int priority() {
+        return this.priority;
     }
 
     @Override
@@ -58,10 +68,16 @@ final class EventListenerImpl<T> implements EventListener<T> {
         this.handler.accept(event);
     }
 
+    @Override
+    public int compareTo(@NotNull EventListener<T> other) {
+        return Integer.compare(this.priority, other.priority());
+    }
+
     static final class BuilderImpl<T> implements EventListener.Builder<T> {
 
         private final Class<T> type;
         private final List<Predicate<T>> conditions;
+        private int priority = EventListenerImpl.DEFAULT_PRIORITY;
         private Consumer<T> handler;
 
         public BuilderImpl(Class<T> type) {
@@ -77,6 +93,12 @@ final class EventListenerImpl<T> implements EventListener<T> {
         }
 
         @Override
+        public @NotNull Builder<T> priority(int priority) {
+            this.priority = priority;
+            return this;
+        }
+
+        @Override
         public EventListener.@NotNull Builder<T> handler(@NotNull Consumer<T> handler) {
             Check.notNull(handler, "handler");
             this.handler = handler;
@@ -85,7 +107,7 @@ final class EventListenerImpl<T> implements EventListener<T> {
 
         @Override
         public EventListener<T> build() {
-            return new EventListenerImpl<>(this.type, new ArrayList<>(this.conditions), this.handler);
+            return new EventListenerImpl<>(this.type, new ArrayList<>(this.conditions), this.priority, this.handler);
         }
     }
 }

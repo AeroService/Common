@@ -14,20 +14,23 @@
 package de.natrox.event;
 
 import static de.natrox.common.validate.Check.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 
 class EventBusTest {
 
     @Test
-    void callTest() {
+    void testCall() {
         EventBus eventBus = EventBus.create();
-
         AtomicBoolean result = new AtomicBoolean(false);
-        EventListener<?> listener = EventListener.of(EventTest.class, eventTest -> result.set(true));
+
+        var listener = EventListener.of(EventTest.class, eventTest -> result.set(true));
+
         eventBus.register(listener);
         assertFalse(result.get(), "The event should not be called before the call");
         eventBus.call(new EventTest());
@@ -41,16 +44,18 @@ class EventBusTest {
     }
 
     @Test
-    void cancellableTest() {
+    void testCancellable() {
         EventBus eventBus = EventBus.create();
         AtomicBoolean result = new AtomicBoolean(false);
-        EventListener<?> listener = EventListener
+
+        var listener = EventListener
             .builder(CancellableTest.class)
             .handler(event -> {
                 event.setCancelled(true);
                 result.set(true);
                 assertTrue(event.isCancelled(), "The event should be cancelled");
             }).build();
+
         eventBus.register(listener);
         eventBus.call(new CancellableTest());
         assertTrue(result.get(), "The event should be called after the call");
@@ -61,14 +66,17 @@ class EventBusTest {
     }
 
     @Test
-    void recursiveTest() {
+    void testRecursive() {
         EventBus eventBus = EventBus.create();
         AtomicBoolean result1 = new AtomicBoolean(false);
         AtomicBoolean result2 = new AtomicBoolean(false);
+
         var listener1 = EventListener.of(Recursive1.class, event -> result1.set(true));
         var listener2 = EventListener.of(Recursive2.class, event -> result2.set(true));
+
         eventBus.register(listener1);
         eventBus.register(listener2);
+
         eventBus.call(new Recursive2());
         assertTrue(result2.get(), "Recursive2 should have been called directly");
         assertTrue(result1.get(),
@@ -82,6 +90,40 @@ class EventBusTest {
         assertFalse(result2.get(), "There is no listener for Recursive2");
         assertTrue(result1.get(),
             "Recursive1 should be called due to the fact that the Recursive2 event inherits from it");
+    }
+
+    @Test
+    void testPriorities() {
+        EventBus eventBus = EventBus.create();
+        AtomicInteger indicator = new AtomicInteger(0);
+
+        var listener1 = EventListener
+            .builder(EventTest.class)
+            .priority(100)
+            .handler(event -> {
+                int old = indicator.getAndSet(100);
+
+                assertEquals(10, old);
+            })
+            .build();
+        var listener2 = EventListener
+            .builder(EventTest.class)
+            .priority(10)
+            .handler(event -> {
+                int old = indicator.getAndSet(10);
+
+                assertEquals(5, old);
+            })
+            .build();
+
+        eventBus.register(EventTest.class, event -> indicator.set(5));
+        eventBus.register(listener1);
+        eventBus.register(listener2);
+
+        assertEquals(0, indicator.get());
+        eventBus.call(new EventTest());
+
+        assertEquals(100, indicator.get());
     }
 
     static class EventTest {
