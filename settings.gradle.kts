@@ -16,4 +16,3 @@
 
 rootProject.name = "Conversion"
 
-include(":demo")

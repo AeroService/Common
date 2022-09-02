@@ -7,15 +7,11 @@ A library to coerce an input value to another type
 
 # Table of contents
 - [Install](#install)
-- [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
 
 # Install
 The newest version can be found [here: ![](https://jitpack.io/v/ConversionBus/Conversion.svg)](https://jitpack.io/#NatroxMC/Conversion)
-
-# Usage
-An example of how to use this library is available [here](/demo).
 
 # Contributing
 See [the contributing file](CONTRIBUTING.md)!
