@@ -63,7 +63,7 @@ class CounterTest {
         return counters;
     }
 
-    private static Collection<Counter.Builder> counterBuilder() {
+    private static Collection<Counter.Builder> counterBuilders() {
         return builders;
     }
 
@@ -74,7 +74,7 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counter")
-    void isRunningTest(Counter counter) {
+    void testIsRunning(Counter counter) {
         assertFalse(counter.isRunning(), "The Counter should not run unless it got started");
         counter.start();
         assertTrue(counter.isRunning(), "The Counter should run if it got started, unless it got paused");
@@ -88,7 +88,7 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counter")
-    private void isPausedTest(Counter counter) {
+    private void testIsPaused(Counter counter) {
         assertFalse(counter.isPaused(), "The Counter should not be paused unless it got started");
         counter.start();
         assertFalse(counter.isPaused(), "The Counter should not be paused if it got started, unless it got paused");
@@ -102,7 +102,7 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counter")
-    void stateTest(Counter counter) {
+    void testState(Counter counter) {
         assertEquals(CounterStatus.IDLING, counter.status(), "The Counter should be idling unless it got started");
         counter.start();
         assertEquals(CounterStatus.RUNNING, counter.status(),
@@ -117,7 +117,7 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counter")
-    void failedStartTest(Counter counter) {
+    void testStartFailed(Counter counter) {
         assertDoesNotThrow(counter::start, "The Counter should not throw an exception when it gets started");
         assertThrows(IllegalStateException.class, counter::start,
             "The Counter should throw an exception if it got started twice");
@@ -127,7 +127,7 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counter")
-    void tickedCountTest(Counter counter) {
+    void testTickedCount(Counter counter) {
         counter.start();
         long minCount = Math.min(counter.startCount(), counter.stopCount());
         final long maxCount = Math.max(counter.startCount(), counter.stopCount());
@@ -145,7 +145,7 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counter")
-    void presetVariablesTest(Counter counter) {
+    void testPresetVariables(Counter counter) {
         counter.start();
         assertEquals(counter.startCount(), counter.currentCount(),
             "The Counter's startCount should equal the preset startCount");
@@ -154,8 +154,8 @@ class CounterTest {
     }
 
     @ParameterizedTest
-    @MethodSource("counterBuilder")
-    void startCallbackTest(Counter.Builder counterBuilder) {
+    @MethodSource("counterBuilders")
+    void testStartCallback(Counter.Builder counterBuilder) {
         AtomicInteger indicator = new AtomicInteger();
         Counter counter = counterBuilder
             .startCallback(c -> indicator.incrementAndGet())
@@ -169,8 +169,8 @@ class CounterTest {
     }
 
     @ParameterizedTest
-    @MethodSource("counterBuilder")
-    void tickCallbackTest(Counter.Builder counterBuilder) throws InterruptedException {
+    @MethodSource("counterBuilders")
+    void testTickCallback(Counter.Builder counterBuilder) throws InterruptedException {
         AtomicInteger indicator = new AtomicInteger();
         Counter counter = counterBuilder
             .tickCallback(c -> indicator.incrementAndGet())
@@ -186,8 +186,8 @@ class CounterTest {
     }
 
     @ParameterizedTest
-    @MethodSource("counterBuilder")
-    void finishCallbackTest(Counter.Builder counterBuilder) throws InterruptedException {
+    @MethodSource("counterBuilders")
+    void testFinishCallback(Counter.Builder counterBuilder) throws InterruptedException {
         AtomicInteger indicator = new AtomicInteger();
         Counter counter = counterBuilder
             .finishCallback(c -> indicator.incrementAndGet())
@@ -202,8 +202,8 @@ class CounterTest {
     }
 
     @ParameterizedTest
-    @MethodSource("counterBuilder")
-    void cancelCallbackTest(Counter.Builder counterBuilder) {
+    @MethodSource("counterBuilders")
+    void testCancelCallback(Counter.Builder counterBuilder) {
         AtomicInteger indicator = new AtomicInteger();
         Counter counter = counterBuilder
             .cancelCallback(c -> indicator.incrementAndGet())

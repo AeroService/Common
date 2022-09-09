@@ -21,52 +21,53 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("AssertBetweenInconvertibleTypes")
 class PairTest {
 
     @Test
-    void equalsTest() {
+    void testEquals() {
         Pair<String, String> pair = Pair.of("first", "second");
         assertNotEquals(Pair.empty(), pair, "A not-empty Pair should not equal an empty Pair");
     }
 
     @Test
-    void equalsTest2() {
+    void testEquals2() {
         Pair<?, ?> pair = Pair.empty();
         assertEquals(Pair.empty(), pair, "An empty Pair should equal an empty Pair");
     }
 
     @Test
-    void equalsTest3() {
+    void testEquals3() {
         Pair<String, String> pair = Pair.of("first", "second");
         assertEquals(Pair.of("first", "second"), pair, "Two Pairs containing equal items should equal");
     }
 
     @Test
-    void equalsTest4() {
+    void testEquals4() {
         assertNotEquals("o", Pair.empty(), "An empty Pair should not equal a String");
     }
 
     @Test
-    void equalsTest5() {
+    void testEquals5() {
         Pair<String, Pair<?, ?>> pair = Pair.of("first", Pair.empty());
         assertNotEquals(Pair.of("first", "second"), pair,
             "Two Pairs should only equal if both items of each are equal");
     }
 
     @Test
-    void equalsTest6() {
+    void testEquals6() {
         Pair<Pair<?, ?>, String> pair = Pair.of(Pair.empty(), "second");
         assertNotEquals(Pair.empty(), pair, "Two Pairs should only equal if both items of each are equal");
     }
 
     @Test
-    void equalsTest7() {
+    void testEquals7() {
         Pair<?, String> pair = Pair.of(null, "second");
         assertNotEquals(Pair.empty(), pair, "Two Pairs should only equal if both items of each are equal");
     }
 
     @Test
-    void setFirstTest() {
+    void testSetFirst() {
         Pair<String, String> pair = Pair.empty();
         pair.setFirst("first");
         assertEquals("first", pair.first(),
@@ -74,7 +75,7 @@ class PairTest {
     }
 
     @Test
-    void setSecondTest() {
+    void testSetSecond() {
         Pair<String, String> pair = Pair.empty();
         pair.setSecond("second");
         assertEquals("second", pair.second(),

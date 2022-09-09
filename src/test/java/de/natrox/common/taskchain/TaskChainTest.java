@@ -32,7 +32,7 @@ class TaskChainTest {
 
     @SuppressWarnings("ConstantConditions")
     @Test
-    void factoryTest() {
+    void testFactory() {
         TaskChain.Factory factory = TaskChain.createFactory(CachedTaskExecutor.create());
         TaskChain taskChain = factory.create();
         assertThrows(IllegalArgumentException.class, () -> TaskChain.createFactory(null));
@@ -40,7 +40,7 @@ class TaskChainTest {
     }
 
     @Test
-    void delayTest() throws InterruptedException {
+    void testDelay() throws InterruptedException {
         TaskChain.Factory factory = TaskChain.createFactory(CachedTaskExecutor.create());
         CountDownLatch latch = new CountDownLatch(2);
 
@@ -59,7 +59,7 @@ class TaskChainTest {
     }
 
     @Test
-    void multipleRunTest() {
+    void testMultipleRun() {
         TaskChain.Factory factory = TaskChain.createFactory(CachedTaskExecutor.create());
         {
             AtomicInteger indicator = new AtomicInteger(0);
@@ -94,7 +94,7 @@ class TaskChainTest {
     }
 
     @Test
-    void callbackTest() throws InterruptedException {
+    void testCallback() throws InterruptedException {
         TaskChain.Factory factory = TaskChain.createFactory(CachedTaskExecutor.create());
         {
             TaskChain taskChain = factory.create();

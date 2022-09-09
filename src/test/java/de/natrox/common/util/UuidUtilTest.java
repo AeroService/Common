@@ -27,7 +27,7 @@ class UuidUtilTest {
 
     @SuppressWarnings("ConstantConditions")
     @Test
-    void fromNameTest() {
+    void testFromName() {
         assertEquals(UuidUtil.fromName("foo"), UuidUtil.fromName("foo"));
         assertNotEquals(UuidUtil.fromName("foo"), UuidUtil.fromName("boo"));
         assertThrows(IllegalArgumentException.class, () -> UuidUtil.fromName(null));

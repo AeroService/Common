@@ -27,7 +27,7 @@ class ThrowableSupplierTest {
     private static int a;
 
     @Test
-    void defaultGetTest1() {
+    void testGet() {
         ThrowableSupplier<Integer, IllegalArgumentException> supplier = this::a;
         a = 1;
         assertEquals(1, supplier.get(), "Supplier should provide the input of 1");
@@ -36,7 +36,7 @@ class ThrowableSupplierTest {
     }
 
     @Test
-    void defaultGetTest2() {
+    void testGet2() {
         ThrowableSupplier<Integer, Exception> supplier = this::exceptionA;
         try {
             a = 1;
@@ -49,7 +49,7 @@ class ThrowableSupplierTest {
     }
 
     @Test
-    void exceptionGetTest1() {
+    void testThrowingGet() {
         ThrowableSupplier<Integer, IllegalArgumentException> supplier = this::a;
         a = -1;
         assertThrows(IllegalArgumentException.class,
@@ -57,7 +57,7 @@ class ThrowableSupplierTest {
     }
 
     @Test
-    void exceptionGetTest2() {
+    void testThrowingGet2() {
         ThrowableSupplier<Integer, Exception> supplier = this::exceptionA;
         a = -1;
         assertThrows(Exception.class,

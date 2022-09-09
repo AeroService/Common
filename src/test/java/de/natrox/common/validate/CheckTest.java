@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 class CheckTest {
 
     @Test
-    void notNullTest() {
+    void testNotNull() {
         assertThrows(NullPointerException.class, () -> Check.notNull(null, "nullObject"));
         assertDoesNotThrow(() -> Check.notNull("foo", "nullObject"));
 
@@ -33,7 +33,7 @@ class CheckTest {
     }
 
     @Test
-    void argConditionTest() {
+    void testArgCondition() {
         assertThrows(IllegalArgumentException.class, () -> Check.argCondition(true, "argCondition"));
         assertDoesNotThrow(() -> Check.argCondition(false, "argCondition"));
 
@@ -42,12 +42,12 @@ class CheckTest {
     }
 
     @Test
-    void failTest() {
+    void testFail() {
         assertThrows(IllegalArgumentException.class, () -> Check.fail("fail"));
     }
 
     @Test
-    void stateConditionTest() {
+    void testStateCondition() {
         assertThrows(IllegalStateException.class, () -> Check.stateCondition(true, "stateCondition"));
         assertDoesNotThrow(() -> Check.argCondition(false, "stateCondition"));
 

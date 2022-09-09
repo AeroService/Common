@@ -26,14 +26,14 @@ import org.junit.jupiter.api.Test;
 class QuadFunctionTest {
 
     @Test
-    void defaultApplyTest() {
+    void testApply() {
         QuadFunction<Integer, Integer, Integer, Integer, Integer> function = this::sum;
         assertEquals(10, function.apply(1, 2, 3, 4), "Function should return the input sum of 10.");
         assertEquals(14, function.apply(5, 4, 3, 2), "Function should return the input sum of 14.");
     }
 
     @Test
-    void nullApplyTest() {
+    void testNullApply() {
         QuadFunction<Integer, Integer, Integer, Integer, Integer> function = this::sum;
         assertThrows(NullPointerException.class, () ->
                 function.apply(null, null, null, null),
@@ -41,7 +41,7 @@ class QuadFunctionTest {
     }
 
     @Test
-    void andThenApplyTest() {
+    void testAndThenApply() {
         Function<Integer, Integer> andThenFunction = (a) -> (0);
         QuadFunction<Integer, Integer, Integer, Integer, Integer> operation = this::sum;
         QuadFunction<Integer, Integer, Integer, Integer, Integer> function = operation.andThen(andThenFunction);
@@ -50,14 +50,14 @@ class QuadFunctionTest {
     }
 
     @Test
-    void andThenNullTest() {
+    void testAndThenNull() {
         QuadFunction<Integer, Integer, Integer, Integer, Integer> function = this::sum;
         assertThrows(NullPointerException.class, () ->
             function.andThen(null), "Function should throw a NullPointerException if the andThen function is invalid");
     }
 
     @Test
-    void andThenExecutionTest() {
+    void testAndThenExecution() {
         AtomicInteger indicator = new AtomicInteger();
         Function<Integer, Integer> andThenFunction = (a) -> (indicator.incrementAndGet());
         QuadFunction<Integer, Integer, Integer, Integer, Integer> operation = (a, b, c, d) -> {

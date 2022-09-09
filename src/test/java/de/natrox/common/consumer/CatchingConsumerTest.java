@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 class CatchingConsumerTest {
 
     @Test
-    void defaultAcceptTest() {
+    void testAccept() {
         AtomicInteger indicator = new AtomicInteger();
         CatchingConsumer<Integer> consumer = new CatchingConsumer<>((a) -> indicator.set(value(a)));
         consumer.accept(1);
@@ -35,7 +35,7 @@ class CatchingConsumerTest {
     }
 
     @Test
-    void exceptionAcceptTest() {
+    void testThrowingAccept() {
         CatchingConsumer<Integer> consumer = new CatchingConsumer<>(this::value);
         assertThrows(IllegalArgumentException.class, () ->
             consumer.accept(-1), "Consumer should throw an exception if the arguments don't meet the conditions");

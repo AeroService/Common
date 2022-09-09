@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 class QuadConsumerTest {
 
     @Test
-    void defaultAcceptTest() {
+    void testAccept() {
         AtomicInteger indicator = new AtomicInteger();
         QuadConsumer<Integer, Integer, Integer, Integer> consumer = (a, b, c, d) -> indicator.set(this.sum(a, b, c, d));
         consumer.accept(1, 2, 3, 4);
@@ -35,7 +35,7 @@ class QuadConsumerTest {
     }
 
     @Test
-    void nullAcceptTest() {
+    void testNullAccept() {
         QuadConsumer<Integer, Integer, Integer, Integer> consumer = this::sum;
         assertThrows(NullPointerException.class, () ->
                 consumer.accept(null, null, null, null),
@@ -43,7 +43,7 @@ class QuadConsumerTest {
     }
 
     @Test
-    void andThenAcceptTest() {
+    void testAndThenAccept() {
         AtomicInteger indicator = new AtomicInteger();
         QuadConsumer<Integer, Integer, Integer, Integer> andThenConsumer = (a, b, c, d) -> indicator.addAndGet(
             -this.sum(a, b, c, d));
@@ -59,14 +59,14 @@ class QuadConsumerTest {
     }
 
     @Test
-    void andThenNullTest() {
+    void testAndThenNull() {
         QuadConsumer<Integer, Integer, Integer, Integer> consumer = this::sum;
-        assertThrows(NullPointerException.class, () ->
-            consumer.andThen(null), "Consumer should throw a NullPointerException if the andThen consumer is invalid");
+        assertThrows(NullPointerException.class, () -> consumer.andThen(null),
+            "Consumer should throw a NullPointerException if the andThen consumer is invalid");
     }
 
     @Test
-    void andThenExecutionTest() {
+    void testAndThenExecution() {
         AtomicInteger indicator = new AtomicInteger();
         QuadConsumer<Integer, Integer, Integer, Integer> andThenConsumer = (a, b, c, d) -> indicator.incrementAndGet();
         QuadConsumer<Integer, Integer, Integer, Integer> operation = (a, b, c, d) -> {

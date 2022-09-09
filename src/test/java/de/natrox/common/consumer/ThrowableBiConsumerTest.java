@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 class ThrowableBiConsumerTest {
 
     @Test
-    void defaultAcceptTest1() {
+    void testAccept() {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = (a, b) -> indicator.set(sum(a, b));
         consumer.accept(1, 2);
@@ -36,7 +36,7 @@ class ThrowableBiConsumerTest {
     }
 
     @Test
-    void defaultAcceptTest2() {
+    void testAccept2() {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableBiConsumer<Integer, Integer, Exception> consumer = (a, b) -> indicator.set(exceptionSum(a, b));
         assertDoesNotThrow(() -> consumer.accept(1, 2),
@@ -48,21 +48,21 @@ class ThrowableBiConsumerTest {
     }
 
     @Test
-    void exceptionAcceptTest1() {
+    void testThrowingAccept() {
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = this::sum;
         assertThrows(IllegalArgumentException.class, () ->
             consumer.accept(-5, 3), "Consumer should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
-    void exceptionAcceptTest2() {
+    void testThrowingAccept2() {
         ThrowableBiConsumer<Integer, Integer, Exception> consumer = this::exceptionSum;
         assertThrows(Exception.class, () ->
             consumer.accept(-5, 3), "Consumer should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
-    void andThenAcceptTest() {
+    void testAndThenAccept() {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> andThenConsumer = (a, b) -> indicator.addAndGet(
             -this.sum(a, b));
@@ -78,14 +78,14 @@ class ThrowableBiConsumerTest {
     }
 
     @Test
-    void andThenNullTest() {
+    void testAndThenNull() {
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> consumer = this::sum;
         assertThrows(NullPointerException.class, () ->
             consumer.andThen(null), "Consumer should throw a NullPointerException if the andThen consumer is invalid");
     }
 
     @Test
-    void andThenExecutionTest() {
+    void testAndThenExecution() {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> andThenConsumer = (a, b) -> indicator.incrementAndGet();
         ThrowableBiConsumer<Integer, Integer, IllegalArgumentException> operation = (a, b) -> {

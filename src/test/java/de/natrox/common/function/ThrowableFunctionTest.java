@@ -27,14 +27,14 @@ import org.junit.jupiter.api.Test;
 class ThrowableFunctionTest {
 
     @Test
-    void defaultApplyTest1() {
+    void testApply() {
         ThrowableFunction<Integer, Integer, IllegalArgumentException> function = this::value;
         assertEquals(1, function.apply(1), "Function should return the input of 1");
         assertEquals(2, function.apply(2), "Function should return the input of 2");
     }
 
     @Test
-    void defaultApplyTest2() {
+    void testApply2() {
         ThrowableFunction<Integer, Integer, Exception> function = this::exceptionValue;
         try {
             assertEquals(1, function.apply(1), "Function should return the input of 1");
@@ -45,21 +45,21 @@ class ThrowableFunctionTest {
     }
 
     @Test
-    void exceptionApplyTest1() {
+    void testThrowingApply() {
         ThrowableFunction<Integer, Integer, IllegalArgumentException> function = this::value;
         assertThrows(IllegalArgumentException.class, () ->
             function.apply(-1), "Function should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
-    void exceptionApplyTest2() {
+    void testThrowingApply2() {
         ThrowableFunction<Integer, Integer, Exception> function = this::exceptionValue;
         assertThrows(Exception.class, () ->
             function.apply(-1), "Function should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
-    void andThenApplyTest() {
+    void testAndThenApply() {
         Function<Integer, Integer> andThenFunction = (a) -> (0);
         ThrowableFunction<Integer, Integer, IllegalArgumentException> operation = this::value;
         ThrowableFunction<Integer, Integer, IllegalArgumentException> function = operation.andThen(andThenFunction);
@@ -68,14 +68,14 @@ class ThrowableFunctionTest {
     }
 
     @Test
-    void andThenNullTest() {
+    void testAndThenNull() {
         ThrowableFunction<Integer, Integer, IllegalArgumentException> function = this::value;
         assertThrows(NullPointerException.class, () ->
             function.andThen(null), "Function should throw a NullPointerException if the andThen function is invalid");
     }
 
     @Test
-    void andThenExecutionTest() {
+    void testAndThenExecution() {
         AtomicInteger indicator = new AtomicInteger();
         Function<Integer, Integer> andThenFunction = (a) -> indicator.incrementAndGet();
         ThrowableFunction<Integer, Integer, IllegalArgumentException> operation = (a) -> {

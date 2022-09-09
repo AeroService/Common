@@ -65,7 +65,7 @@ class TaskExecutorTest {
     }
 
     @Test
-    void executeMainTest() throws InterruptedException {
+    void testExecuteMain() throws InterruptedException {
         AtomicInteger result = new AtomicInteger(-1);
         CountDownLatch latch = new CountDownLatch(1);
         Runnable runnable = () -> {
@@ -78,7 +78,7 @@ class TaskExecutorTest {
     }
 
     @Test
-    void executeAsyncTest() throws InterruptedException {
+    void testExecuteAsync() throws InterruptedException {
         AtomicInteger result = new AtomicInteger(-1);
         CountDownLatch latch = new CountDownLatch(1);
         Runnable runnable = () -> {
@@ -91,7 +91,7 @@ class TaskExecutorTest {
     }
 
     @Test
-    void executeDelayedTest() throws InterruptedException {
+    void testExecuteDelayed() throws InterruptedException {
         AtomicInteger result = new AtomicInteger(-1);
         CountDownLatch latch = new CountDownLatch(1);
         Runnable runnable = () -> {
@@ -105,7 +105,7 @@ class TaskExecutorTest {
     }
 
     @Test
-    void executeRepeatedTest() throws InterruptedException {
+    void testExecuteRepeated() throws InterruptedException {
         AtomicBoolean executed = new AtomicBoolean();
         CountDownLatch latch = new CountDownLatch(3);
         Runnable runnable = () -> {

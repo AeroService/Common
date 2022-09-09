@@ -27,14 +27,14 @@ import org.junit.jupiter.api.Test;
 class ThrowableBiFunctionTest {
 
     @Test
-    void defaultApplyTest1() {
+    void testApply() {
         ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = this::sum;
         assertEquals(3, function.apply(1, 2), "Function should return the input sum of 3");
         assertEquals(5, function.apply(2, 3), "Function should return the input sum of 5");
     }
 
     @Test
-    void defaultApplyTest2() {
+    void testApply2() {
         ThrowableBiFunction<Integer, Integer, Integer, Exception> function = this::exceptionSum;
         try {
             assertEquals(3, function.apply(1, 2), "Function should return the input sum of 3");
@@ -45,21 +45,21 @@ class ThrowableBiFunctionTest {
     }
 
     @Test
-    void exceptionApplyTest1() {
+    void testThrowingApply() {
         ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = this::sum;
         assertThrows(IllegalArgumentException.class, () ->
             function.apply(-5, 3), "Function should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
-    void exceptionApplyTest2() {
+    void testThrowingApply2() {
         ThrowableBiFunction<Integer, Integer, Integer, Exception> function = this::exceptionSum;
         assertThrows(Exception.class, () ->
             function.apply(-5, 3), "Function should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
-    void andThenApplyTest() {
+    void testAndThenApply() {
         Function<Integer, Integer> andThenFunction = (a) -> (0);
         ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> operation = this::sum;
         ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = operation.andThen(
@@ -69,14 +69,14 @@ class ThrowableBiFunctionTest {
     }
 
     @Test
-    void andThenNullTest() {
+    void testAndThenNull() {
         ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> function = this::sum;
         assertThrows(NullPointerException.class, () ->
             function.andThen(null), "Function should throw a NullPointerException if the andThen function is invalid");
     }
 
     @Test
-    void andThenExecutionTest() {
+    void testAndThenExecution() {
         AtomicInteger indicator = new AtomicInteger();
         Function<Integer, Integer> andThenFunction = (a) -> indicator.incrementAndGet();
         ThrowableBiFunction<Integer, Integer, Integer, IllegalArgumentException> operation = (a, b) -> {

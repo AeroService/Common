@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 class ThrowableConsumerTest {
 
     @Test
-    void defaultAcceptTest1() {
+    void testAccept() {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableConsumer<Integer, IllegalArgumentException> consumer = (a) -> indicator.set(value(a));
         consumer.accept(1);
@@ -36,7 +36,7 @@ class ThrowableConsumerTest {
     }
 
     @Test
-    void defaultAcceptTest2() {
+    void testAccept2() {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableConsumer<Integer, Exception> consumer = (a) -> indicator.set(exceptionValue(a));
         assertDoesNotThrow(() -> consumer.accept(1),
@@ -48,21 +48,21 @@ class ThrowableConsumerTest {
     }
 
     @Test
-    void exceptionAcceptTest1() {
+    void testThrowingAccept() {
         ThrowableConsumer<Integer, IllegalArgumentException> consumer = this::value;
-        assertThrows(IllegalArgumentException.class, () ->
-            consumer.accept(-1), "Consumer should throw an exception if the arguments don't meet the conditions");
+        assertThrows(IllegalArgumentException.class, () -> consumer.accept(-1),
+            "Consumer should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
-    void exceptionAcceptTest2() {
+    void testThrowingAccept2() {
         ThrowableConsumer<Integer, Exception> consumer = this::exceptionValue;
-        assertThrows(Exception.class, () ->
-            consumer.accept(-1), "Consumer should throw an exception if the arguments don't meet the conditions");
+        assertThrows(Exception.class, () -> consumer.accept(-1),
+            "Consumer should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
-    void andThenAcceptTest() {
+    void testAndThenAccept() {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableConsumer<Integer, IllegalArgumentException> andThenConsumer = (a) -> indicator.addAndGet(
             -this.value(a));
@@ -75,14 +75,14 @@ class ThrowableConsumerTest {
     }
 
     @Test
-    void andThenNullTest() {
+    void testAndThenNull() {
         ThrowableConsumer<Integer, IllegalArgumentException> consumer = this::value;
         assertThrows(NullPointerException.class, () ->
             consumer.andThen(null), "Consumer should throw a NullPointerException if the andThen consumer is invalid");
     }
 
     @Test
-    void andThenExecutionTest() {
+    void testAndThenExecution() {
         AtomicInteger indicator = new AtomicInteger();
         ThrowableConsumer<Integer, IllegalArgumentException> andThenConsumer = (a) -> indicator.incrementAndGet();
         ThrowableConsumer<Integer, IllegalArgumentException> operation = (a) -> {

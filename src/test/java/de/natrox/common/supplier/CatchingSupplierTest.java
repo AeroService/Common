@@ -26,7 +26,7 @@ public class CatchingSupplierTest {
     private static int a;
 
     @Test
-    void defaultGetTest() {
+    void testGet() {
         CatchingSupplier<Integer> supplier = new CatchingSupplier<>(this::a);
         a = 1;
         assertEquals(1, supplier.get(), "Supplier should provide the input of 1");
@@ -35,7 +35,7 @@ public class CatchingSupplierTest {
     }
 
     @Test
-    void exceptionGetTest() {
+    void testThrowingGet() {
         CatchingSupplier<Integer> supplier = new CatchingSupplier<>(this::a);
         a = -1;
         assertThrows(IllegalArgumentException.class,

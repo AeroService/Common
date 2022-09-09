@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 class TriConsumerTest {
 
     @Test
-    void defaultAcceptTest() {
+    void testAccept() {
         AtomicInteger indicator = new AtomicInteger();
         TriConsumer<Integer, Integer, Integer> consumer = (a, b, c) -> indicator.set(this.sum(a, b, c));
         consumer.accept(1, 2, 3);
@@ -35,7 +35,7 @@ class TriConsumerTest {
     }
 
     @Test
-    void nullAcceptTest() {
+    void testNullAccept() {
         TriConsumer<Integer, Integer, Integer> consumer = this::sum;
         assertThrows(NullPointerException.class, () ->
                 consumer.accept(null, null, null),
@@ -43,7 +43,7 @@ class TriConsumerTest {
     }
 
     @Test
-    void andThenAcceptTest() {
+    void testAndThenAccept() {
         AtomicInteger indicator = new AtomicInteger();
         TriConsumer<Integer, Integer, Integer> andThenConsumer = (a, b, c) -> indicator.addAndGet(-this.sum(a, b, c));
         TriConsumer<Integer, Integer, Integer> operation = (a, b, c) -> indicator.set(this.sum(a, b, c));
@@ -57,14 +57,14 @@ class TriConsumerTest {
     }
 
     @Test
-    void andThenNullTest() {
+    void testAndThenNull() {
         TriConsumer<Integer, Integer, Integer> consumer = this::sum;
         assertThrows(NullPointerException.class, () ->
             consumer.andThen(null), "Consumer should throw a NullPointerException if the andThen consumer is invalid");
     }
 
     @Test
-    void andThenExecutionTest() {
+    void testAndThenExecution() {
         AtomicInteger indicator = new AtomicInteger();
         TriConsumer<Integer, Integer, Integer> andThenConsumer = (a, b, c) -> indicator.incrementAndGet();
         TriConsumer<Integer, Integer, Integer> operation = (a, b, c) -> {

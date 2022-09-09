@@ -26,7 +26,7 @@ class ThrowableRunnableTest {
     private static int a;
 
     @Test
-    void defaultRunTest1() {
+    void testRun() {
         ThrowableRunnable<IllegalArgumentException> runnable = this::check;
         a = 1;
         assertDoesNotThrow(runnable::run);
@@ -35,7 +35,7 @@ class ThrowableRunnableTest {
     }
 
     @Test
-    void defaultRunTest2() {
+    void testRun2() {
         ThrowableRunnable<Exception> runnable = this::exceptionCheck;
         a = 1;
         assertDoesNotThrow(runnable::run, "Runnable should not throw exception as the arguments are valid");
@@ -44,7 +44,7 @@ class ThrowableRunnableTest {
     }
 
     @Test
-    void exceptionRunTest1() {
+    void testThrowingRun() {
         ThrowableRunnable<Exception> runnable = this::check;
         a = -1;
         assertThrows(IllegalArgumentException.class,
@@ -52,7 +52,7 @@ class ThrowableRunnableTest {
     }
 
     @Test
-    void exceptionRunTest2() {
+    void testThrowingRun2() {
         ThrowableRunnable<Exception> runnable = this::check;
         a = -1;
         assertThrows(IllegalArgumentException.class,

@@ -26,7 +26,7 @@ class CatchingRunnableTest {
     private static int a;
 
     @Test
-    void defaultRunTest() {
+    void testRun() {
         CatchingRunnable runnable = new CatchingRunnable(this::check);
         a = 1;
         assertDoesNotThrow(runnable::run);
@@ -35,7 +35,7 @@ class CatchingRunnableTest {
     }
 
     @Test
-    void exceptionRunTest() {
+    void testThrowingRun() {
         CatchingRunnable runnable = new CatchingRunnable(this::check);
         a = -1;
         assertThrows(IllegalArgumentException.class,
