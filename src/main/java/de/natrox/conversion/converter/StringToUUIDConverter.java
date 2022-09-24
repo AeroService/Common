@@ -16,14 +16,13 @@
 
 package de.natrox.conversion.converter;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.UUID;
+import org.jetbrains.annotations.NotNull;
 
 public class StringToUUIDConverter implements Converter<String, UUID> {
 
-	@Override
-	public @NotNull UUID convert(@NotNull String source) {
-		return UUID.fromString(source.trim());
-	}
+    @Override
+    public @NotNull UUID convert(@NotNull String source) {
+        return UUID.fromString(source.trim());
+    }
 }

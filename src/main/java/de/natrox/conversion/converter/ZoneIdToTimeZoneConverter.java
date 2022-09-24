@@ -16,15 +16,14 @@
 
 package de.natrox.conversion.converter;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.time.ZoneId;
 import java.util.TimeZone;
+import org.jetbrains.annotations.NotNull;
 
 public class ZoneIdToTimeZoneConverter implements Converter<ZoneId, TimeZone> {
 
-	@Override
-	public @NotNull TimeZone convert(@NotNull ZoneId source) {
-		return TimeZone.getTimeZone(source);
-	}
+    @Override
+    public @NotNull TimeZone convert(@NotNull ZoneId source) {
+        return TimeZone.getTimeZone(source);
+    }
 }

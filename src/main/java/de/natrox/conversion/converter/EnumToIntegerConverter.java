@@ -20,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class EnumToIntegerConverter implements Converter<Enum<?>, Integer> {
 
-	@Override
-	public @NotNull Integer convert(@NotNull Enum<?> source) {
-		return source.ordinal();
-	}
+    @Override
+    public @NotNull Integer convert(@NotNull Enum<?> source) {
+        return source.ordinal();
+    }
 }

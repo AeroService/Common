@@ -16,12 +16,11 @@
 
 package de.natrox.conversion.converter;
 
-import de.natrox.conversion.exception.ConversionFailedException;
 import de.natrox.conversion.exception.ConversionException;
-import org.jetbrains.annotations.NotNull;
-
+import de.natrox.conversion.exception.ConversionFailedException;
 import java.util.Locale;
 import java.util.Set;
+import org.jetbrains.annotations.NotNull;
 
 public class ObjectToBooleanConverter implements Converter<Object, Boolean> {
 

@@ -16,16 +16,15 @@
 
 package de.natrox.conversion.converter;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import org.jetbrains.annotations.NotNull;
 
 public class ZonedDateTimeToCalendarConverter implements Converter<ZonedDateTime, Calendar> {
 
-	@Override
-	public @NotNull Calendar convert(@NotNull ZonedDateTime source) {
-		return GregorianCalendar.from(source);
-	}
+    @Override
+    public @NotNull Calendar convert(@NotNull ZonedDateTime source) {
+        return GregorianCalendar.from(source);
+    }
 }

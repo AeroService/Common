@@ -21,6 +21,7 @@ import java.lang.reflect.Type;
 public class ConverterNotFoundException extends ConversionException {
 
     public ConverterNotFoundException(Type input, Type output) {
-        super("Failed to find converter which converts the input value of type " + input + " to a value of type " + output);
+        super("Failed to find converter which converts the input value of type " + input + " to a value of type "
+            + output);
     }
 }

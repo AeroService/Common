@@ -16,9 +16,8 @@
 
 package de.natrox.conversion.exception;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.lang.reflect.Type;
+import org.jetbrains.annotations.Nullable;
 
 public class ConversionException extends Exception {
 
