@@ -37,7 +37,7 @@ allprojects {
     }
 
     dependencies {
-        implementation("com.github.NatroxMC:Common:2f49ff1e0f")
+        implementation("com.github.NatroxMC:Common:403993bc56")
 
         implementation("org.jetbrains:annotations:23.0.0")
         implementation("io.leangen.geantyref:geantyref:1.3.13")

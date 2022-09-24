@@ -18,7 +18,7 @@ package de.natrox.conversion;
 
 import de.natrox.common.builder.IBuilder;
 import de.natrox.common.validate.Check;
-import de.natrox.conversion.convert.Converter;
+import de.natrox.conversion.converter.Converter;
 import io.leangen.geantyref.GenericTypeReflector;
 import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
@@ -99,6 +99,13 @@ public sealed interface ConversionBus permits ConversionBusImpl {
             return this.registerProvider((input, output) -> this.testType(output, type), (input, output) -> converter);
         }
 
+        default <T, U> ConversionBus.@NotNull Builder register(@NotNull Class<? super T> in, @NotNull Class<? super U> out, @NotNull Converter<T, U> converter) {
+            Check.notNull(in, "type");
+            Check.notNull(out, "type");
+            Check.notNull(converter, "parser");
+            return this.registerProvider((input, output) -> this.testType(output, out) && this.testType(input, in), (input, output) -> converter);
+        }
+
         default <T, U> ConversionBus.@NotNull Builder register(@NotNull TypeToken<? super U> typeToken, @NotNull Converter<T, U> converter) {
             Check.notNull(typeToken, "typeToken");
             Check.notNull(converter, "parser");
@@ -123,10 +130,24 @@ public sealed interface ConversionBus permits ConversionBusImpl {
             return this.register((input, output) -> output.equals(type), converter);
         }
 
+        default <T, U> ConversionBus.@NotNull Builder registerExact(@NotNull Class<T> in, @NotNull Class<U> out, @NotNull Converter<? super T, ? super U> converter) {
+            Check.notNull(in, "type");
+            Check.notNull(out, "out");
+            Check.notNull(converter, "parser");
+            return this.register((input, output) -> output.equals(out) && input.equals(in), converter);
+        }
+
         default <T, U> ConversionBus.@NotNull Builder registerExact(@NotNull TypeToken<U> typeToken, @NotNull Converter<T, U> converter) {
             Check.notNull(typeToken, "typeToken");
             Check.notNull(converter, "parser");
             return this.register((input, output) -> output.equals(typeToken.getType()), converter);
+        }
+
+        default <T, U> ConversionBus.@NotNull Builder registerExact(@NotNull TypeToken<T> in, @NotNull TypeToken<U> out, @NotNull Converter<T, U> converter) {
+            Check.notNull(in, "typeToken");
+            Check.notNull(out, "typeToken");
+            Check.notNull(converter, "parser");
+            return this.register((input, output) -> output.equals(out.getType()) && input.equals(in.getType()), converter);
         }
 
         private boolean testType(Type test, Type type) {

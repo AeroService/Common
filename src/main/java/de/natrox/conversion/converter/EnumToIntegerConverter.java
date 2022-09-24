@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion.exception;
+package de.natrox.conversion.converter;
 
-import java.lang.reflect.Type;
+import org.jetbrains.annotations.NotNull;
 
-public class ConverterNotFoundException extends ConversionException {
+public class EnumToIntegerConverter implements Converter<Enum<?>, Integer> {
 
-    public ConverterNotFoundException(Type input, Type output) {
-        super("Failed to find converter which converts the input value of type " + input + " to a value of type " + output);
-    }
+	@Override
+	public @NotNull Integer convert(@NotNull Enum<?> source) {
+		return source.ordinal();
+	}
 }

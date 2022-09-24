@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion.exception;
+package de.natrox.conversion.converter;
 
-import java.lang.reflect.Type;
+import de.natrox.conversion.exception.ConversionException;
+import org.jetbrains.annotations.NotNull;
 
-public class ConverterNotFoundException extends ConversionException {
+@FunctionalInterface
+public interface Converter<T, U> {
 
-    public ConverterNotFoundException(Type input, Type output) {
-        super("Failed to find converter which converts the input value of type " + input + " to a value of type " + output);
-    }
+    @NotNull U convert(@NotNull T obj) throws ConversionException;
+
 }

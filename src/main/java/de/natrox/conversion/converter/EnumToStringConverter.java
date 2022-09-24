@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion.convert;
+package de.natrox.conversion.converter;
 
+import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
-final class StringConverterImpl implements Converter<Object, String> {
+public class EnumToStringConverter implements Converter<Enum<?>, String> {
+
+    public final static TypeToken<Enum<?>> INPUT_TYPE = new TypeToken<>() {
+
+    };
+
+    public final static TypeToken<String> OUTPUT_TYPE = TypeToken.get(String.class);
 
     @Override
-    public @NotNull String read(@NotNull Object obj) {
-        if (obj instanceof Enum<?> enumValue) {
-            return enumValue.name();
-        }
-
-        return obj.toString();
+    public @NotNull String convert(@NotNull Enum<?> source) {
+        return source.name();
     }
 }

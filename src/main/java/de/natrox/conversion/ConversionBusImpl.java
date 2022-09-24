@@ -18,20 +18,19 @@ package de.natrox.conversion;
 
 import de.natrox.common.container.Pair;
 import de.natrox.common.validate.Check;
-import de.natrox.conversion.convert.*;
-import de.natrox.conversion.convert.ListConverter;
-import de.natrox.conversion.convert.SetConverter;
+import de.natrox.conversion.converter.Converter;
+import de.natrox.conversion.converter.EnumToStringConverter;
+import de.natrox.conversion.converter.ObjectToStringConverter;
+import de.natrox.conversion.converter.ObjectToBooleanConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
-import java.io.File;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -44,39 +43,10 @@ final class ConversionBusImpl implements ConversionBus {
     static {
         DEFAULT = ConversionBus
             .builder()
-            .registerExact(Boolean.class, Converters.BOOLEAN)
-            .registerExact(boolean.class, Converters.BOOLEAN)
-            .registerExact(Character.class, Converters.CHAR)
-            .registerExact(char.class, Converters.CHAR)
-            .registerExact(String.class, Converters.STRING)
-            .registerExact(URI.class, Converters.URI)
-            .registerExact(URL.class, Converters.URL)
-            .registerExact(UUID.class, Converters.UUID)
-            .registerExact(Path.class, Converters.PATH)
-            .registerExact(File.class, Converters.FILE)
-            .registerExact(Byte.class, Converters.BYTE)
-            .registerExact(byte.class, Converters.BYTE)
-            .registerExact(Short.class, Converters.SHORT)
-            .registerExact(short.class, Converters.SHORT)
-            .registerExact(Integer.class, Converters.INTEGER)
-            .registerExact(int.class, Converters.INTEGER)
-            .registerExact(Long.class, Converters.LONG)
-            .registerExact(long.class, Converters.LONG)
-            .registerExact(Float.class, Converters.FLOAT)
-            .registerExact(float.class, Converters.FLOAT)
-            .registerExact(Double.class, Converters.DOUBLE)
-            .registerExact(double.class, Converters.DOUBLE)
-            .registerProvider(Enum.class, (input, output) -> EnumConverter.create(output))
-            .registerProvider(Map.class, (input, output) -> MapConverter.create(output))
-            .registerProvider(Set.class, (input, output) -> SetConverter.create(output))
-            .registerProvider(List.class, (input, output) -> ListConverter.create(output))
-            .registerProvider((input, output) -> {
-                if(input instanceof ParameterizedType parameterizedType) {
-                    return parameterizedType.getActualTypeArguments()[0].equals(String.class);
-                }
-
-                return false;
-            }, (input, output) -> ObjectConverter.create(output))
+            .register(Object.class, String.class, new ObjectToStringConverter())
+            .registerExact(EnumToStringConverter.INPUT_TYPE, EnumToStringConverter.OUTPUT_TYPE, new EnumToStringConverter())
+            .registerExact(String.class, Boolean.class, new ObjectToBooleanConverter())
+            .registerExact(Integer.class, Boolean.class, new ObjectToBooleanConverter())
             .build();
     }
 

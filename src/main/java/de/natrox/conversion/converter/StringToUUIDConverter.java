@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion.convert;
+package de.natrox.conversion.converter;
 
-import de.natrox.conversion.exception.SerializeException;
 import org.jetbrains.annotations.NotNull;
 
-@FunctionalInterface
-public interface Converter<T, U> {
+import java.util.UUID;
 
-    @NotNull U read(@NotNull T obj) throws SerializeException;
+public class StringToUUIDConverter implements Converter<String, UUID> {
 
-    default @NotNull Object write(@NotNull U value) throws SerializeException {
-        return value;
-    }
-
+	@Override
+	public @NotNull UUID convert(@NotNull String source) {
+		return UUID.fromString(source.trim());
+	}
 }

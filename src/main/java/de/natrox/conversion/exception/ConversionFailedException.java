@@ -18,7 +18,7 @@ package de.natrox.conversion.exception;
 
 import java.lang.reflect.Type;
 
-public class ConversionFailedException extends SerializeException {
+public class ConversionFailedException extends ConversionException {
 
     public ConversionFailedException(Object inputValue, String typeDescription) {
         super("Failed to convert input value of type " + inputValue.getClass() + " to " + typeDescription);

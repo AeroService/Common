@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion.convert;
+package de.natrox.conversion.converter;
 
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import org.jetbrains.annotations.NotNull;
 
-final class SetConverterImpl<T> extends AbstractCollectionConverter<T, Set<T>> implements SetConverter<T> {
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
-    SetConverterImpl(Type entryType, Converter<Object, T> entryConverter) {
-        super(entryType, entryConverter);
-    }
+public class ZonedDateTimeToCalendarConverter implements Converter<ZonedDateTime, Calendar> {
 
-    @Override
-    protected <U> Collection<U> createNew(int length, Type elementType) {
-        return new HashSet<>();
-    }
+	@Override
+	public @NotNull Calendar convert(@NotNull ZonedDateTime source) {
+		return GregorianCalendar.from(source);
+	}
 }

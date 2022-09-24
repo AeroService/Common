@@ -20,33 +20,33 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 
-public class SerializeException extends Exception {
+public class ConversionException extends Exception {
 
     private @Nullable Type expectedType;
 
-    public SerializeException() {
+    public ConversionException() {
 
     }
 
-    public SerializeException(String message) {
+    public ConversionException(String message) {
         super(message);
     }
 
-    public SerializeException(Throwable cause) {
+    public ConversionException(Throwable cause) {
         super(cause);
     }
 
-    public SerializeException(@Nullable Type expectedType, String message) {
+    public ConversionException(@Nullable Type expectedType, String message) {
         super(message);
         this.expectedType = expectedType;
     }
 
-    public SerializeException(@Nullable Type expectedType, Throwable cause) {
+    public ConversionException(@Nullable Type expectedType, Throwable cause) {
         super(cause);
         this.expectedType = expectedType;
     }
 
-    public SerializeException(@Nullable Type expectedType, String message, Throwable cause) {
+    public ConversionException(@Nullable Type expectedType, String message, Throwable cause) {
         super(message, cause);
         this.expectedType = expectedType;
     }

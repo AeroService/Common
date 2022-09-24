@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion.convert;
+package de.natrox.conversion.converter;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
-final class ListConverterImpl<T> extends AbstractCollectionConverter<T, List<T>> implements ListConverter<T> {
+import java.time.ZoneId;
+import java.util.TimeZone;
 
-    ListConverterImpl(Type entryType, Converter<Object, T> entryConverter) {
-        super(entryType, entryConverter);
-    }
+public class ZoneIdToTimeZoneConverter implements Converter<ZoneId, TimeZone> {
 
-    @Override
-    protected <F> Collection<F> createNew(int length, Type elementType) {
-        return new ArrayList<>();
-    }
+	@Override
+	public @NotNull TimeZone convert(@NotNull ZoneId source) {
+		return TimeZone.getTimeZone(source);
+	}
 }
