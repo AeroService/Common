@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 NatroxMC
+ * Copyright 2020-2022 Conelux
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,7 +20,7 @@ plugins {
 defaultTasks("build", "shadowJar")
 
 allprojects {
-    group = "de.natrox"
+    group = "org.conelux"
     version = "1.0"
     description = "A simple event bus"
 
@@ -34,7 +34,7 @@ allprojects {
     }
 
     dependencies {
-        implementation("com.github.Natroxmc:common:9b5bbf5fd2")
+        implementation("com.github.Conelux:Common:b60d08839c")
 
         implementation("org.jetbrains:annotations:23.0.0")
         implementation("org.slf4j:slf4j-api:2.0.0")

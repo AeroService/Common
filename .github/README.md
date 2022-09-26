@@ -1,6 +1,6 @@
 # Event
 
-[![license](https://img.shields.io/github/license/NatroxMC/Event?style=for-the-badge&color=b2204c)](../LICENSE)
+[![license](https://img.shields.io/github/license/Conelux/Event?style=for-the-badge&color=b2204c)](../LICENSE)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=for-the-badge)](https://github.com/RichardLitt/standard-readme)
 
 A simple event bus for Java
@@ -13,7 +13,7 @@ A simple event bus for Java
 
 # Install
 
-The newest version can be found [here: ![](https://jitpack.io/v/NatroxMC/Event.svg)](https://jitpack.io/#NatroxMC/Event)
+The newest version can be found [here: ![](https://jitpack.io/v/Conelux/Event.svg)](https://jitpack.io/#Conelux/Event)
 
 # Contributing
 

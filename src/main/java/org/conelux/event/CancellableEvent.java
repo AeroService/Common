@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.natrox.event;
+package org.conelux.event;
 
 /**
  * Represents an event which can be cancelled.

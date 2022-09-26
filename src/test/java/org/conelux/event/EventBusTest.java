@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package de.natrox.event;
+package org.conelux.event;
 
-import static de.natrox.common.validate.Check.fail;
+import static org.conelux.common.validate.Check.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
