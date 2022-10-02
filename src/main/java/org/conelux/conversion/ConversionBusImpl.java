@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion;
+package org.conelux.conversion;
 
-import de.natrox.common.container.Pair;
-import de.natrox.common.validate.Check;
-import de.natrox.conversion.converter.Converter;
-import de.natrox.conversion.converter.EnumToStringConverter;
-import de.natrox.conversion.converter.ObjectToBooleanConverter;
-import de.natrox.conversion.converter.ObjectToStringConverter;
+import org.conelux.common.container.Pair;
+import org.conelux.common.validate.Check;
+import org.conelux.conversion.converter.Converter;
+import org.conelux.conversion.converter.EnumToStringConverter;
+import org.conelux.conversion.converter.ObjectToBooleanConverter;
+import org.conelux.conversion.converter.ObjectToStringConverter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,8 +40,7 @@ final class ConversionBusImpl implements ConversionBus {
     final static ConversionBus DEFAULT;
 
     static {
-        DEFAULT = ConversionBus
-            .builder()
+        DEFAULT = ConversionBus.builder()
             .register(Object.class, String.class, new ObjectToStringConverter())
             .registerExact(EnumToStringConverter.INPUT_TYPE, EnumToStringConverter.OUTPUT_TYPE,
                 new EnumToStringConverter())

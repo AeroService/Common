@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Conelux
+ * Copyright 2020-2022 NatroxMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +14,14 @@
  * limitations under the License.
  */
 
-rootProject.name = "Conversion"
+package org.conelux.conversion.converter;
 
+import org.conelux.conversion.exception.ConversionException;
+import org.jetbrains.annotations.NotNull;
+
+@FunctionalInterface
+public interface Converter<T, U> {
+
+    @NotNull U convert(@NotNull T obj) throws ConversionException;
+
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 NatroxMC
+ * Copyright 2020-2022 Conelux
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ plugins {
 defaultTasks("build", "shadowJar")
 
 allprojects {
-    group = "de.natrox"
+    group = "org.conelux"
     version = "1.0"
     description = "A library to coerce an input value to another type"
 
@@ -37,7 +37,7 @@ allprojects {
     }
 
     dependencies {
-        implementation("com.github.NatroxMC:Common:403993bc56")
+        implementation("com.github.conelux:Common:6ce6fc4dae")
 
         implementation("org.jetbrains:annotations:23.0.0")
         implementation("io.leangen.geantyref:geantyref:1.3.13")

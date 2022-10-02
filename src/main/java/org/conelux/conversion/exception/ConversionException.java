@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion.exception;
+package org.conelux.conversion.exception;
 
 import java.lang.reflect.Type;
 import org.jetbrains.annotations.Nullable;

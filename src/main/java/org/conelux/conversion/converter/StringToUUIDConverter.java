@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion.converter;
+package org.conelux.conversion.converter;
 
 import java.util.UUID;
 import org.jetbrains.annotations.NotNull;

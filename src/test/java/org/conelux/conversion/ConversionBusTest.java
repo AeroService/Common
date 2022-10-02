@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion.exception;
+package org.conelux.conversion;
 
-import java.lang.reflect.Type;
+import org.junit.jupiter.api.Test;
 
-public class ConversionFailedException extends ConversionException {
+class ConversionBusTest {
 
-    public ConversionFailedException(Object inputValue, String typeDescription) {
-        super("Failed to convert input value of type " + inputValue.getClass() + " to " + typeDescription);
-    }
+    @Test
+    void test() {
 
-    public ConversionFailedException(Type target, Object inputValue, String typeDescription) {
-        super(target, "Failed to convert input value of type " + inputValue.getClass() + " to " + typeDescription);
     }
 }

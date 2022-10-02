@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion.converter;
+package org.conelux.conversion.converter;
 
-import java.time.ZonedDateTime;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
-public class ZonedDateTimeToCalendarConverter implements Converter<ZonedDateTime, Calendar> {
+public class EnumToStringConverter implements Converter<Enum<?>, String> {
+
+    public final static TypeToken<Enum<?>> INPUT_TYPE = new TypeToken<>() {
+
+    };
+
+    public final static TypeToken<String> OUTPUT_TYPE = TypeToken.get(String.class);
 
     @Override
-    public @NotNull Calendar convert(@NotNull ZonedDateTime source) {
-        return GregorianCalendar.from(source);
+    public @NotNull String convert(@NotNull Enum<?> source) {
+        return source.name();
     }
 }

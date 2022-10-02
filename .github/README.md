@@ -1,6 +1,6 @@
 # Conversion
 
-[![license](https://img.shields.io/github/license/NatroxMC/Conversion?style=for-the-badge&color=b2204c)](../LICENSE)
+[![license](https://img.shields.io/github/license/Conelux/Conversion?style=for-the-badge&color=b2204c)](../LICENSE)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=for-the-badge)](https://github.com/RichardLitt/standard-readme)
 
 A library to coerce an input value to another type
@@ -14,7 +14,7 @@ A library to coerce an input value to another type
 # Install
 
 The newest version can be
-found [here: ![](https://jitpack.io/v/NatroxMC/Conversion.svg)](https://jitpack.io/#NatroxMC/Conversion)
+found [here: ![](https://jitpack.io/v/Conelux/Conversion.svg)](https://jitpack.io/#Conelux/Conversion)
 
 # Contributing
 

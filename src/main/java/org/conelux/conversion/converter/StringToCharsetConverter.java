@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion.converter;
+package org.conelux.conversion.converter;
 
-import de.natrox.conversion.exception.ConversionException;
+import java.nio.charset.Charset;
 import org.jetbrains.annotations.NotNull;
 
-@FunctionalInterface
-public interface Converter<T, U> {
+public class StringToCharsetConverter implements Converter<String, Charset> {
 
-    @NotNull U convert(@NotNull T obj) throws ConversionException;
-
+	@Override
+	public @NotNull Charset convert(@NotNull String source) {
+		return Charset.forName(source.trim());
+	}
 }

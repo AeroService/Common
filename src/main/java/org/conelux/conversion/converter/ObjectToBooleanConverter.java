@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion.converter;
+package org.conelux.conversion.converter;
 
-import de.natrox.conversion.exception.ConversionException;
-import de.natrox.conversion.exception.ConversionFailedException;
+import org.conelux.conversion.exception.ConversionException;
+import org.conelux.conversion.exception.ConversionFailedException;
 import java.util.Locale;
 import java.util.Set;
 import org.jetbrains.annotations.NotNull;

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion;
+package org.conelux.conversion;
 
-import de.natrox.common.builder.IBuilder;
-import de.natrox.common.validate.Check;
-import de.natrox.conversion.converter.Converter;
+import org.conelux.common.builder.IBuilder;
+import org.conelux.common.validate.Check;
+import org.conelux.conversion.converter.Converter;
 import io.leangen.geantyref.GenericTypeReflector;
 import io.leangen.geantyref.TypeToken;
 import java.lang.reflect.Type;

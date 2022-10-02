@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion.exception;
+package org.conelux.conversion.converter;
 
-import java.lang.reflect.Type;
+import org.jetbrains.annotations.NotNull;
 
-public class ConverterNotFoundException extends ConversionException {
+public class ObjectToStringConverter implements Converter<Object, String> {
 
-    public ConverterNotFoundException(Type input, Type output) {
-        super("Failed to find converter which converts the input value of type " + input + " to a value of type "
-            + output);
+    @Override
+    public @NotNull String convert(@NotNull Object source) {
+        return source.toString();
     }
 }

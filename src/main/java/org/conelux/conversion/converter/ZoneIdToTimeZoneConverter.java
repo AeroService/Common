@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package de.natrox.conversion.converter;
+package org.conelux.conversion.converter;
 
+import java.time.ZoneId;
+import java.util.TimeZone;
 import org.jetbrains.annotations.NotNull;
 
-public class EnumToIntegerConverter implements Converter<Enum<?>, Integer> {
+public class ZoneIdToTimeZoneConverter implements Converter<ZoneId, TimeZone> {
 
     @Override
-    public @NotNull Integer convert(@NotNull Enum<?> source) {
-        return source.ordinal();
+    public @NotNull TimeZone convert(@NotNull ZoneId source) {
+        return TimeZone.getTimeZone(source);
     }
 }
