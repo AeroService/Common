@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *     
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
 
 package org.conelux.common.scheduler;
 
-import org.conelux.common.task.TaskExecutor;
+import java.util.function.Supplier;
 import org.conelux.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,37 +26,34 @@ import org.jetbrains.annotations.NotNull;
 public sealed interface Scheduler permits SchedulerImpl {
 
     /**
-     * Creates a scheduler that schedules the tasks with the specified {@link TaskExecutor}.
+     * Creates a scheduler that schedules the tasks.
      *
-     * @param taskExecutor the task executor that schedules the tasks
      * @return the created scheduler
      */
-    static @NotNull Scheduler create(@NotNull TaskExecutor taskExecutor) {
-        Check.notNull(taskExecutor, "taskExecutor");
-        return new SchedulerImpl(taskExecutor);
+    static @NotNull Scheduler create() {
+        return new SchedulerImpl();
     }
+
+    /**
+     * Submits a new task with custom scheduling logic.
+     * <p>
+     * This is the primitive method used by all scheduling shortcuts,
+     * {@code task} is immediately executed in the caller thread to retrieve its scheduling state
+     * and the task will stay alive as long as {@link TaskSchedule#stop()} is not returned (or {@link Task#cancel()} is called).
+     *
+     * @param task          the task to be directly executed in the caller thread
+     * @return the created task
+     */
+    @NotNull Task submitTask(@NotNull Supplier<TaskSchedule> task);
 
     /**
      * Creates a new {@link Task.Builder} for creating a task.
      *
-     * @param task the runnable to run
+     * @param runnable the runnable to run
      * @return the created task builder
      */
-    @NotNull Task.Builder buildTask(@NotNull Runnable task);
-
-    /**
-     * Returns whether this scheduler is shut down or not.
-     *
-     * @return true, if this scheduler is shut down, false, if not
-     */
-    boolean isShutdown();
-
-    /**
-     * Shutdowns the scheduler and cancel all running tasks.
-     *
-     * @return true, if this executor terminated, false, if 10 seconds elapsed before termination
-     * @throws InterruptedException if interrupted while waiting
-     */
-    boolean shutdown() throws InterruptedException;
-
+    default @NotNull Task.Builder buildTask(@NotNull Runnable runnable) {
+        Check.notNull(runnable, "runnable");
+        return new TaskImpl.BuilderImpl(this, runnable);
+    }
 }

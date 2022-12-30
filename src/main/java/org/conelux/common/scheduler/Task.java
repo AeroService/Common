@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *     
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,10 +16,10 @@
 
 package org.conelux.common.scheduler;
 
-import org.conelux.common.validate.Check;
 import java.time.Duration;
 import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
+import org.conelux.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,6 +43,13 @@ public sealed interface Task permits TaskImpl {
     @NotNull TaskStatus status();
 
     /**
+     * Returns whether this task is alive or not.
+     *
+     * @return true, if this task is alive, false if not
+     */
+    boolean isAlive();
+
+    /**
      * Cancels this task. If the task is already running, the thread in which it is running will be interrupted. If the
      * task is not currently running, the scheduler will terminate it safely.
      */
@@ -53,14 +60,7 @@ public sealed interface Task permits TaskImpl {
      */
     sealed interface Builder permits TaskImpl.BuilderImpl {
 
-        /**
-         * Sets the delay for execution to the specified amount of time.
-         *
-         * @param time     the time to delay by
-         * @param timeUnit the unit of time for {@code time}
-         * @return this builder, for chaining
-         */
-        @NotNull Builder delay(long time, @NotNull TimeUnit timeUnit);
+        @NotNull Builder delay(@NotNull TaskSchedule schedule);
 
         /**
          * Sets the delay for execution to the specified amount of time.
@@ -68,9 +68,9 @@ public sealed interface Task permits TaskImpl {
          * @param duration the duration of the delay
          * @return this builder, for chaining
          */
-        default @NotNull Builder delay(Duration duration) {
+        default @NotNull Builder delay(@NotNull Duration duration) {
             Check.notNull(duration, "duration");
-            return delay(duration.toMillis(), TimeUnit.MILLISECONDS);
+            return this.delay(TaskSchedule.duration(duration));
         }
 
         /**
@@ -82,17 +82,22 @@ public sealed interface Task permits TaskImpl {
          */
         default @NotNull Builder delay(long time, @NotNull TemporalUnit temporalUnit) {
             Check.notNull(temporalUnit, "temporalUnit");
-            return delay(Duration.of(time, temporalUnit));
+            return this.delay(Duration.of(time, temporalUnit));
         }
 
         /**
-         * Sets that the task should continue running after waiting for the specified amount, until it is cancelled.
+         * Sets the delay for execution to the specified amount of time.
          *
          * @param time     the time to delay by
          * @param timeUnit the unit of time for {@code time}
          * @return this builder, for chaining
          */
-        @NotNull Builder repeat(long time, @NotNull TimeUnit timeUnit);
+        default @NotNull Builder delay(long time, @NotNull TimeUnit timeUnit) {
+            Check.notNull(timeUnit, "timeUnit");
+            return this.delay(time, timeUnit.toChronoUnit());
+        }
+
+        @NotNull Builder repeat(@NotNull TaskSchedule schedule);
 
         /**
          * Sets that the task should continue running after waiting for the specified amount, until it is cancelled.
@@ -100,9 +105,9 @@ public sealed interface Task permits TaskImpl {
          * @param duration the duration of the delay
          * @return this builder, for chaining
          */
-        default @NotNull Builder repeat(Duration duration) {
+        default @NotNull Builder repeat(@NotNull Duration duration) {
             Check.notNull(duration, "duration");
-            return repeat(duration.toMillis(), TimeUnit.MILLISECONDS);
+            return this.repeat(TaskSchedule.duration(duration));
         }
 
         /**
@@ -114,22 +119,20 @@ public sealed interface Task permits TaskImpl {
          */
         default @NotNull Builder repeat(long time, @NotNull TemporalUnit temporalUnit) {
             Check.notNull(temporalUnit, "temporalUnit");
-            return repeat(Duration.of(time, temporalUnit));
+            return this.repeat(Duration.of(time, temporalUnit));
         }
 
         /**
-         * Clears the delay on this task.
+         * Sets that the task should continue running after waiting for the specified amount, until it is cancelled.
          *
+         * @param time     the time to delay by
+         * @param timeUnit the unit of time for {@code time}
          * @return this builder, for chaining
          */
-        @NotNull Builder clearDelay();
-
-        /**
-         * Clears the repeat interval on this task.
-         *
-         * @return this builder, for chaining
-         */
-        @NotNull Builder clearRepeat();
+        default @NotNull Builder repeat(long time, @NotNull TimeUnit timeUnit) {
+            Check.notNull(timeUnit, "timeUnit");
+            return this.repeat(time, timeUnit.toChronoUnit());
+        }
 
         /**
          * Builds and schedules the task for execution and calls a callback when the task has finished.

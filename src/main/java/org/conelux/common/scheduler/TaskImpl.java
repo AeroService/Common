@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *     
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,39 +16,22 @@
 
 package org.conelux.common.scheduler;
 
+import java.util.function.Supplier;
 import org.conelux.common.validate.Check;
-import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-final class TaskImpl implements Runnable, Task {
+final class TaskImpl implements Task {
 
     private final SchedulerImpl scheduler;
-    private final Runnable runnable;
-    private final Runnable doneCallback;
-    private final long delay;
-    private final long repeat;
-    private @Nullable org.conelux.common.task.Task task;
-    private volatile @Nullable Thread currentTaskThread;
+    private final Supplier<TaskSchedule> task;
 
-    TaskImpl(SchedulerImpl scheduler, Runnable runnable, Runnable doneCallback, long delay, long repeat) {
+    private volatile boolean alive = true;
+    private volatile boolean done = false;
+
+    TaskImpl(SchedulerImpl scheduler, Supplier<TaskSchedule> task) {
         this.scheduler = scheduler;
-        this.runnable = runnable;
-        this.doneCallback = doneCallback;
-        this.delay = delay;
-        this.repeat = repeat;
-    }
-
-    void schedule() {
-        if (this.repeat == 0) {
-            this.task = this.scheduler
-                .taskExecutor()
-                .executeWithDelay(this, this.delay, TimeUnit.MILLISECONDS);
-        } else {
-            this.task = this.scheduler
-                .taskExecutor()
-                .executeInRepeat(this, this.delay, this.repeat, TimeUnit.MILLISECONDS);
-        }
+        this.task = task;
     }
 
     @Override
@@ -58,99 +41,81 @@ final class TaskImpl implements Runnable, Task {
 
     @Override
     public @NotNull TaskStatus status() {
-        if (this.task == null) {
-            return TaskStatus.SCHEDULED;
-        }
-
-        if (this.task.isCancelled()) {
-            return TaskStatus.CANCELLED;
-        }
-
-        if (this.task.isDone()) {
+        if (this.done) {
             return TaskStatus.FINISHED;
+        }
+
+        if (!this.alive) {
+            return TaskStatus.CANCELLED;
         }
 
         return TaskStatus.SCHEDULED;
     }
 
     @Override
-    public void cancel() {
-        if (this.task == null) {
-            return;
-        }
-
-        this.task.cancel();
-
-        Thread cur = this.currentTaskThread;
-        if (cur != null) {
-            cur.interrupt();
-        }
-
-        this.done();
+    public boolean isAlive() {
+        return this.alive;
     }
 
     @Override
-    public void run() {
-        this.scheduler.taskExecutor().executeAsync(this::execute);
+    public void cancel() {
+        this.alive = false;
     }
 
-    private void execute() {
-        this.currentTaskThread = Thread.currentThread();
-        this.runnable.run();
-        this.currentTaskThread = null;
-        this.done();
+    public void done() {
+        this.done = true;
+        this.cancel();
     }
 
-    private void done() {
-        if (this.doneCallback == null) {
-            return;
-        }
-        this.doneCallback.run();
+    public Supplier<TaskSchedule> task() {
+        return this.task;
     }
 
     static final class BuilderImpl implements Task.Builder {
 
-        private final SchedulerImpl scheduler;
+        private final Scheduler scheduler;
         private final Runnable runnable;
-        private long delay; // ms
-        private long repeat; // ms
+        private TaskSchedule delay = TaskSchedule.immediate();
+        private TaskSchedule repeat = TaskSchedule.stop();
 
-        BuilderImpl(SchedulerImpl scheduler, Runnable runnable) {
+
+        BuilderImpl(Scheduler scheduler, Runnable runnable) {
             this.scheduler = scheduler;
             this.runnable = runnable;
         }
 
         @Override
-        public Task.@NotNull Builder delay(long time, @NotNull TimeUnit timeUnit) {
-            Check.notNull(timeUnit, "timeUnit");
-            this.delay = timeUnit.toMillis(time);
+        public Task.@NotNull Builder delay(@NotNull TaskSchedule schedule) {
+            Check.notNull(schedule, "schedule");
+            this.delay = schedule;
             return this;
         }
 
         @Override
-        public Task.@NotNull Builder repeat(long time, @NotNull TimeUnit timeUnit) {
-            Check.notNull(timeUnit, "timeUnit");
-            this.repeat = timeUnit.toMillis(time);
-            return this;
-        }
-
-        @Override
-        public Task.@NotNull Builder clearDelay() {
-            this.delay = 0;
-            return this;
-        }
-
-        @Override
-        public Task.@NotNull Builder clearRepeat() {
-            this.repeat = 0;
+        public Task.@NotNull Builder repeat(@NotNull TaskSchedule schedule) {
+            Check.notNull(schedule, "schedule");
+            this.repeat = schedule;
             return this;
         }
 
         @Override
         public @NotNull Task schedule(@Nullable Runnable doneCallback) {
-            TaskImpl task = new TaskImpl(this.scheduler, this.runnable, doneCallback, this.delay, this.repeat);
-            task.schedule();
-            return task;
+            var runnable = this.runnable;
+            var delay = this.delay;
+            var repeat = this.repeat;
+            return scheduler.submitTask(new Supplier<>() {
+                boolean first = true;
+
+                @Override
+                public TaskSchedule get() {
+                    if (this.first) {
+                        this.first = false;
+                        return delay;
+                    }
+                    runnable.run();
+                    return repeat;
+                }
+            });
         }
     }
 }

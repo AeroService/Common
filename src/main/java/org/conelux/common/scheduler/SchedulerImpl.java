@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *     
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,50 +16,52 @@
 
 package org.conelux.common.scheduler;
 
-import org.conelux.common.task.TaskExecutor;
+import java.time.Duration;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import org.conelux.common.validate.Check;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 
 final class SchedulerImpl implements Scheduler {
 
-    private final TaskExecutor taskExecutor;
-    private final Set<Task> tasks = new LinkedHashSet<>();
-
-    SchedulerImpl(TaskExecutor taskExecutor) {
-        this.taskExecutor = taskExecutor;
-    }
-
-    @Override
-    public @NotNull Task.Builder buildTask(@NotNull Runnable runnable) {
-        Check.notNull(runnable, "runnable");
-        return new TaskImpl.BuilderImpl(this, runnable);
-    }
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread thread = new Thread(r);
+        thread.setDaemon(true);
+        return thread;
+    });
 
     @Override
-    public boolean isShutdown() {
-        return this.taskExecutor.isShutdown();
+    public @NotNull Task submitTask(@NotNull Supplier<TaskSchedule> task) {
+        Check.notNull(task, "task");
+
+        TaskImpl taskWrapper = new TaskImpl(this, task);
+        this.handleTask(taskWrapper);
+        return taskWrapper;
     }
 
-    public boolean shutdown() {
-        Collection<Task> terminating;
-        synchronized (this.tasks) {
-            terminating = Collections.unmodifiableSet(this.tasks);
+    private void execute(TaskImpl task) {
+        if (!task.isAlive()) {
+            return;
         }
-        for (Task task : terminating) {
-            task.cancel();
+
+        this.executor.submit(() -> this.handleTask(task));
+    }
+
+    private void handleTask(TaskImpl task) {
+        TaskSchedule schedule = task.task().get();
+
+        if (schedule instanceof TaskScheduleImpl.DurationSchedule durationSchedule) {
+            Duration duration = durationSchedule.duration();
+
+            this.executor.schedule(() -> this.execute(task), duration.toMillis(), TimeUnit.MILLISECONDS);
+        } else if (schedule instanceof TaskScheduleImpl.FutureSchedule futureSchedule) {
+            futureSchedule.future().thenRun(() -> this.execute(task));
+        } else if (schedule instanceof TaskScheduleImpl.Immediate) {
+            this.execute(task);
+        } else if (schedule instanceof TaskScheduleImpl.Stop) {
+            task.done();
         }
-        return this.taskExecutor.shutdown();
-    }
-
-    TaskExecutor taskExecutor() {
-        return this.taskExecutor;
-    }
-
-    public Set<Task> tasks() {
-        return this.tasks;
     }
 }

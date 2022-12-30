@@ -22,13 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.conelux.common.task.CachedTaskExecutor;
-import org.conelux.common.task.TaskExecutor;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.conelux.common.scheduler.Scheduler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,15 +40,15 @@ class CounterTest {
 
     @BeforeAll
     private static void init() {
-        TaskExecutor executor = CachedTaskExecutor.create();
+        Scheduler scheduler = Scheduler.create();
         builders.add(
-            Counter.builder(executor)
+            Counter.builder(scheduler)
                 .tick(100, ChronoUnit.MILLIS)
                 .startCount(10)
                 .stopCount(1)
         );
         builders.add(
-            Counter.builder(executor)
+            Counter.builder(scheduler)
                 .tick(100, ChronoUnit.MILLIS)
                 .startCount(1)
                 .stopCount(10)
@@ -59,17 +58,17 @@ class CounterTest {
         }
     }
 
+    @BeforeEach
+    private void resetCounters() {
+        counters.forEach(Counter::stop);
+    }
+
     private static Collection<Counter> counter() {
         return counters;
     }
 
     private static Collection<Counter.Builder> counterBuilders() {
         return builders;
-    }
-
-    @BeforeEach
-    private void resetCounters() {
-        counters.forEach(Counter::stop);
     }
 
     @ParameterizedTest

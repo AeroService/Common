@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *     
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,19 +16,19 @@
 
 package org.conelux.common.counter;
 
-import org.conelux.common.runnable.CatchingRunnable;
-import org.conelux.common.task.TaskExecutor;
-import org.conelux.common.validate.Check;
-import org.conelux.common.task.Task;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import org.conelux.common.runnable.CatchingRunnable;
+import org.conelux.common.scheduler.Scheduler;
+import org.conelux.common.scheduler.Task;
+import org.conelux.common.scheduler.TaskSchedule;
+import org.conelux.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 final class CounterImpl implements Counter {
 
-    private final TaskExecutor taskExecutor;
-
+    private final Scheduler scheduler;
     private final long startCount;
     private final long stopCount;
     private final long tick;
@@ -40,12 +40,12 @@ final class CounterImpl implements Counter {
     private final Consumer<Counter> finishHandler;
     private final Consumer<Counter> cancelHandler;
 
+    private volatile Task task;
     private long currentCount;
-    private Task task;
     private CounterStatus status;
 
     CounterImpl(
-        TaskExecutor taskExecutor,
+        Scheduler scheduler,
         long startCount,
         long stopCount,
         long tick,
@@ -55,9 +55,9 @@ final class CounterImpl implements Counter {
         Consumer<Counter> finishHandler,
         Consumer<Counter> cancelHandler
     ) {
-        Check.notNull(taskExecutor, "taskExecutor");
         Check.notNull(tickUnit, "tickUnit");
         Check.argCondition(tick <= 0, "tick");
+        this.scheduler = scheduler;
 
         this.startHandler = startHandler;
         this.tickHandler = tickHandler;
@@ -67,7 +67,6 @@ final class CounterImpl implements Counter {
         this.stopCount = stopCount;
         this.tick = tick;
         this.tickUnit = tickUnit;
-        this.taskExecutor = taskExecutor;
         this.status = CounterStatus.IDLING;
         this.step = stopCount > startCount ? 1 : -1;
     }
@@ -80,8 +79,10 @@ final class CounterImpl implements Counter {
 
         this.currentCount = this.startCount - step;
 
-        this.task = this.taskExecutor.executeInRepeat(new CatchingRunnable(this::tick), this.tick, this.tick,
-            this.tickUnit);
+        this.task = this.scheduler
+            .buildTask(new CatchingRunnable(this::tick))
+            .repeat(this.tick, this.tickUnit)
+            .schedule();
 
         this.status = CounterStatus.RUNNING;
 
@@ -221,8 +222,7 @@ final class CounterImpl implements Counter {
 
     static final class BuilderImpl implements Counter.Builder {
 
-        private final TaskExecutor taskExecutor;
-
+        private final Scheduler scheduler;
         private long startCount;
         private long stopCount;
         private long tick;
@@ -233,8 +233,8 @@ final class CounterImpl implements Counter {
         private Consumer<Counter> finishHandler;
         private Consumer<Counter> cancelHandler;
 
-        BuilderImpl(TaskExecutor taskExecutor) {
-            this.taskExecutor = taskExecutor;
+        BuilderImpl(Scheduler scheduler) {
+            this.scheduler = scheduler;
         }
 
         @Override
@@ -285,7 +285,7 @@ final class CounterImpl implements Counter {
         @Override
         public @NotNull Counter build() {
             return new CounterImpl(
-                this.taskExecutor,
+                this.scheduler,
                 this.startCount,
                 this.stopCount,
                 this.tick,

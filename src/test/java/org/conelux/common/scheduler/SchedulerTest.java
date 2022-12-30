@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *     
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,86 +16,95 @@
 
 package org.conelux.common.scheduler;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.conelux.common.task.CachedTaskExecutor;
-import org.conelux.common.task.TaskExecutor;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.Test;
 
 class SchedulerTest {
 
-    private static Scheduler scheduler;
+    private static final Scheduler scheduler = Scheduler.create();
 
-    @BeforeAll
-    private static void init() {
-        TaskExecutor taskExecutor = CachedTaskExecutor.create();
-        scheduler = Scheduler.create(taskExecutor);
+    @Test
+    public void testSchedule() {
+        AtomicBoolean result = new AtomicBoolean(false);
+        assertFalse(result.get(), "Task should not executed yet");
+
+        scheduler.submitTask(() -> {
+            result.set(true);
+
+            return TaskSchedule.stop();
+        });
+
+        assertTrue(result.get(), "Task didn't get executed");
     }
 
     @Test
-    void testBuildTask() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        Task task = scheduler
-            .buildTask(latch::countDown)
-            .schedule();
-        latch.await();
-        assertEquals(TaskStatus.FINISHED, task.status(), "The task should be done executing");
-    }
-
-    @Test
-    void testCancel() throws InterruptedException {
-        AtomicInteger indicator = new AtomicInteger(0);
-        Task task = scheduler
-            .buildTask(indicator::incrementAndGet)
-            .delay(100, TimeUnit.SECONDS)
-            .schedule();
-        task.cancel();
-        Thread.sleep(200);
-        assertEquals(0, indicator.get(), "The indicator value should not have changed");
-        assertEquals(TaskStatus.CANCELLED, task.status(), "The task should have been cancelled");
-    }
-
-    @Test
-    void testRepeatTask() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(3);
-        Task task = scheduler
-            .buildTask(latch::countDown)
-            .delay(100, TimeUnit.MILLISECONDS)
-            .repeat(100, TimeUnit.MILLISECONDS)
-            .schedule();
-        latch.await();
-        task.cancel();
-    }
-
-    @Test
-    void testCallback() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
+    public void testDelayedTask() throws InterruptedException {
+        AtomicBoolean result = new AtomicBoolean(false);
+        assertFalse(result.get(), "Task should not executed yet");
 
         scheduler
-            .buildTask(() -> {
+            .buildTask(() -> result.set(true))
+            .delay(TaskSchedule.seconds(1))
+            .schedule();
 
-            })
-            .schedule(latch::countDown);
-        latch.await();
-
-        assertEquals(0, latch.getCount());
+        Thread.sleep(100);
+        assertFalse(result.get(), "900ms remaining");
+        Thread.sleep(1200);
+        assertTrue(result.get(), "Tick task must be executed after 1 second");
     }
 
     @Test
-    void testCallbackCancel() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
+    public void testRepeatedTask() {
 
+    }
+
+    @Test
+    public void testImmediateTask() {
+        AtomicBoolean result = new AtomicBoolean(false);
+        assertFalse(result.get(), "Task should not executed yet");
+
+        scheduler.submitTask(() -> {
+            result.set(true);
+
+            return TaskSchedule.immediate();
+        });
+
+        assertTrue(result.get());
+        result.set(false);
+        assertFalse(result.get());
+    }
+
+    @Test
+    public void testCancelTask() throws InterruptedException {
+        AtomicBoolean result = new AtomicBoolean(false);
+        Task task = scheduler
+            .buildTask(() -> result.set(true))
+            .delay(Duration.ofMillis(1))
+            .schedule();
+
+        assertTrue(task.isAlive(), "Task should still be alive");
+        task.cancel();
+        assertFalse(task.isAlive(), "Task should not be alive anymore");
+        Thread.sleep(10L);
+        assertFalse(result.get(), "Task should be cancelled");
+    }
+
+    @Test
+    public void testFutureTask() {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        AtomicBoolean result = new AtomicBoolean(false);
         scheduler
-            .buildTask(Assertions::fail)
-            .schedule(latch::countDown)
-            .cancel();
-        latch.await();
+            .buildTask(() -> result.set(true))
+            .delay(TaskSchedule.future(future))
+            .schedule();
 
-        assertEquals(0, latch.getCount());
+        assertFalse(result.get(), "Future is not completed yet");
+        future.complete(null);
+        assertTrue(result.get(), "Future should be completed");
     }
 }
