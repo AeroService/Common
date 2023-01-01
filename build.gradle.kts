@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 NatroxMC
+ * Copyright 2020-2022 Conelux
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ plugins {
 
 defaultTasks("build", "shadowJar")
 
-group = "de.natrox"
+group = "org.conelux"
 version = "1.0"
 description = "A common core library"
 
@@ -30,14 +30,14 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains:annotations:23.0.0")
-    implementation("org.slf4j:slf4j-api:2.0.2")
+    implementation("org.jetbrains:annotations:23.1.0")
+    implementation("org.slf4j:slf4j-api:2.0.5")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.0")
-    testImplementation("org.junit.platform:junit-platform-suite-api:1.9.0")
-    testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:1.9.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.1")
+    testImplementation("org.junit.platform:junit-platform-suite-api:1.9.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:1.9.1")
 }
 
 java {

@@ -1,6 +1,6 @@
 # Common
 
-[![license](https://img.shields.io/github/license/NatroxMC/Common?style=for-the-badge&color=b2204c)](../LICENSE)
+[![license](https://img.shields.io/github/license/Conelux/Common?style=for-the-badge&color=b2204c)](../LICENSE)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=for-the-badge)](https://github.com/RichardLitt/standard-readme)
 
 A basic and common library for the development of Java projects
@@ -14,7 +14,7 @@ A basic and common library for the development of Java projects
 # Install
 
 The newest version can be
-found [here: ![](https://jitpack.io/v/NatroxMC/Common.svg)](https://jitpack.io/#NatroxMC/Common)
+found [here: ![](https://jitpack.io/v/Conelux/Common.svg)](https://jitpack.io/#Conelux/Common)
 
 # Contributing
 
