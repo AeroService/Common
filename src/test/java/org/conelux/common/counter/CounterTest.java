@@ -42,13 +42,15 @@ class CounterTest {
     private static void init() {
         Scheduler scheduler = Scheduler.create();
         builders.add(
-            Counter.builder(scheduler)
+            Counter
+                .builder(scheduler)
                 .tick(100, ChronoUnit.MILLIS)
                 .startCount(10)
                 .stopCount(1)
         );
         builders.add(
-            Counter.builder(scheduler)
+            Counter
+                .builder(scheduler)
                 .tick(100, ChronoUnit.MILLIS)
                 .startCount(1)
                 .stopCount(10)

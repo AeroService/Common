@@ -95,7 +95,7 @@ class SchedulerTest {
     }
 
     @Test
-    public void testFutureTask() {
+    public void testFutureTask() throws InterruptedException {
         CompletableFuture<Void> future = new CompletableFuture<>();
         AtomicBoolean result = new AtomicBoolean(false);
         scheduler
@@ -105,6 +105,7 @@ class SchedulerTest {
 
         assertFalse(result.get(), "Future is not completed yet");
         future.complete(null);
+        Thread.sleep(10L);
         assertTrue(result.get(), "Future should be completed");
     }
 }
