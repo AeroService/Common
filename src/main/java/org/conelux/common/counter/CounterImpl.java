@@ -17,11 +17,11 @@
 package org.conelux.common.counter;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import org.conelux.common.runnable.CatchingRunnable;
 import org.conelux.common.scheduler.Scheduler;
 import org.conelux.common.scheduler.Task;
-import org.conelux.common.scheduler.TaskSchedule;
 import org.conelux.common.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,10 +39,10 @@ final class CounterImpl implements Counter {
     private final Consumer<Counter> tickHandler;
     private final Consumer<Counter> finishHandler;
     private final Consumer<Counter> cancelHandler;
+    private final AtomicLong currentCount;
 
     private volatile Task task;
-    private long currentCount;
-    private CounterStatus status;
+    private volatile CounterStatus status;
 
     CounterImpl(
         Scheduler scheduler,
@@ -69,6 +69,7 @@ final class CounterImpl implements Counter {
         this.tickUnit = tickUnit;
         this.status = CounterStatus.IDLING;
         this.step = stopCount > startCount ? 1 : -1;
+        this.currentCount = new AtomicLong();
     }
 
     @Override
@@ -77,15 +78,13 @@ final class CounterImpl implements Counter {
             throw new IllegalStateException("This counter is already running");
         }
 
-        this.currentCount = this.startCount - step;
-
+        this.currentCount.set(this.startCount - step);
         this.task = this.scheduler
             .buildTask(new CatchingRunnable(this::tick))
             .repeat(this.tick, this.tickUnit)
             .schedule();
 
         this.status = CounterStatus.RUNNING;
-
         this.handleStart();
         this.tick();
     }
@@ -126,17 +125,17 @@ final class CounterImpl implements Counter {
 
     @Override
     public long tickedCount() {
-        return (this.startCount - this.currentCount) * -this.step;
+        return (this.startCount - this.currentCount.get()) * -this.step;
     }
 
     @Override
     public long currentCount() {
-        return this.currentCount;
+        return this.currentCount.get();
     }
 
     @Override
     public void setCurrentCount(long count) {
-        this.currentCount = count;
+        this.currentCount.set(count);
     }
 
     @Override
@@ -209,15 +208,14 @@ final class CounterImpl implements Counter {
             return;
         }
 
-        if (this.currentCount * this.step < this.stopCount * this.step) {
-            this.currentCount += this.step;
+        if (this.currentCount.get() * this.step < this.stopCount * this.step) {
+            this.currentCount.addAndGet(this.step);
             this.handleTick();
+            return;
         }
 
-        if (this.currentCount * this.step >= this.stopCount * this.step) {
-            this.handleFinish();
-            this.cancel(null);
-        }
+        this.handleFinish();
+        this.cancel(null);
     }
 
     static final class BuilderImpl implements Counter.Builder {
