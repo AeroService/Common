@@ -16,12 +16,55 @@
 
 package org.conelux.conversion;
 
+import java.nio.charset.Charset;
+import java.util.Currency;
+import java.util.Locale;
+import java.util.UUID;
+import org.conelux.conversion.converter.EnumToIntegerConverter;
+import org.conelux.conversion.converter.EnumToStringConverter;
+import org.conelux.conversion.converter.ObjectToStringConverter;
+import org.conelux.conversion.converter.StringToBooleanConverter;
+import org.conelux.conversion.converter.StringToEnumConverterFactory;
+import org.conelux.conversion.exception.ConversionException;
 import org.junit.jupiter.api.Test;
 
 class ConversionBusTest {
 
     @Test
     void test() {
+        ConversionBus conversionBus = ConversionBus
+            .builder()
+            // -> Integer
+            .register(Enum.class, Integer.class, new EnumToIntegerConverter())
+            // -> Boolean
+            .register(String.class, Boolean.class, new StringToBooleanConverter())
+            // -> String
+            .register(Number.class, String.class, new ObjectToStringConverter())
+            .register(Character.class, String.class, new ObjectToStringConverter())
+            .register(Boolean.class, String.class, new ObjectToStringConverter())
+            .register(Enum.class, String.class, new EnumToStringConverter())
+            .register(Locale.class, String.class, new ObjectToStringConverter())
+            .register(Charset.class, String.class, new ObjectToStringConverter())
+            .register(Currency.class, String.class, new ObjectToStringConverter())
+            .register(UUID.class, String.class, new ObjectToStringConverter())
+            // -> Enum
+            .register(String.class, Enum.class, new StringToEnumConverterFactory())
+            .build();
+
+        try {
+            String s = conversionBus.convert(Mood.HAPPY, String.class);
+            Mood mood = conversionBus.convert(s, Mood.class);
+
+            System.out.println(mood.getClass().getName());
+        } catch (ConversionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    enum Mood {
+
+        HAPPY,
+        LOL
 
     }
 }
