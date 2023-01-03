@@ -22,6 +22,6 @@ import org.jetbrains.annotations.NotNull;
 @FunctionalInterface
 public interface Converter<T, U> {
 
-    @NotNull U convert(@NotNull T obj) throws ConversionException;
+    @NotNull U convert(@NotNull T obj, @NotNull Class<T> sourceType, @NotNull Class<U> targetType) throws ConversionException;
 
 }

@@ -23,7 +23,8 @@ import org.jetbrains.annotations.NotNull;
 public class ZoneIdToTimeZoneConverter implements Converter<ZoneId, TimeZone> {
 
     @Override
-    public @NotNull TimeZone convert(@NotNull ZoneId source) {
+    public @NotNull TimeZone convert(@NotNull ZoneId source, @NotNull Class<ZoneId> sourceType,
+        @NotNull Class<TimeZone> targetType) {
         return TimeZone.getTimeZone(source);
     }
 }

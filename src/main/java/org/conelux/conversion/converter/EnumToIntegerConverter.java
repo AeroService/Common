@@ -18,10 +18,12 @@ package org.conelux.conversion.converter;
 
 import org.jetbrains.annotations.NotNull;
 
-public class EnumToIntegerConverter implements Converter<Enum<?>, Integer> {
+@SuppressWarnings("rawtypes") //TODO: Change
+public class EnumToIntegerConverter implements Converter<Enum, Integer> {
 
     @Override
-    public @NotNull Integer convert(@NotNull Enum<?> source) {
+    public @NotNull Integer convert(@NotNull Enum source, @NotNull Class<Enum> sourceType,
+        @NotNull Class<Integer> targetType) {
         return source.ordinal();
     }
 }

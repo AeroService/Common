@@ -16,19 +16,14 @@
 
 package org.conelux.conversion.converter;
 
-import io.leangen.geantyref.TypeToken;
 import org.jetbrains.annotations.NotNull;
 
-public class EnumToStringConverter implements Converter<Enum<?>, String> {
-
-    public final static TypeToken<Enum<?>> INPUT_TYPE = new TypeToken<>() {
-
-    };
-
-    public final static TypeToken<String> OUTPUT_TYPE = TypeToken.get(String.class);
+@SuppressWarnings("rawtypes") //TODO: Change
+public class EnumToStringConverter implements Converter<Enum, String> {
 
     @Override
-    public @NotNull String convert(@NotNull Enum<?> source) {
+    public @NotNull String convert(@NotNull Enum source, @NotNull Class<Enum> sourceType,
+        @NotNull Class<String> targetType) {
         return source.name();
     }
 }

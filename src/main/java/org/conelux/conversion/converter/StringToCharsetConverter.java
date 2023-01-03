@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 public class StringToCharsetConverter implements Converter<String, Charset> {
 
 	@Override
-	public @NotNull Charset convert(@NotNull String source) {
+	public @NotNull Charset convert(@NotNull String source, @NotNull Class<String> sourceType, @NotNull Class<Charset> targetType) {
 		return Charset.forName(source.trim());
 	}
 }

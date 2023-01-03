@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 public class StringToUUIDConverter implements Converter<String, UUID> {
 
     @Override
-    public @NotNull UUID convert(@NotNull String source) {
+    public @NotNull UUID convert(@NotNull String source, @NotNull Class<String> sourceType, @NotNull Class<UUID> targetType) {
         return UUID.fromString(source.trim());
     }
 }

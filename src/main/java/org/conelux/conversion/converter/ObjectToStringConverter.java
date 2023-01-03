@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class ObjectToStringConverter implements Converter<Object, String> {
 
     @Override
-    public @NotNull String convert(@NotNull Object source) {
+    public @NotNull String convert(@NotNull Object source, @NotNull Class<Object> sourceType, @NotNull Class<String> targetType) {
         return source.toString();
     }
 }

@@ -24,7 +24,8 @@ import org.jetbrains.annotations.NotNull;
 public class ZonedDateTimeToCalendarConverter implements Converter<ZonedDateTime, Calendar> {
 
     @Override
-    public @NotNull Calendar convert(@NotNull ZonedDateTime source) {
+    public @NotNull Calendar convert(@NotNull ZonedDateTime source, @NotNull Class<ZonedDateTime> sourceType,
+        @NotNull Class<Calendar> targetType) {
         return GregorianCalendar.from(source);
     }
 }

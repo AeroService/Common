@@ -22,14 +22,15 @@ import java.util.Locale;
 import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 
-public class ObjectToBooleanConverter implements Converter<Object, Boolean> {
+public class StringToBooleanConverter implements Converter<String, Boolean> {
 
     private static final Set<String> TRUE_VALUES = Set.of("true", "t", "on", "yes", "y", "1");
     private static final Set<String> FALSE_VALUES = Set.of("false", "f", "off", "no", "n", "0");
 
     @Override
-    public @NotNull Boolean convert(@NotNull Object source) throws ConversionException {
-        String value = source.toString().trim().toLowerCase(Locale.ROOT);
+    public @NotNull Boolean convert(@NotNull String source, @NotNull Class<String> sourceType,
+        @NotNull Class<Boolean> targetType) throws ConversionException {
+        String value = source.trim().toLowerCase(Locale.ROOT);
 
         if (TRUE_VALUES.contains(value)) {
             return Boolean.TRUE;
