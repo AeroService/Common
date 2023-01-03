@@ -16,20 +16,19 @@
 
 package org.conelux.conversion;
 
-import org.conelux.common.container.Pair;
-import org.conelux.common.validate.Check;
-import org.conelux.conversion.converter.Converter;
-import org.conelux.conversion.converter.EnumToStringConverter;
-import org.conelux.conversion.converter.ObjectToBooleanConverter;
-import org.conelux.conversion.converter.ObjectToStringConverter;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
+import org.conelux.common.validate.Check;
+import org.conelux.conversion.converter.ConditionalConverter;
+import org.conelux.conversion.converter.Converter;
+import org.conelux.conversion.converter.ConverterCondition;
+import org.conelux.conversion.converter.ConverterFactory;
+import org.conelux.conversion.exception.ConversionException;
+import org.conelux.conversion.exception.ConverterNotFoundException;
+import org.conelux.conversion.util.ConversionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -37,96 +36,148 @@ import org.jetbrains.annotations.UnknownNullability;
 @SuppressWarnings({"unchecked"})
 final class ConversionBusImpl implements ConversionBus {
 
-    final static ConversionBus DEFAULT;
+    private final Set<ConditionalConverter<Object, Object>> converters;
+    private final Map<Key, ConditionalConverter<Object, Object>> cache = new ConcurrentHashMap<>(64);
 
-    static {
-        DEFAULT = ConversionBus.builder()
-            .register(Object.class, String.class, new ObjectToStringConverter())
-            .registerExact(EnumToStringConverter.INPUT_TYPE, EnumToStringConverter.OUTPUT_TYPE,
-                new EnumToStringConverter())
-            .registerExact(String.class, Boolean.class, new ObjectToBooleanConverter())
-            .registerExact(Integer.class, Boolean.class, new ObjectToBooleanConverter())
-            .build();
-    }
-
-    private final @Nullable ConversionBus parent;
-    private final Map<Pair<Type, Type>, BiFunction<Type, Type, Converter<?, ?>>> typeMatches = new ConcurrentHashMap<>();
-    List<RegisteredSerializer> serializers;
-
-    ConversionBusImpl(@Nullable ConversionBus parent, List<RegisteredSerializer> serializers) {
-        this.parent = parent;
-        this.serializers = Collections.unmodifiableList(serializers);
+    ConversionBusImpl(Set<ConditionalConverter<Object, Object>> serializers) {
+        this.converters = Collections.unmodifiableSet(serializers);
     }
 
     @Override
-    public @NotNull <T, U> Converter<T, U> get(@NotNull Type inputType, @NotNull Type outputType) {
-        Check.notNull(inputType, "inputType");
-        Check.notNull(outputType, "outputType");
-        Pair<Type, Type> key = Pair.of(inputType, outputType);
-        BiFunction<Type, Type, Converter<?, ?>> supplier = this.typeMatches.computeIfAbsent(key, param -> {
-            for (RegisteredSerializer ent : this.serializers) {
-                if (ent.matches(param.first(), param.second())) {
-                    return ent.converter();
+    public <T> @NotNull T convert(@NotNull Object source, @NotNull Class<T> targetType) throws ConversionException {
+        Check.notNull(source, "source");
+        Check.notNull(targetType, "targetType");
+
+        Key key = new Key(source.getClass(), targetType);
+        ConditionalConverter<Object, Object> converter = this.cache.computeIfAbsent(key, param -> {
+            for (ConditionalConverter<Object, Object> conv : this.converters) {
+                if (conv.matches(param.sourceType(), param.targetType())) {
+                    return conv;
                 }
             }
 
             return null;
         });
 
-        if (supplier != null) {
-            return (Converter<T, U>) supplier.apply(inputType, outputType);
+        if (converter == null) {
+            // No Converter found
+            throw new ConverterNotFoundException(source.getClass(), targetType);
         }
 
-        if (this.parent != null) {
-            return this.parent.get(inputType, outputType);
+        Object result = converter.convert(source, (Class<Object>) source.getClass(), (Class<Object>) targetType);
+
+
+
+
+        return (T) result;
+    }
+
+    private static final class ConverterAdapter implements ConditionalConverter<Object, Object> {
+
+        private final Converter<Object, Object> converter;
+        private final Class<?> sourceType;
+        private final Class<?> targetType;
+
+        public ConverterAdapter(Converter<?, ?> converter, Class<?> sourceType, Class<?> targetType) {
+            this.converter = (Converter<Object, Object>) converter;
+            this.sourceType = sourceType;
+            this.targetType = targetType;
         }
 
-        throw new IllegalArgumentException(
-            "Failed to find converter which converts the input value of type " + inputType.getTypeName()
-                + " to a value of type " + outputType.getTypeName());
+        @Override
+        public @NotNull Object convert(@NotNull Object obj, @NotNull Class<Object> sourceType,
+            @NotNull Class<Object> targetType) throws ConversionException {
+            return this.converter.convert(obj, sourceType, targetType);
+        }
+
+        @Override
+        public boolean matches(Class<?> sourceType, Class<?> targetType) {
+            if (this.targetType != targetType) {
+                return false;
+            }
+
+            return this.sourceType.isAssignableFrom(sourceType);
+        }
+    }
+
+    private static final class ConverterFactoryAdapter implements ConditionalConverter<Object, Object> {
+
+        private final ConverterFactory<Object, Object> converterFactory;
+        private final Class<?> sourceType;
+        private final Class<?> targetType;
+
+        public ConverterFactoryAdapter(ConverterFactory<?, ?> converterFactory, Class<?> sourceType, Class<?> targetType) {
+            this.converterFactory = (ConverterFactory<Object, Object>) converterFactory;
+            this.sourceType = sourceType;
+            this.targetType = targetType;
+        }
+
+        @Override
+        public @NotNull Object convert(@NotNull Object obj, @NotNull Class<Object> sourceType,
+            @NotNull Class<Object> targetType) throws ConversionException {
+            return this.converterFactory.create(targetType).convert(obj, sourceType, targetType);
+        }
+
+        @Override
+        public boolean matches(Class<?> sourceType, Class<?> targetType) {
+            if (this.converterFactory instanceof ConverterCondition condition && condition.matches(sourceType, targetType)) {
+                Converter<?, ?> converter = this.converterFactory.create(targetType);
+                if (converter instanceof ConverterCondition converterCondition) {
+                    return converterCondition.matches(sourceType, targetType);
+                }
+            }
+
+            if (!this.targetType.isAssignableFrom(targetType)) {
+                return false;
+            }
+
+            return this.sourceType.isAssignableFrom(sourceType);
+        }
+    }
+
+    record Key(Class<?> sourceType, Class<?> targetType) {
+
+        @Override
+        public boolean equals(@Nullable Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (!(other instanceof Key otherKey)) {
+                return false;
+            }
+            return (this.sourceType.equals(otherKey.sourceType)) && this.targetType.equals(otherKey.targetType);
+        }
     }
 
     final static class BuilderImpl implements ConversionBus.Builder {
 
-        private final @Nullable ConversionBus parent;
-        private final List<RegisteredSerializer> serializers = new ArrayList<>();
+        private final Set<ConditionalConverter<Object, Object>> converters = new HashSet<>();
 
-        BuilderImpl(@Nullable ConversionBus parent) {
-            this.parent = parent;
+        BuilderImpl() {
+
         }
 
         @Override
-        public @NotNull Builder registerProvider(@NotNull BiPredicate<Type, Type> test,
-            @NotNull BiFunction<Type, Type, Converter<?, ?>> supplier) {
-            Check.notNull(test, "test");
-            Check.notNull(supplier, "supplier");
-            this.serializers.add(new RegisteredSerializer(test, supplier));
+        public <U, V> Builder register(Class<? extends U> source, Class<V> target, Converter<U, V> converter) {
+            this.converters.add(new ConverterAdapter(converter, source, target));
+            return this;
+        }
+
+        @Override
+        public Builder register(ConditionalConverter<?, ?> converter) {
+            this.converters.add((ConditionalConverter<Object, Object>) converter);
+            return this;
+        }
+
+        @Override
+        public <U, V> Builder register(Class<? extends U> source, Class<V> target, ConverterFactory<?, ?> converterFactory) {
+            this.converters.add(new ConverterFactoryAdapter(converterFactory, source, target));
             return this;
         }
 
         @Override
         public @UnknownNullability ConversionBus build() {
-            return new ConversionBusImpl(this.parent, this.serializers);
-        }
-    }
-
-    @SuppressWarnings("ClassCanBeRecord")
-    static final class RegisteredSerializer {
-
-        private final BiPredicate<Type, Type> predicate;
-        private final BiFunction<Type, Type, Converter<?, ?>> converter;
-
-        RegisteredSerializer(BiPredicate<Type, Type> predicate, BiFunction<Type, Type, Converter<?, ?>> converter) {
-            this.predicate = predicate;
-            this.converter = converter;
-        }
-
-        public boolean matches(Type input, Type output) {
-            return this.predicate.test(input, output);
-        }
-
-        public BiFunction<Type, Type, Converter<?, ?>> converter() {
-            return this.converter;
+            return new ConversionBusImpl(this.converters);
         }
     }
 }

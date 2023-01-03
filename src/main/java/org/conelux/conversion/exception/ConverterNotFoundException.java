@@ -20,8 +20,8 @@ import java.lang.reflect.Type;
 
 public class ConverterNotFoundException extends ConversionException {
 
-    public ConverterNotFoundException(Type input, Type output) {
-        super("Failed to find converter which converts the input value of type " + input + " to a value of type "
-            + output);
+    public ConverterNotFoundException(Type sourceType, Type targetType) {
+        super("Failed to find converter which converts the source value of type " + sourceType.getTypeName()
+            + " to target value of type " + targetType.getTypeName());
     }
 }
