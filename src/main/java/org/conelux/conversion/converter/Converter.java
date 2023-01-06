@@ -16,12 +16,13 @@
 
 package org.conelux.conversion.converter;
 
+import java.lang.reflect.Type;
 import org.conelux.conversion.exception.ConversionException;
 import org.jetbrains.annotations.NotNull;
 
 @FunctionalInterface
 public interface Converter<T, U> {
 
-    @NotNull U convert(@NotNull T obj, @NotNull Class<T> sourceType, @NotNull Class<U> targetType) throws ConversionException;
+    @NotNull U convert(@NotNull T obj, @NotNull Type sourceType, @NotNull Type targetType) throws ConversionException;
 
 }

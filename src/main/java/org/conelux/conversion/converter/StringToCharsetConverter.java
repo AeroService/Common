@@ -16,13 +16,14 @@
 
 package org.conelux.conversion.converter;
 
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import org.jetbrains.annotations.NotNull;
 
 public class StringToCharsetConverter implements Converter<String, Charset> {
 
 	@Override
-	public @NotNull Charset convert(@NotNull String source, @NotNull Class<String> sourceType, @NotNull Class<Charset> targetType) {
+	public @NotNull Charset convert(@NotNull String source, @NotNull Type sourceType, @NotNull Type targetType) {
 		return Charset.forName(source.trim());
 	}
 }

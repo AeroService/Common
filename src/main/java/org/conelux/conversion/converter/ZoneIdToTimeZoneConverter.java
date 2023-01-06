@@ -16,6 +16,7 @@
 
 package org.conelux.conversion.converter;
 
+import java.lang.reflect.Type;
 import java.time.ZoneId;
 import java.util.TimeZone;
 import org.jetbrains.annotations.NotNull;
@@ -23,8 +24,8 @@ import org.jetbrains.annotations.NotNull;
 public class ZoneIdToTimeZoneConverter implements Converter<ZoneId, TimeZone> {
 
     @Override
-    public @NotNull TimeZone convert(@NotNull ZoneId source, @NotNull Class<ZoneId> sourceType,
-        @NotNull Class<TimeZone> targetType) {
+    public @NotNull TimeZone convert(@NotNull ZoneId source, @NotNull Type sourceType,
+        @NotNull Type targetType) {
         return TimeZone.getTimeZone(source);
     }
 }

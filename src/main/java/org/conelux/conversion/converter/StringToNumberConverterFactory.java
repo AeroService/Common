@@ -19,34 +19,30 @@ package org.conelux.conversion.converter;
 import java.lang.reflect.Type;
 import org.conelux.conversion.exception.ConversionException;
 import org.conelux.conversion.exception.ConversionFailedException;
-import org.conelux.conversion.util.ConversionUtil;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
-public class StringToEnumConverterFactory implements ConverterFactory<String, Enum> {
+public class StringToNumberConverterFactory implements ConverterFactory<String, Number> {
 
 	@Override
-	public <T extends Enum> Converter<String, T> create(Class<T> targetType) {
-		return new StringToEnum(ConversionUtil.getEnumType(targetType));
+	public <T extends Number> Converter<String, T> create(Class<T> targetType) {
+		return new StringToNumber<>(targetType);
 	}
 
 	@SuppressWarnings("ClassCanBeRecord")
-    private static class StringToEnum<T extends Enum> implements Converter<String, T> {
+    private static final class StringToNumber<T extends Number> implements Converter<String, T> {
 
-		private final Class<T> enumType;
+		private final Class<T> targetType;
 
-		StringToEnum(Class<T> enumType) {
-			this.enumType = enumType;
+		public StringToNumber(Class<T> targetType) {
+			this.targetType = targetType;
 		}
 
 		@Override
 		public @NotNull T convert(@NotNull String source, @NotNull Type sourceType, @NotNull Type targetType) throws ConversionException {
 			if (source.isEmpty()) {
-				// It's an empty enum identifier: reset the enum value to null.
 				throw new ConversionFailedException(source, "");
 			}
-			return (T) Enum.valueOf(this.enumType, source.trim());
+			return (T) Integer.valueOf(0); //NumberUtils.parseNumber(source, this.targetType);
 		}
 	}
-
 }

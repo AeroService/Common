@@ -16,14 +16,15 @@
 
 package org.conelux.conversion.converter;
 
+import java.lang.reflect.Type;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("rawtypes") //TODO: Change
 public class EnumToIntegerConverter implements Converter<Enum, Integer> {
 
     @Override
-    public @NotNull Integer convert(@NotNull Enum source, @NotNull Class<Enum> sourceType,
-        @NotNull Class<Integer> targetType) {
+    public @NotNull Integer convert(@NotNull Enum source, @NotNull Type sourceType,
+        @NotNull Type targetType) {
         return source.ordinal();
     }
 }

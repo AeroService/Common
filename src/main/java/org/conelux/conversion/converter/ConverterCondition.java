@@ -16,8 +16,10 @@
 
 package org.conelux.conversion.converter;
 
+import java.lang.reflect.Type;
+
 public interface ConverterCondition {
 
-    boolean matches(Class<?> sourceType, Class<?> targetType);
+    boolean matches(Type sourceType, Type targetType);
 
 }

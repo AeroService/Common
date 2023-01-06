@@ -16,12 +16,13 @@
 
 package org.conelux.conversion.converter;
 
+import java.lang.reflect.Type;
 import org.jetbrains.annotations.NotNull;
 
 public class ObjectToStringConverter implements Converter<Object, String> {
 
     @Override
-    public @NotNull String convert(@NotNull Object source, @NotNull Class<Object> sourceType, @NotNull Class<String> targetType) {
+    public @NotNull String convert(@NotNull Object source, @NotNull Type sourceType, @NotNull Type targetType) {
         return source.toString();
     }
 }

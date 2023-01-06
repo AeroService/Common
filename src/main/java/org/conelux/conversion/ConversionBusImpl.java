@@ -16,6 +16,9 @@
 
 package org.conelux.conversion;
 
+import io.leangen.geantyref.GenericTypeReflector;
+import io.leangen.geantyref.TypeToken;
+import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,7 +31,6 @@ import org.conelux.conversion.converter.ConverterCondition;
 import org.conelux.conversion.converter.ConverterFactory;
 import org.conelux.conversion.exception.ConversionException;
 import org.conelux.conversion.exception.ConverterNotFoundException;
-import org.conelux.conversion.util.ConversionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -44,7 +46,7 @@ final class ConversionBusImpl implements ConversionBus {
     }
 
     @Override
-    public <T> @NotNull T convert(@NotNull Object source, @NotNull Class<T> targetType) throws ConversionException {
+    public @NotNull Object convert(@NotNull Object source, @NotNull Type targetType) throws ConversionException {
         Check.notNull(source, "source");
         Check.notNull(targetType, "targetType");
 
@@ -64,12 +66,10 @@ final class ConversionBusImpl implements ConversionBus {
             throw new ConverterNotFoundException(source.getClass(), targetType);
         }
 
-        Object result = converter.convert(source, (Class<Object>) source.getClass(), (Class<Object>) targetType);
+        Object result = converter.convert(source, source.getClass(), targetType);
 
 
-
-
-        return (T) result;
+        return result;
     }
 
     private static final class ConverterAdapter implements ConditionalConverter<Object, Object> {
@@ -85,18 +85,18 @@ final class ConversionBusImpl implements ConversionBus {
         }
 
         @Override
-        public @NotNull Object convert(@NotNull Object obj, @NotNull Class<Object> sourceType,
-            @NotNull Class<Object> targetType) throws ConversionException {
+        public @NotNull Object convert(@NotNull Object obj, @NotNull Type sourceType,
+            @NotNull Type targetType) throws ConversionException {
             return this.converter.convert(obj, sourceType, targetType);
         }
 
         @Override
-        public boolean matches(Class<?> sourceType, Class<?> targetType) {
+        public boolean matches(Type sourceType, Type targetType) {
             if (this.targetType != targetType) {
                 return false;
             }
 
-            return this.sourceType.isAssignableFrom(sourceType);
+            return GenericTypeReflector.isSuperType(this.sourceType, sourceType);
         }
     }
 
@@ -113,29 +113,29 @@ final class ConversionBusImpl implements ConversionBus {
         }
 
         @Override
-        public @NotNull Object convert(@NotNull Object obj, @NotNull Class<Object> sourceType,
-            @NotNull Class<Object> targetType) throws ConversionException {
-            return this.converterFactory.create(targetType).convert(obj, sourceType, targetType);
+        public @NotNull Object convert(@NotNull Object obj, @NotNull Type sourceType,
+            @NotNull Type targetType) throws ConversionException {
+            return this.converterFactory.create(GenericTypeReflector.erase(targetType)).convert(obj, sourceType, targetType);
         }
 
         @Override
-        public boolean matches(Class<?> sourceType, Class<?> targetType) {
+        public boolean matches(Type sourceType, Type targetType) {
             if (this.converterFactory instanceof ConverterCondition condition && condition.matches(sourceType, targetType)) {
-                Converter<?, ?> converter = this.converterFactory.create(targetType);
+                Converter<?, ?> converter = this.converterFactory.create(GenericTypeReflector.erase(targetType));
                 if (converter instanceof ConverterCondition converterCondition) {
                     return converterCondition.matches(sourceType, targetType);
                 }
             }
 
-            if (!this.targetType.isAssignableFrom(targetType)) {
+            if (!GenericTypeReflector.isSuperType(this.targetType, targetType)) {
                 return false;
             }
 
-            return this.sourceType.isAssignableFrom(sourceType);
+            return GenericTypeReflector.isSuperType(this.sourceType, sourceType);
         }
     }
 
-    record Key(Class<?> sourceType, Class<?> targetType) {
+    record Key(Type sourceType, Type targetType) {
 
         @Override
         public boolean equals(@Nullable Object other) {

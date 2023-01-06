@@ -16,6 +16,7 @@
 
 package org.conelux.conversion.converter;
 
+import java.lang.reflect.Type;
 import org.conelux.conversion.exception.ConversionException;
 import org.conelux.conversion.exception.ConversionFailedException;
 import java.util.Locale;
@@ -28,8 +29,8 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     private static final Set<String> FALSE_VALUES = Set.of("false", "f", "off", "no", "n", "0");
 
     @Override
-    public @NotNull Boolean convert(@NotNull String source, @NotNull Class<String> sourceType,
-        @NotNull Class<Boolean> targetType) throws ConversionException {
+    public @NotNull Boolean convert(@NotNull String source, @NotNull Type sourceType,
+        @NotNull Type targetType) throws ConversionException {
         String value = source.trim().toLowerCase(Locale.ROOT);
 
         if (TRUE_VALUES.contains(value)) {
