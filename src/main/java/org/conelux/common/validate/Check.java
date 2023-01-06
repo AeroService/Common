@@ -36,7 +36,7 @@ public final class Check {
         if (!Objects.isNull(object)) {
             return;
         }
-        throw new NullPointerException(reason);
+        throw new IllegalArgumentException(reason);
     }
 
     @Contract("null, _, _ -> fail")
@@ -44,7 +44,7 @@ public final class Check {
         if (!Objects.isNull(object)) {
             return;
         }
-        throw new NullPointerException(MessageFormat.format(reason, arguments));
+        throw new IllegalArgumentException(MessageFormat.format(reason, arguments));
     }
 
     @Contract("true, _ -> fail")
