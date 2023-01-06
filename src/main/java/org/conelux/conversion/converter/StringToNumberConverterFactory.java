@@ -17,6 +17,8 @@
 package org.conelux.conversion.converter;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import org.conelux.conversion.exception.ConversionException;
 import org.conelux.conversion.exception.ConversionFailedException;
 import org.jetbrains.annotations.NotNull;
@@ -37,12 +39,33 @@ public class StringToNumberConverterFactory implements ConverterFactory<String, 
 			this.targetType = targetType;
 		}
 
-		@Override
+		@SuppressWarnings("unchecked")
+        @Override
 		public @NotNull T convert(@NotNull String source, @NotNull Type sourceType, @NotNull Type targetType) throws ConversionException {
 			if (source.isEmpty()) {
 				throw new ConversionFailedException(source, "");
 			}
-			return (T) Integer.valueOf(0); //NumberUtils.parseNumber(source, this.targetType);
+            String trimmed = source.trim();
+
+            if (Byte.class == this.targetType) {
+                return (T) Byte.valueOf(trimmed);
+            } else if (Short.class == this.targetType) {
+                return (T) Short.valueOf(trimmed);
+            } else if (Integer.class == this.targetType) {
+                return (T) Integer.valueOf(trimmed);
+            } else if (Long.class == this.targetType) {
+                return (T) Long.valueOf(trimmed);
+            } else if (BigInteger.class == this.targetType) {
+                return (T) new BigInteger(trimmed);
+            } else if (Float.class == this.targetType) {
+                return (T) Float.valueOf(trimmed);
+            } else if (Double.class == this.targetType) {
+                return (T) Double.valueOf(trimmed);
+            } else if (BigDecimal.class == this.targetType || Number.class == this.targetType) {
+                return (T) new BigDecimal(trimmed);
+            }
+
+            throw new ConversionFailedException(source, "");
 		}
 	}
 }
