@@ -24,7 +24,12 @@ import org.conelux.conversion.converter.EnumToIntegerConverter;
 import org.conelux.conversion.converter.EnumToStringConverter;
 import org.conelux.conversion.converter.ObjectToStringConverter;
 import org.conelux.conversion.converter.StringToBooleanConverter;
+import org.conelux.conversion.converter.StringToCharacterConverter;
+import org.conelux.conversion.converter.StringToCharsetConverter;
+import org.conelux.conversion.converter.StringToCurrencyConverter;
 import org.conelux.conversion.converter.StringToEnumConverterFactory;
+import org.conelux.conversion.converter.StringToNumberConverterFactory;
+import org.conelux.conversion.converter.StringToUUIDConverter;
 import org.conelux.conversion.exception.ConversionException;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +39,8 @@ class ConversionBusTest {
     void test() {
         ConversionBus conversionBus = ConversionBus
             .builder()
+            // -> Number
+            .register(String.class, Number.class, new StringToNumberConverterFactory())
             // -> Integer
             .register(Enum.class, Integer.class, new EnumToIntegerConverter())
             // -> Boolean
@@ -47,15 +54,22 @@ class ConversionBusTest {
             .register(Charset.class, String.class, new ObjectToStringConverter())
             .register(Currency.class, String.class, new ObjectToStringConverter())
             .register(UUID.class, String.class, new ObjectToStringConverter())
+            // -> Character
+            .register(String.class, Character.class, new StringToCharacterConverter())
+            // -> Charset
+            .register(String.class, Charset.class, new StringToCharsetConverter())
+            // -> Currency
+            .register(String.class, Currency.class, new StringToCurrencyConverter())
+            // -> UUID
+            .register(String.class, UUID.class, new StringToUUIDConverter())
             // -> Enum
             .register(String.class, Enum.class, new StringToEnumConverterFactory())
             .build();
 
         try {
-            String s = conversionBus.convert(Mood.HAPPY, String.class);
-            Mood mood = conversionBus.convert(s, Mood.class);
+            int count = conversionBus.convert("20", Integer.class);
 
-            System.out.println(mood.getClass().getName());
+            System.out.println(count);
         } catch (ConversionException e) {
             throw new RuntimeException(e);
         }
@@ -64,7 +78,7 @@ class ConversionBusTest {
     enum Mood {
 
         HAPPY,
-        LOL
+        SAD
 
     }
 }
