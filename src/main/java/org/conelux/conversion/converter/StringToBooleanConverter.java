@@ -31,13 +31,13 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     @Override
     public @NotNull Boolean convert(@NotNull String source, @NotNull Type sourceType,
         @NotNull Type targetType) throws ConversionException {
-        String value = source.trim().toLowerCase(Locale.ROOT);
+        String trimmed = source.trim().toLowerCase(Locale.ROOT);
 
-        if (TRUE_VALUES.contains(value)) {
+        if (TRUE_VALUES.contains(trimmed)) {
             return Boolean.TRUE;
         }
 
-        if (FALSE_VALUES.contains(value)) {
+        if (FALSE_VALUES.contains(trimmed)) {
             return Boolean.FALSE;
         }
 
