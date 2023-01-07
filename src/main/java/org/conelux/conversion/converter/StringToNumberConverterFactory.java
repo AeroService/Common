@@ -43,7 +43,7 @@ public class StringToNumberConverterFactory implements ConverterFactory<String, 
         @Override
 		public @NotNull T convert(@NotNull String source, @NotNull Type sourceType, @NotNull Type targetType) throws ConversionException {
 			if (source.isEmpty()) {
-				throw new ConversionFailedException(source, "");
+				throw new ConversionFailedException(sourceType, targetType);
 			}
             String trimmed = source.trim();
 
@@ -65,7 +65,7 @@ public class StringToNumberConverterFactory implements ConverterFactory<String, 
                 return (T) new BigDecimal(trimmed);
             }
 
-            throw new ConversionFailedException(source, "");
+            throw new ConversionFailedException(sourceType, targetType);
 		}
 	}
 }

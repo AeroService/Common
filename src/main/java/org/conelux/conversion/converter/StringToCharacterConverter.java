@@ -27,10 +27,10 @@ public class StringToCharacterConverter implements Converter<String, Character> 
     public @NotNull Character convert(String source, @NotNull Type sourceType, @NotNull Type targetType)
         throws ConversionException {
         if (source.isEmpty()) {
-            throw new ConversionFailedException(source, "");
+            throw new ConversionFailedException(sourceType, targetType);
         }
         if (source.length() > 1) {
-            throw new ConversionFailedException(source, "");
+            throw new ConversionFailedException(sourceType, targetType);
         }
         return source.charAt(0);
     }

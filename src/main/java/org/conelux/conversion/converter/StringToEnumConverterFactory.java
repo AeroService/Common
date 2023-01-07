@@ -43,7 +43,7 @@ public class StringToEnumConverterFactory implements ConverterFactory<String, En
 		public @NotNull T convert(@NotNull String source, @NotNull Type sourceType, @NotNull Type targetType) throws ConversionException {
 			if (source.isEmpty()) {
 				// It's an empty enum identifier: reset the enum value to null.
-				throw new ConversionFailedException(source, "");
+				throw new ConversionFailedException(sourceType, targetType);
 			}
 			return (T) Enum.valueOf(this.enumType, source.trim());
 		}

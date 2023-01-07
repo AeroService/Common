@@ -41,6 +41,6 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
             return Boolean.FALSE;
         }
 
-        throw new ConversionFailedException(source, "boolean");
+        throw new ConversionFailedException(sourceType, targetType);
     }
 }

@@ -20,8 +20,8 @@ import java.lang.reflect.Type;
 
 public class ConversionFailedException extends ConversionException {
 
-    public ConversionFailedException(Object inputValue, String typeDescription) {
-        super("Failed to convert input value of type " + inputValue.getClass() + " to " + typeDescription);
+    public ConversionFailedException(Type sourceType, Type targetType) {
+        super("Failed to convert input value of type [" + sourceType.getTypeName() + "] to [" + targetType.getTypeName() + "]");
     }
 
     public ConversionFailedException(Type target, Object inputValue, String typeDescription) {
