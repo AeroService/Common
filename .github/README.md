@@ -18,7 +18,7 @@ found [here: ![](https://jitpack.io/v/Conelux/Common.svg)](https://jitpack.io/#C
 
 # Contributing
 
-See [the contributing file](CONTRIBUTING.md)!
+See [the contributing file](https://github.com/Conelux/.github/CONTRIBUTING.md)!
 All WIP features are previewed as Draft PRs!
 
 # License
