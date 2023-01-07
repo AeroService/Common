@@ -32,6 +32,12 @@ public sealed interface ConversionBus permits ConversionBusImpl {
         return new ConversionBusImpl.BuilderImpl();
     }
 
+    boolean canConvert(@NotNull Type sourceType, @NotNull Type targetType);
+
+    default boolean canConvert(@NotNull TypeToken<?> sourceTypeToken, @NotNull TypeToken<?> targetTypeToken) {
+        return this.canConvert(sourceTypeToken.getType(), targetTypeToken.getType());
+    }
+
     @NotNull Object convert(@NotNull Object source, @NotNull Type targetType) throws ConversionException;
 
     @SuppressWarnings("unchecked")

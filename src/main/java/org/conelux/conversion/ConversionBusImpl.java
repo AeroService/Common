@@ -46,20 +46,18 @@ final class ConversionBusImpl implements ConversionBus {
     }
 
     @Override
+    public boolean canConvert(@NotNull Type sourceType, @NotNull Type targetType) {
+        Check.notNull(sourceType, "sourceType");
+        Check.notNull(targetType, "targetType");
+        return this.getConverter(sourceType, targetType) != null;
+    }
+
+    @Override
     public @NotNull Object convert(@NotNull Object source, @NotNull Type targetType) throws ConversionException {
         Check.notNull(source, "source");
         Check.notNull(targetType, "targetType");
 
-        Key key = new Key(source.getClass(), targetType);
-        ConditionalConverter<Object, Object> converter = this.cache.computeIfAbsent(key, param -> {
-            for (ConditionalConverter<Object, Object> conv : this.converters) {
-                if (conv.matches(param.sourceType(), param.targetType())) {
-                    return conv;
-                }
-            }
-
-            return null;
-        });
+        Converter<Object, Object> converter = this.getConverter(source.getClass(), targetType);
 
         if (converter == null) {
             // No Converter found
@@ -70,6 +68,18 @@ final class ConversionBusImpl implements ConversionBus {
 
 
         return result;
+    }
+
+    private @Nullable Converter<Object, Object> getConverter(@NotNull Type sourceType, @NotNull Type targetType) {
+        return this.cache.computeIfAbsent(new Key(sourceType, targetType), param -> {
+            for (ConditionalConverter<Object, Object> conv : this.converters) {
+                if (conv.matches(param.sourceType(), param.targetType())) {
+                    return conv;
+                }
+            }
+
+            return null;
+        });
     }
 
     private static final class ConverterAdapter implements ConditionalConverter<Object, Object> {
