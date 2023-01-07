@@ -67,6 +67,7 @@ publishing {
     publications {
         create<MavenPublication>(project.name) {
             from(components.findByName("java"))
+            artifact(tasks["shadowJar"])
         }
     }
 }
