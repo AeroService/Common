@@ -18,7 +18,6 @@ package org.conelux.conversion;
 
 import io.leangen.geantyref.GenericTypeReflector;
 import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -32,39 +31,56 @@ import org.conelux.conversion.exception.ConversionException;
 import org.conelux.conversion.exception.ConverterNotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 @SuppressWarnings({"unchecked"})
-final class ConversionBusImpl implements ConversionBus {
+sealed class ConversionBusImpl implements ConversionBus permits DefaultConversionBus {
 
     private static final ConditionalConverter<Object, Object> NO_OP_CONVERTER = new NoOpConverter();
 
     private final Set<ConditionalConverter<Object, Object>> converters;
     private final Map<Key, ConditionalConverter<Object, Object>> cache = new ConcurrentHashMap<>(64);
 
-    ConversionBusImpl(Set<ConditionalConverter<Object, Object>> serializers) {
-        this.converters = Collections.unmodifiableSet(serializers);
+    ConversionBusImpl() {
+        this.converters = new HashSet<>();
+    }
+
+    @Override
+    public <U, V> void register(Class<? extends U> source, Class<V> target, Converter<U, V> converter) {
+        this.converters.add(new ConverterAdapter(converter, source, target));
+    }
+
+    @Override
+    public void register(ConditionalConverter<?, ?> converter) {
+        this.converters.add((ConditionalConverter<Object, Object>) converter);
+    }
+
+    @Override
+    public <U, V> void register(Class<? extends U> source, Class<V> target, ConverterFactory<?, ?> converterFactory) {
+        this.converters.add(new ConverterFactoryAdapter(converterFactory, source, target));
     }
 
     @Override
     public boolean canConvert(@NotNull Type sourceType, @NotNull Type targetType) {
         Check.notNull(sourceType, "sourceType");
         Check.notNull(targetType, "targetType");
-        return this.getConverter(sourceType, targetType) != null;
+        return this.getConverter(GenericTypeReflector.box(sourceType), GenericTypeReflector.box(targetType)) != null;
     }
 
     @Override
-    public @NotNull Object convert(@NotNull Object source, @NotNull Type targetType) throws ConversionException {
+    public @NotNull Object convert(@NotNull Object source, @NotNull Type sourceType, @NotNull Type targetType)
+        throws ConversionException {
         Check.notNull(source, "source");
         Check.notNull(targetType, "targetType");
-        Converter<Object, Object> converter = this.getConverter(source.getClass(), targetType);
+
+        targetType = GenericTypeReflector.box(targetType);
+        Converter<Object, Object> converter = this.getConverter(sourceType, targetType);
 
         if (converter == null) {
             // No Converter found
-            throw new ConverterNotFoundException(source.getClass(), targetType);
+            throw new ConverterNotFoundException(sourceType, targetType);
         }
 
-        return converter.convert(source, source.getClass(), targetType);
+        return converter.convert(source, sourceType, targetType);
     }
 
     private @Nullable Converter<Object, Object> getConverter(@NotNull Type sourceType, @NotNull Type targetType) {
@@ -86,10 +102,10 @@ final class ConversionBusImpl implements ConversionBus {
     private static final class ConverterAdapter implements ConditionalConverter<Object, Object> {
 
         private final Converter<Object, Object> converter;
-        private final Class<?> sourceType;
-        private final Class<?> targetType;
+        private final Type sourceType;
+        private final Type targetType;
 
-        public ConverterAdapter(Converter<?, ?> converter, Class<?> sourceType, Class<?> targetType) {
+        public ConverterAdapter(Converter<?, ?> converter, Type sourceType, Type targetType) {
             this.converter = (Converter<Object, Object>) converter;
             this.sourceType = sourceType;
             this.targetType = targetType;
@@ -160,39 +176,6 @@ final class ConversionBusImpl implements ConversionBus {
                 return false;
             }
             return (this.sourceType.equals(otherKey.sourceType)) && this.targetType.equals(otherKey.targetType);
-        }
-    }
-
-    final static class BuilderImpl implements ConversionBus.Builder {
-
-        private final Set<ConditionalConverter<Object, Object>> converters = new HashSet<>();
-
-        BuilderImpl() {
-
-        }
-
-        @Override
-        public <U, V> Builder register(Class<? extends U> source, Class<V> target, Converter<U, V> converter) {
-            this.converters.add(new ConverterAdapter(converter, source, target));
-            return this;
-        }
-
-        @Override
-        public Builder register(ConditionalConverter<?, ?> converter) {
-            this.converters.add((ConditionalConverter<Object, Object>) converter);
-            return this;
-        }
-
-        @Override
-        public <U, V> Builder register(Class<? extends U> source, Class<V> target,
-            ConverterFactory<?, ?> converterFactory) {
-            this.converters.add(new ConverterFactoryAdapter(converterFactory, source, target));
-            return this;
-        }
-
-        @Override
-        public @UnknownNullability ConversionBus build() {
-            return new ConversionBusImpl(this.converters);
         }
     }
 

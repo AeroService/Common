@@ -20,12 +20,12 @@ import org.conelux.conversion.converter.ConditionalConverter;
 import org.conelux.conversion.converter.Converter;
 import org.conelux.conversion.converter.ConverterFactory;
 
-public interface ConverterRegistry<T extends ConverterRegistry<T>> {
+public interface ConverterRegistry {
 
-    <U, V> T register(Class<? extends U> source, Class<V> target, Converter<U, V> converter);
+    <U, V> void register(Class<? extends U> source, Class<V> target, Converter<U, V> converter);
 
-    T register(ConditionalConverter<?, ?> converter);
+    void register(ConditionalConverter<?, ?> converter);
 
-    <U, V> T register(Class<? extends U> source, Class<V> target, ConverterFactory<?, ?> converterFactory);
+    <U, V> void register(Class<? extends U> source, Class<V> target, ConverterFactory<?, ?> converterFactory);
 
 }

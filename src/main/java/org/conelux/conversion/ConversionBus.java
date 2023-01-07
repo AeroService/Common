@@ -22,14 +22,14 @@ import org.conelux.common.builder.IBuilder;
 import org.conelux.conversion.exception.ConversionException;
 import org.jetbrains.annotations.NotNull;
 
-public sealed interface ConversionBus permits ConversionBusImpl {
+public sealed interface ConversionBus extends ConverterRegistry permits ConversionBusImpl {
 
-    static @NotNull ConversionBus.Builder builder() {
-        return new ConversionBusImpl.BuilderImpl();
+    static @NotNull ConversionBus create() {
+        return new ConversionBusImpl();
     }
 
-    default ConversionBus.Builder childBuilder() {
-        return new ConversionBusImpl.BuilderImpl();
+    static @NotNull ConversionBus createDefault() {
+        return new DefaultConversionBus();
     }
 
     boolean canConvert(@NotNull Type sourceType, @NotNull Type targetType);
@@ -38,20 +38,16 @@ public sealed interface ConversionBus permits ConversionBusImpl {
         return this.canConvert(sourceTypeToken.getType(), targetTypeToken.getType());
     }
 
-    @NotNull Object convert(@NotNull Object source, @NotNull Type targetType) throws ConversionException;
+    @NotNull Object convert(@NotNull Object source, @NotNull Type sourceType, @NotNull Type targetType) throws ConversionException;
 
     @SuppressWarnings("unchecked")
     default <T> @NotNull T convert(@NotNull Object source, @NotNull Class<T> targetType) throws ConversionException {
-        return (T) this.convert(source, (Type) targetType);
+        return (T) this.convert(source, source.getClass(), targetType);
     }
 
     @SuppressWarnings("unchecked")
-    default <T> @NotNull T convert(@NotNull Object source, @NotNull TypeToken<T> targetTypeToken)
+    default <T, U> @NotNull T convert(@NotNull U source, @NotNull TypeToken<U> sourceTypeToken, @NotNull TypeToken<T> targetTypeToken)
         throws ConversionException {
-        return (T) this.convert(source, targetTypeToken.getType());
-    }
-
-    interface Builder extends ConverterRegistry<Builder>, IBuilder<ConversionBus> {
-
+        return (T) this.convert(source, sourceTypeToken.getType(), targetTypeToken.getType());
     }
 }
