@@ -46,17 +46,18 @@ sealed class ConversionBusImpl implements ConversionBus permits DefaultConversio
 
     @Override
     public <U, V> void register(Class<? extends U> source, Class<V> target, Converter<U, V> converter) {
-        this.converters.add(new ConverterAdapter(converter, source, target));
+        this.register(new ConverterAdapter(converter, source, target));
     }
 
     @Override
     public void register(ConditionalConverter<?, ?> converter) {
         this.converters.add((ConditionalConverter<Object, Object>) converter);
+        this.invalidateCache();
     }
 
     @Override
     public <U, V> void register(Class<? extends U> source, Class<V> target, ConverterFactory<?, ?> converterFactory) {
-        this.converters.add(new ConverterFactoryAdapter(converterFactory, source, target));
+        this.register(new ConverterFactoryAdapter(converterFactory, source, target));
     }
 
     @Override
@@ -97,6 +98,10 @@ sealed class ConversionBusImpl implements ConversionBus permits DefaultConversio
 
             return null;
         });
+    }
+
+    private void invalidateCache() {
+        this.cache.clear();
     }
 
     private static final class ConverterAdapter implements ConditionalConverter<Object, Object> {
