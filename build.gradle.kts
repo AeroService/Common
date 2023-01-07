@@ -65,8 +65,7 @@ tasks.withType<JavaCompile> {
 
 publishing {
     publications {
-        create<MavenPublication>(project.name) {
-            artifact(tasks["shadowJar"])
-        }
+        val publication = create<MavenPublication>(project.name)
+        project.shadow.component(publication)
     }
 }
