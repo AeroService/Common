@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package org.conelux.event;
+package org.conelux.common.event;
 
-/**
- * Represents an event which can be cancelled.
- */
-public interface CancellableEvent {
+public abstract class AbstractCancellableEvent implements CancellableEvent {
 
-    /**
-     * Gets if the event should be cancelled or not.
-     *
-     * @return true if the event should be cancelled
-     */
-    boolean isCancelled();
+    private boolean cancelled = false;
 
-    /**
-     * Marks the event as cancelled or not.
-     *
-     * @param cancel true if the event should be cancelled, false otherwise
-     */
-    void setCancelled(boolean cancel);
+    @Override
+    public boolean isCancelled() {
+        return this.cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
 }

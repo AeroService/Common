@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.conelux.event;
+package org.conelux.common.event;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;

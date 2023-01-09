@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.conelux.event;
+package org.conelux.common.event;
 
 import java.util.Map;
 import java.util.SortedSet;
