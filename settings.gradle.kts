@@ -15,4 +15,8 @@
  */
 
 rootProject.name = "Common"
-include("core")
+
+include(
+    ":core",
+    ":event"
+)
