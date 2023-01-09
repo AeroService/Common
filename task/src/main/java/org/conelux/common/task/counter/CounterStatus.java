@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ *     
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,30 +14,23 @@
  * limitations under the License.
  */
 
-package org.conelux.conversion;
+package org.conelux.common.task.counter;
 
-import org.conelux.conversion.exception.ConversionException;
-import org.junit.jupiter.api.Test;
+/**
+ * Represents the different statuses for a {@link Counter}.
+ */
+public enum CounterStatus {
 
-class ConversionBusTest {
-
-    @Test
-    void test() {
-        ConversionBus conversionBus = ConversionBus.createDefault();
-
-        try {
-            int count = conversionBus.convert("20", Integer.class);
-
-            System.out.println(count);
-        } catch (ConversionException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    enum Mood {
-
-        HAPPY,
-        SAD
-
-    }
+    /**
+     * The singleton instance for the status while the counter is not running.
+     */
+    IDLING,
+    /**
+     * The singleton instance for the status while the counter is running and performing actions.
+     */
+    RUNNING,
+    /**
+     * The singleton instance for the status while the counter is paused and not performing any actions.
+     */
+    PAUSED
 }

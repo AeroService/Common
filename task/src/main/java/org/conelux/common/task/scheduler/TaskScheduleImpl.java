@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *     
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,23 +14,29 @@
  * limitations under the License.
  */
 
-package org.conelux.common.core.counter;
+package org.conelux.common.task.scheduler;
 
-/**
- * Represents the different statuses for a {@link Counter}.
- */
-public enum CounterStatus {
+import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
+import org.jetbrains.annotations.NotNull;
 
-    /**
-     * The singleton instance for the status while the counter is not running.
-     */
-    IDLING,
-    /**
-     * The singleton instance for the status while the counter is running and performing actions.
-     */
-    RUNNING,
-    /**
-     * The singleton instance for the status while the counter is paused and not performing any actions.
-     */
-    PAUSED
+final class TaskScheduleImpl {
+
+    static TaskSchedule STOP = new Stop();
+    static TaskSchedule IMMEDIATE = new Immediate();
+
+    record DurationSchedule(@NotNull Duration duration) implements TaskSchedule {
+
+    }
+
+    record FutureSchedule(CompletableFuture<?> future) implements TaskSchedule {
+    }
+
+    record Stop() implements TaskSchedule {
+
+    }
+
+    record Immediate() implements TaskSchedule {
+
+    }
 }

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.conelux.common.core.counter;
+package org.conelux.common.task.counter;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import org.conelux.common.core.runnable.CatchingRunnable;
-import org.conelux.common.core.scheduler.Scheduler;
-import org.conelux.common.core.scheduler.Task;
+import org.conelux.common.task.scheduler.Scheduler;
+import org.conelux.common.task.scheduler.Task;
 import org.conelux.common.core.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

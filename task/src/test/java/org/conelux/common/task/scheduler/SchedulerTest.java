@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.conelux.common.core.scheduler;
+package org.conelux.common.task.scheduler;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

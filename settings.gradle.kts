@@ -19,5 +19,6 @@ rootProject.name = "Common"
 include(
     ":core",
     ":event",
-    ":conversion"
+    ":conversion",
+    ":task"
 )
