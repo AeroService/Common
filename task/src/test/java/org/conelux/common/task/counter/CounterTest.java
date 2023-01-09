@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *     
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.conelux.common.core.counter;
+package org.conelux.common.task.counter;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +27,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.conelux.common.core.scheduler.Scheduler;
+import org.conelux.common.task.scheduler.Scheduler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -60,17 +60,17 @@ class CounterTest {
         }
     }
 
-    @BeforeEach
-    private void resetCounters() {
-        counters.forEach(Counter::stop);
-    }
-
     private static Collection<Counter> counter() {
         return counters;
     }
 
     private static Collection<Counter.Builder> counterBuilders() {
         return builders;
+    }
+
+    @BeforeEach
+    private void resetCounters() {
+        counters.forEach(Counter::stop);
     }
 
     @ParameterizedTest

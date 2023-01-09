@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.conelux.common.core.scheduler;
+package org.conelux.common.task.scheduler;
 
 import java.time.Duration;
 import java.util.concurrent.Executors;

@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ *     
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,29 +14,25 @@
  * limitations under the License.
  */
 
-package org.conelux.common.core.scheduler;
+package org.conelux.common.task.scheduler;
 
-import java.time.Duration;
-import java.util.concurrent.CompletableFuture;
-import org.jetbrains.annotations.NotNull;
+/**
+ * Represents the different statuses for a {@link Task} of {@link Scheduler}.
+ */
+public enum TaskStatus {
 
-final class TaskScheduleImpl {
+    /**
+     * The singleton instance for the status while the task is scheduled and is currently running.
+     */
+    SCHEDULED,
+    /**
+     * The singleton instance for the status when the task was cancelled with {@link Task#cancel()}.
+     */
+    CANCELLED,
+    /**
+     * The singleton instance for the status when task has run to completion. This is applicable only for tasks without
+     * a repeat.
+     */
+    FINISHED
 
-    static TaskSchedule STOP = new Stop();
-    static TaskSchedule IMMEDIATE = new Immediate();
-
-    record DurationSchedule(@NotNull Duration duration) implements TaskSchedule {
-
-    }
-
-    record FutureSchedule(CompletableFuture<?> future) implements TaskSchedule {
-    }
-
-    record Stop() implements TaskSchedule {
-
-    }
-
-    record Immediate() implements TaskSchedule {
-
-    }
 }
