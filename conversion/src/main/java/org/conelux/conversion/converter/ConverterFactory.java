@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+package org.conelux.conversion.converter;
 
-include(
-    ":core",
-    ":event",
-    ":conversion"
-)
+@FunctionalInterface
+public interface ConverterFactory<T, U> {
+
+    <V extends U> Converter<T, V> create(Class<V> type);
+
+}

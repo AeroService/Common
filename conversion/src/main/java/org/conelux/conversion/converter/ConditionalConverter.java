@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+package org.conelux.conversion.converter;
 
-include(
-    ":core",
-    ":event",
-    ":conversion"
-)
+public interface ConditionalConverter<T, U> extends Converter<T, U>, ConverterCondition {
+
+}

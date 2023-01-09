@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+package org.conelux.conversion.exception;
 
-include(
-    ":core",
-    ":event",
-    ":conversion"
-)
+import java.lang.reflect.Type;
+
+public class ConversionFailedException extends ConversionException {
+
+    public ConversionFailedException(Type sourceType, Type targetType) {
+        super("Failed to convert input value of type [" + sourceType.getTypeName() + "] to [" + targetType.getTypeName() + "]");
+    }
+
+    public ConversionFailedException(Type target, Object inputValue, String typeDescription) {
+        super(target, "Failed to convert input value of type " + inputValue.getClass() + " to " + typeDescription);
+    }
+}

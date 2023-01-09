@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+dependencies {
+    implementation(project(":core"))
 
-include(
-    ":core",
-    ":event",
-    ":conversion"
-)
+    implementation("io.leangen.geantyref:geantyref:1.3.13")
+}

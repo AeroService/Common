@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+package org.conelux.conversion.converter;
 
-include(
-    ":core",
-    ":event",
-    ":conversion"
-)
+import java.lang.reflect.Type;
+import org.jetbrains.annotations.NotNull;
+
+@SuppressWarnings("rawtypes") //TODO: Change
+public class EnumToStringConverter implements Converter<Enum, String> {
+
+    @Override
+    public @NotNull String convert(@NotNull Enum source, @NotNull Type sourceType,
+        @NotNull Type targetType) {
+        return source.name();
+    }
+}

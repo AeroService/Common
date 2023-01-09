@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+package org.conelux.conversion;
 
-include(
-    ":core",
-    ":event",
-    ":conversion"
-)
+import org.conelux.conversion.converter.ConditionalConverter;
+import org.conelux.conversion.converter.Converter;
+import org.conelux.conversion.converter.ConverterFactory;
+
+public interface ConverterRegistry {
+
+    <U, V> void register(Class<? extends U> source, Class<V> target, Converter<U, V> converter);
+
+    void register(ConditionalConverter<?, ?> converter);
+
+    <U, V> void register(Class<? extends U> source, Class<V> target, ConverterFactory<?, ?> converterFactory);
+
+}

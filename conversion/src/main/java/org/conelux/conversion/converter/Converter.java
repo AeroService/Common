@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+package org.conelux.conversion.converter;
 
-include(
-    ":core",
-    ":event",
-    ":conversion"
-)
+import java.lang.reflect.Type;
+import org.conelux.conversion.exception.ConversionException;
+import org.jetbrains.annotations.NotNull;
+
+@FunctionalInterface
+public interface Converter<T, U> {
+
+    @NotNull U convert(@NotNull T obj, @NotNull Type sourceType, @NotNull Type targetType) throws ConversionException;
+
+}

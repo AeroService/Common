@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+package org.conelux.conversion.converter;
 
-include(
-    ":core",
-    ":event",
-    ":conversion"
-)
+import java.lang.reflect.Type;
+
+public interface ConverterCondition {
+
+    boolean matches(Type sourceType, Type targetType);
+
+}

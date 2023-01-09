@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+package org.conelux.conversion.converter;
 
-include(
-    ":core",
-    ":event",
-    ":conversion"
-)
+import java.lang.reflect.Type;
+import java.util.UUID;
+import org.jetbrains.annotations.NotNull;
+
+public class StringToUUIDConverter implements Converter<String, UUID> {
+
+    @Override
+    public @NotNull UUID convert(@NotNull String source, @NotNull Type sourceType, @NotNull Type targetType) {
+        return UUID.fromString(source.trim());
+    }
+}

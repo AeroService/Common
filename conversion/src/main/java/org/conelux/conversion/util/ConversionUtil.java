@@ -14,10 +14,25 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+package org.conelux.conversion.util;
 
-include(
-    ":core",
-    ":event",
-    ":conversion"
-)
+import org.conelux.common.core.validate.Check;
+import org.jetbrains.annotations.NotNull;
+
+public final class ConversionUtil {
+
+    private ConversionUtil() {
+
+    }
+
+    public static Class<?> getEnumType(@NotNull Class<?> targetType) {
+        Class<?> enumType = targetType;
+        while (enumType != null && !enumType.isEnum()) {
+            enumType = enumType.getSuperclass();
+        }
+
+        Check.notNull(enumType, "The target type " + targetType.getName() + " does not refer to an enum");
+        return enumType;
+    }
+
+}

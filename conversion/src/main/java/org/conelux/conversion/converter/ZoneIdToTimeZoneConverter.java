@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
+package org.conelux.conversion.converter;
 
-include(
-    ":core",
-    ":event",
-    ":conversion"
-)
+import java.lang.reflect.Type;
+import java.time.ZoneId;
+import java.util.TimeZone;
+import org.jetbrains.annotations.NotNull;
+
+public class ZoneIdToTimeZoneConverter implements Converter<ZoneId, TimeZone> {
+
+    @Override
+    public @NotNull TimeZone convert(@NotNull ZoneId source, @NotNull Type sourceType,
+        @NotNull Type targetType) {
+        return TimeZone.getTimeZone(source);
+    }
+}
