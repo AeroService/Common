@@ -14,5 +14,29 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
-include("core")
+package org.conelux.common.core.scheduler;
+
+import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
+import org.jetbrains.annotations.NotNull;
+
+final class TaskScheduleImpl {
+
+    static TaskSchedule STOP = new Stop();
+    static TaskSchedule IMMEDIATE = new Immediate();
+
+    record DurationSchedule(@NotNull Duration duration) implements TaskSchedule {
+
+    }
+
+    record FutureSchedule(CompletableFuture<?> future) implements TaskSchedule {
+    }
+
+    record Stop() implements TaskSchedule {
+
+    }
+
+    record Immediate() implements TaskSchedule {
+
+    }
+}

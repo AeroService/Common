@@ -14,5 +14,14 @@
  * limitations under the License.
  */
 
-rootProject.name = "Common"
-include("core")
+package org.conelux.common.core.util;
+
+public final class StringUtil {
+
+    public static final String SPACE = " ";
+    public static final char SPACE_CHAR = ' ';
+
+    private StringUtil() {
+        throw new UnsupportedOperationException();
+    }
+}
