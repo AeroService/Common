@@ -14,6 +14,19 @@
  * limitations under the License.
  */
 
-dependencies {
-    implementation(project(":core"))
+package org.conelux.event;
+
+public abstract class AbstractCancellableEvent implements CancellableEvent {
+
+    private boolean cancelled = false;
+
+    @Override
+    public boolean isCancelled() {
+        return this.cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
 }
