@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Conelux
+ * Copyright 2020-2023 AeroService
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ plugins {
 defaultTasks("build", "shadowJar")
 
 allprojects {
-    group = "org.conelux"
-    version = "1.0"
+    group = "org.aero"
+    version = "1.0.0"
     description = "A common core library"
 
     repositories {
