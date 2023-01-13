@@ -41,11 +41,11 @@ subprojects {
         implementation("org.jetbrains:annotations:24.0.0")
         implementation("org.slf4j:slf4j-api:2.0.5")
 
-        testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.1")
-        testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
-        testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.1")
-        testImplementation("org.junit.platform:junit-platform-suite-api:1.9.1")
-        testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:1.9.1")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+        testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+        testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
+        testImplementation("org.junit.platform:junit-platform-suite-api:1.9.2")
+        testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:1.9.2")
     }
 
     java {
