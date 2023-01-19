@@ -16,47 +16,62 @@
 
 package org.aero.common.task.scheduler;
 
+import org.aero.common.core.validate.Check;
+import org.jetbrains.annotations.NotNull;
+
 import java.time.Duration;
 import java.time.temporal.TemporalUnit;
 import java.util.concurrent.CompletableFuture;
-import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("MissingJavaDocType")
 public sealed interface TaskSchedule permits TaskScheduleImpl.DurationSchedule, TaskScheduleImpl.FutureSchedule,
     TaskScheduleImpl.Immediate, TaskScheduleImpl.Stop {
 
-    static @NotNull TaskSchedule duration(@NotNull Duration duration) {
-        return new TaskScheduleImpl.DurationSchedule(duration);
-    }
-
-    static @NotNull TaskSchedule future(@NotNull CompletableFuture<?> future) {
+    @SuppressWarnings("MissingJavadocMethod")
+    static @NotNull TaskSchedule future(@NotNull final CompletableFuture<?> future) {
+        Check.notNull(future, "future");
         return new TaskScheduleImpl.FutureSchedule(future);
     }
 
+    @SuppressWarnings("MissingJavadocMethod")
     static @NotNull TaskSchedule stop() {
         return TaskScheduleImpl.STOP;
     }
 
+    @SuppressWarnings("MissingJavadocMethod")
     static @NotNull TaskSchedule immediate() {
         return TaskScheduleImpl.IMMEDIATE;
     }
 
-    static @NotNull TaskSchedule duration(long amount, @NotNull TemporalUnit unit) {
+    @SuppressWarnings("MissingJavadocMethod")
+    static @NotNull TaskSchedule duration(@NotNull final Duration duration) {
+        Check.notNull(duration, "duration");
+        return new TaskScheduleImpl.DurationSchedule(duration);
+    }
+
+    @SuppressWarnings("MissingJavadocMethod")
+    static @NotNull TaskSchedule duration(final long amount, @NotNull final TemporalUnit unit) {
+        Check.notNull(unit, "unit");
         return TaskSchedule.duration(Duration.of(amount, unit));
     }
 
-    static @NotNull TaskSchedule hours(long hours) {
+    @SuppressWarnings("MissingJavadocMethod")
+    static @NotNull TaskSchedule hours(final long hours) {
         return TaskSchedule.duration(Duration.ofHours(hours));
     }
 
-    static @NotNull TaskSchedule minutes(long minutes) {
+    @SuppressWarnings("MissingJavadocMethod")
+    static @NotNull TaskSchedule minutes(final long minutes) {
         return TaskSchedule.duration(Duration.ofMinutes(minutes));
     }
 
-    static @NotNull TaskSchedule seconds(long seconds) {
+    @SuppressWarnings("MissingJavadocMethod")
+    static @NotNull TaskSchedule seconds(final long seconds) {
         return TaskSchedule.duration(Duration.ofSeconds(seconds));
     }
 
-    static @NotNull TaskSchedule millis(long millis) {
+    @SuppressWarnings("MissingJavadocMethod")
+    static @NotNull TaskSchedule millis(final long millis) {
         return TaskSchedule.duration(Duration.ofMillis(millis));
     }
 }

@@ -16,58 +16,46 @@
 
 package org.aero.common.core.runnable;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ThrowableRunnableTest {
 
-    private static int a;
-
     @Test
     void testRun() {
-        ThrowableRunnable<IllegalArgumentException> runnable = this::check;
-        a = 1;
-        assertDoesNotThrow(runnable::run);
-        a = 2;
-        assertDoesNotThrow(runnable::run);
-    }
+        final AtomicBoolean result = new AtomicBoolean();
+        final ThrowableRunnable<IllegalArgumentException> runnable = () -> result.set(true);
 
-    @Test
-    void testRun2() {
-        ThrowableRunnable<Exception> runnable = this::exceptionCheck;
-        a = 1;
-        assertDoesNotThrow(runnable::run, "Runnable should not throw exception as the arguments are valid");
-        a = 2;
-        assertDoesNotThrow(runnable::run, "Runnable should not throw exception as the arguments are valid");
+        assertFalse(result.get());
+        assertDoesNotThrow(runnable::run);
+        assertTrue(result.get());
     }
 
     @Test
     void testThrowingRun() {
-        ThrowableRunnable<Exception> runnable = this::check;
-        a = -1;
+        final ThrowableRunnable<Exception> runnable = this::throwException;
         assertThrows(IllegalArgumentException.class,
             runnable::run, "Runnable should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
     void testThrowingRun2() {
-        ThrowableRunnable<Exception> runnable = this::check;
-        a = -1;
-        assertThrows(IllegalArgumentException.class,
+        final ThrowableRunnable<Exception> runnable = this::throwException2;
+        assertThrows(Exception.class,
             runnable::run, "Runnable should throw an exception if the arguments don't meet the conditions");
     }
 
-    private void check() {
-        if (a <= 0) {
-            throw new IllegalArgumentException();
-        }
+    private void throwException() {
+        throw new IllegalArgumentException();
     }
 
-    private void exceptionCheck() throws Exception {
-        if (a <= 0) {
-            throw new Exception();
-        }
+    private void throwException2() throws Exception {
+        throw new Exception();
     }
 }

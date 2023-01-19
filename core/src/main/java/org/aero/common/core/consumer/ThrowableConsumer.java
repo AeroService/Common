@@ -47,11 +47,10 @@ public interface ThrowableConsumer<T, U extends Throwable> {
      * performed.
      *
      * @param after the operation to perform after this operation
-     * @return a composed {@code ThrowableConsumer} that performs in sequence this operation followed by the
-     * {@code after} operation
+     * @return a composed {@code ThrowableConsumer} that performs in sequence this operation followed by the {@code after} operation
      * @throws NullPointerException if {@code after} is null
      */
-    default ThrowableConsumer<T, U> andThen(ThrowableConsumer<? super T, ? extends U> after) {
+    default ThrowableConsumer<T, U> andThen(final ThrowableConsumer<? super T, ? extends U> after) {
         Check.notNull(after, "after");
         return (t) -> {
             this.accept(t);

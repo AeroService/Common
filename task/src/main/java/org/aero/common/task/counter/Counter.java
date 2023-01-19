@@ -16,15 +16,16 @@
 
 package org.aero.common.task.counter;
 
-import java.time.temporal.ChronoUnit;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import org.aero.common.core.builder.IBuilder;
-import org.aero.common.task.scheduler.Scheduler;
 import org.aero.common.core.validate.Check;
+import org.aero.common.task.scheduler.Scheduler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+
+import java.time.temporal.ChronoUnit;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * Represents a clocked Counter, for example a countdown.
@@ -34,9 +35,10 @@ public sealed interface Counter permits CounterImpl {
     /**
      * Create a {@link Builder} for a counter, that schedules the tasks.
      *
+     * @param scheduler the scheduler, on which the task should be executed
      * @return the created builder
      */
-    static Counter.@NotNull Builder builder(Scheduler scheduler) {
+    static Counter.@NotNull Builder builder(@NotNull final Scheduler scheduler) {
         Check.notNull(scheduler, "scheduler");
         return new CounterImpl.BuilderImpl(scheduler);
     }
@@ -136,7 +138,7 @@ public sealed interface Counter permits CounterImpl {
      *
      * @param count the value to set
      */
-    void setCurrentCount(long count);
+    void currentCount(long count);
 
     /**
      * Represents a builder for a {@link Counter}.

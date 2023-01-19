@@ -16,10 +16,11 @@
 
 package org.aero.common.event;
 
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import org.aero.common.core.validate.Check;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Represents an event bus.

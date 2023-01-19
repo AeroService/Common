@@ -16,12 +16,13 @@
 
 package org.aero.common.event;
 
+import org.aero.common.core.validate.Check;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import org.aero.common.core.validate.Check;
-import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("ClassCanBeRecord")
 final class EventListenerImpl<T> implements EventListener<T> {
@@ -33,7 +34,8 @@ final class EventListenerImpl<T> implements EventListener<T> {
     private final int priority;
     private final Consumer<T> handler;
 
-    public EventListenerImpl(Class<T> type, List<Predicate<T>> conditions, int priority, Consumer<T> handler) {
+    EventListenerImpl(final Class<T> type, final List<Predicate<T>> conditions, final int priority,
+        final Consumer<T> handler) {
         this.type = type;
         this.conditions = conditions;
         this.priority = priority;
@@ -50,8 +52,7 @@ final class EventListenerImpl<T> implements EventListener<T> {
         return this.priority;
     }
 
-    @Override
-    public void handle(@NotNull T event) {
+    void handle(@NotNull final T event) {
         if (event instanceof CancellableEvent cancellableEvent && cancellableEvent.isCancelled()) {
             return;
         }
@@ -71,7 +72,7 @@ final class EventListenerImpl<T> implements EventListener<T> {
     }
 
     @Override
-    public int compareTo(@NotNull EventListener<T> other) {
+    public int compareTo(@NotNull final EventListener<T> other) {
         return Integer.compare(this.priority, other.priority());
     }
 
@@ -82,26 +83,26 @@ final class EventListenerImpl<T> implements EventListener<T> {
         private int priority = EventListenerImpl.DEFAULT_PRIORITY;
         private Consumer<T> handler;
 
-        public BuilderImpl(Class<T> type) {
+        BuilderImpl(@NotNull final Class<T> type) {
             this.type = type;
             this.conditions = new ArrayList<>();
         }
 
         @Override
-        public EventListener.@NotNull Builder<T> condition(@NotNull Predicate<T> condition) {
+        public EventListener.@NotNull Builder<T> condition(@NotNull final Predicate<T> condition) {
             Check.notNull(condition, "condition");
             this.conditions.add(condition);
             return this;
         }
 
         @Override
-        public @NotNull Builder<T> priority(int priority) {
+        public @NotNull Builder<T> priority(final int priority) {
             this.priority = priority;
             return this;
         }
 
         @Override
-        public EventListener.@NotNull Builder<T> handler(@NotNull Consumer<T> handler) {
+        public EventListener.@NotNull Builder<T> handler(@NotNull final Consumer<T> handler) {
             Check.notNull(handler, "handler");
             this.handler = handler;
             return this;

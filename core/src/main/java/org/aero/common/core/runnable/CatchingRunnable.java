@@ -26,7 +26,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public record CatchingRunnable(Runnable delegate) implements Runnable {
 
-    public CatchingRunnable(@NotNull Runnable delegate) {
+    /**
+     * Constructs a new catching runnable.
+     *
+     * @param delegate the delegating runnable to run
+     */
+    public CatchingRunnable(@NotNull final Runnable delegate) {
         Check.notNull(delegate, "delegate");
         this.delegate = delegate;
     }
@@ -38,9 +43,9 @@ public record CatchingRunnable(Runnable delegate) implements Runnable {
     public void run() {
         try {
             this.delegate.run();
-        } catch (Throwable e) {
-            e.printStackTrace();
-            throw e;
+        } catch (final Throwable throwable) {
+            throwable.printStackTrace();
+            throw throwable;
         }
     }
 }

@@ -16,25 +16,26 @@
 
 package org.aero.common.core.function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class QuadFunctionTest {
 
     @Test
     void testApply() {
-        QuadFunction<Integer, Integer, Integer, Integer, Integer> function = this::sum;
+        final QuadFunction<Integer, Integer, Integer, Integer, Integer> function = this::sum;
         assertEquals(10, function.apply(1, 2, 3, 4), "Function should return the input sum of 10.");
         assertEquals(14, function.apply(5, 4, 3, 2), "Function should return the input sum of 14.");
     }
 
     @Test
     void testNullApply() {
-        QuadFunction<Integer, Integer, Integer, Integer, Integer> function = this::sum;
+        final QuadFunction<Integer, Integer, Integer, Integer, Integer> function = this::sum;
         assertThrows(NullPointerException.class, () ->
                 function.apply(null, null, null, null),
             "Function should throw a NullPointerException if the arguments are null");
@@ -42,33 +43,33 @@ class QuadFunctionTest {
 
     @Test
     void testAndThenApply() {
-        Function<Integer, Integer> andThenFunction = (a) -> (0);
-        QuadFunction<Integer, Integer, Integer, Integer, Integer> operation = this::sum;
-        QuadFunction<Integer, Integer, Integer, Integer, Integer> function = operation.andThen(andThenFunction);
+        final Function<Integer, Integer> andThenFunction = (a) -> (0);
+        final QuadFunction<Integer, Integer, Integer, Integer, Integer> operation = this::sum;
+        final QuadFunction<Integer, Integer, Integer, Integer, Integer> function = operation.andThen(andThenFunction);
         assertEquals(0, function.apply(1, 2, 3, 4), "Function should return zero");
         assertEquals(0, function.apply(5, 4, 3, 2), "Function should return zero");
     }
 
     @Test
     void testAndThenNull() {
-        QuadFunction<Integer, Integer, Integer, Integer, Integer> function = this::sum;
-        assertThrows(NullPointerException.class, () ->
-            function.andThen(null), "Function should throw a NullPointerException if the andThen function is invalid");
+        final QuadFunction<Integer, Integer, Integer, Integer, Integer> function = this::sum;
+        assertThrows(IllegalArgumentException.class, () ->
+            function.andThen(null), "Function should throw a IllegalArgumentException if the andThen function is invalid");
     }
 
     @Test
     void testAndThenExecution() {
-        AtomicInteger indicator = new AtomicInteger();
-        Function<Integer, Integer> andThenFunction = (a) -> (indicator.incrementAndGet());
-        QuadFunction<Integer, Integer, Integer, Integer, Integer> operation = (a, b, c, d) -> {
+        final AtomicInteger indicator = new AtomicInteger();
+        final Function<Integer, Integer> andThenFunction = (a) -> (indicator.incrementAndGet());
+        final QuadFunction<Integer, Integer, Integer, Integer, Integer> operation = (a, b, c, d) -> {
             throw new IllegalArgumentException();
         };
-        QuadFunction<Integer, Integer, Integer, Integer, Integer> function = operation.andThen(andThenFunction);
+        final QuadFunction<Integer, Integer, Integer, Integer, Integer> function = operation.andThen(andThenFunction);
         assertThrows(IllegalArgumentException.class, () -> function.apply(1, 2, 3, 4), "The operation should fail");
         assertEquals(0, indicator.get(), "AndThenFunction should not have executed since the operation failed");
     }
 
-    private int sum(int a, int b, int c, int d) {
+    private int sum(final int a, final int b, final int c, final int d) {
         return a + b + c + d;
     }
 }

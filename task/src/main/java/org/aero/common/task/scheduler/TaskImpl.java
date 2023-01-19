@@ -16,10 +16,10 @@
 
 package org.aero.common.task.scheduler;
 
-import java.util.function.Supplier;
 import org.aero.common.core.validate.Check;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 final class TaskImpl implements Task {
 
@@ -29,7 +29,7 @@ final class TaskImpl implements Task {
     private volatile boolean alive = true;
     private volatile boolean done = false;
 
-    TaskImpl(SchedulerImpl scheduler, Supplier<TaskSchedule> task) {
+    TaskImpl(final SchedulerImpl scheduler, final Supplier<TaskSchedule> task) {
         this.scheduler = scheduler;
         this.task = task;
     }
@@ -78,32 +78,31 @@ final class TaskImpl implements Task {
         private TaskSchedule delay = TaskSchedule.immediate();
         private TaskSchedule repeat = TaskSchedule.stop();
 
-
-        BuilderImpl(Scheduler scheduler, Runnable runnable) {
+        BuilderImpl(final Scheduler scheduler, final Runnable runnable) {
             this.scheduler = scheduler;
             this.runnable = runnable;
         }
 
         @Override
-        public Task.@NotNull Builder delay(@NotNull TaskSchedule schedule) {
+        public Task.@NotNull Builder delay(@NotNull final TaskSchedule schedule) {
             Check.notNull(schedule, "schedule");
             this.delay = schedule;
             return this;
         }
 
         @Override
-        public Task.@NotNull Builder repeat(@NotNull TaskSchedule schedule) {
+        public Task.@NotNull Builder repeat(@NotNull final TaskSchedule schedule) {
             Check.notNull(schedule, "schedule");
             this.repeat = schedule;
             return this;
         }
 
         @Override
-        public @NotNull Task schedule(@Nullable Runnable doneCallback) {
-            var runnable = this.runnable;
-            var delay = this.delay;
-            var repeat = this.repeat;
-            return scheduler.submitTask(new Supplier<>() {
+        public @NotNull Task schedule(final Runnable doneCallback) {
+            final Runnable runnable = this.runnable;
+            final TaskSchedule delay = this.delay;
+            final TaskSchedule repeat = this.repeat;
+            return this.scheduler.submitTask(new Supplier<>() {
                 boolean first = true;
 
                 @Override

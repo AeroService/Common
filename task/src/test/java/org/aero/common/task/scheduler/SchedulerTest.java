@@ -16,13 +16,14 @@
 
 package org.aero.common.task.scheduler;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SchedulerTest {
 
@@ -30,7 +31,7 @@ class SchedulerTest {
 
     @Test
     public void testSchedule() {
-        AtomicBoolean result = new AtomicBoolean(false);
+        final AtomicBoolean result = new AtomicBoolean(false);
         assertFalse(result.get(), "Task should not executed yet");
 
         scheduler.submitTask(() -> {
@@ -44,7 +45,7 @@ class SchedulerTest {
 
     @Test
     public void testDelayedTask() throws InterruptedException {
-        AtomicBoolean result = new AtomicBoolean(false);
+        final AtomicBoolean result = new AtomicBoolean(false);
         assertFalse(result.get(), "Task should not executed yet");
 
         scheduler
@@ -65,7 +66,7 @@ class SchedulerTest {
 
     @Test
     public void testImmediateTask() {
-        AtomicBoolean result = new AtomicBoolean(false);
+        final AtomicBoolean result = new AtomicBoolean(false);
         assertFalse(result.get(), "Task should not executed yet");
 
         scheduler.submitTask(() -> {
@@ -81,8 +82,8 @@ class SchedulerTest {
 
     @Test
     public void testCancelTask() throws InterruptedException {
-        AtomicBoolean result = new AtomicBoolean(false);
-        Task task = scheduler
+        final AtomicBoolean result = new AtomicBoolean(false);
+        final Task task = scheduler
             .buildTask(() -> result.set(true))
             .delay(Duration.ofMillis(1))
             .schedule();
@@ -96,8 +97,8 @@ class SchedulerTest {
 
     @Test
     public void testFutureTask() throws InterruptedException {
-        CompletableFuture<Void> future = new CompletableFuture<>();
-        AtomicBoolean result = new AtomicBoolean(false);
+        final CompletableFuture<Void> future = new CompletableFuture<>();
+        final AtomicBoolean result = new AtomicBoolean(false);
         scheduler
             .buildTask(() -> result.set(true))
             .delay(TaskSchedule.future(future))

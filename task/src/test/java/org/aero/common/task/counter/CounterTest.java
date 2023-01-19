@@ -16,31 +16,32 @@
 
 package org.aero.common.task.counter;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.time.temporal.ChronoUnit;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.aero.common.task.scheduler.Scheduler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.time.temporal.ChronoUnit;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class CounterTest {
 
-    private final static Set<Counter> counters = new HashSet<>();
-    private final static Set<Counter.Builder> builders = new HashSet<>();
+    private static final Set<Counter> counters = new HashSet<>();
+    private static final Set<Counter.Builder> builders = new HashSet<>();
 
     @BeforeAll
-    private static void init() {
-        Scheduler scheduler = Scheduler.create();
+    static void init() {
+        final Scheduler scheduler = Scheduler.create();
         builders.add(
             Counter
                 .builder(scheduler)
@@ -55,7 +56,7 @@ class CounterTest {
                 .startCount(1)
                 .stopCount(10)
         );
-        for (Counter.Builder builder : builders) {
+        for (final Counter.Builder builder : builders) {
             counters.add(builder.build());
         }
     }
@@ -69,13 +70,13 @@ class CounterTest {
     }
 
     @BeforeEach
-    private void resetCounters() {
+    void resetCounters() {
         counters.forEach(Counter::stop);
     }
 
     @ParameterizedTest
     @MethodSource("counter")
-    void testIsRunning(Counter counter) {
+    void testIsRunning(final Counter counter) {
         assertFalse(counter.isRunning(), "The Counter should not run unless it got started");
         counter.start();
         assertTrue(counter.isRunning(), "The Counter should run if it got started, unless it got paused");
@@ -89,7 +90,7 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counter")
-    private void testIsPaused(Counter counter) {
+    private void testIsPaused(final Counter counter) {
         assertFalse(counter.isPaused(), "The Counter should not be paused unless it got started");
         counter.start();
         assertFalse(counter.isPaused(), "The Counter should not be paused if it got started, unless it got paused");
@@ -103,7 +104,7 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counter")
-    void testState(Counter counter) {
+    void testState(final Counter counter) {
         assertEquals(CounterStatus.IDLING, counter.status(), "The Counter should be idling unless it got started");
         counter.start();
         assertEquals(CounterStatus.RUNNING, counter.status(),
@@ -118,7 +119,7 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counter")
-    void testStartFailed(Counter counter) {
+    void testStartFailed(final Counter counter) {
         assertDoesNotThrow(counter::start, "The Counter should not throw an exception when it gets started");
         assertThrows(IllegalStateException.class, counter::start,
             "The Counter should throw an exception if it got started twice");
@@ -128,7 +129,7 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counter")
-    void testTickedCount(Counter counter) {
+    void testTickedCount(final Counter counter) {
         counter.start();
         long minCount = Math.min(counter.startCount(), counter.stopCount());
         final long maxCount = Math.max(counter.startCount(), counter.stopCount());
@@ -137,8 +138,8 @@ class CounterTest {
         }
     }
 
-    void checkTickedCount(Counter counter, long count) {
-        counter.setCurrentCount(count);
+    private void checkTickedCount(final Counter counter, final long count) {
+        counter.currentCount(count);
         assertEquals(count, counter.currentCount(), "The Counter should be at the set value of " + count + ".");
         assertEquals(Math.abs(counter.startCount() - counter.currentCount()), counter.tickedCount(),
             "The Counter should have ticked exactly the difference between the startCount and the currentCount times");
@@ -146,7 +147,7 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counter")
-    void testPresetVariables(Counter counter) {
+    void testPresetVariables(final Counter counter) {
         counter.start();
         assertEquals(counter.startCount(), counter.currentCount(),
             "The Counter's startCount should equal the preset startCount");
@@ -156,9 +157,9 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counterBuilders")
-    void testStartCallback(Counter.Builder counterBuilder) {
-        AtomicInteger indicator = new AtomicInteger();
-        Counter counter = counterBuilder
+    void testStartCallback(final Counter.Builder counterBuilder) {
+        final AtomicInteger indicator = new AtomicInteger();
+        final Counter counter = counterBuilder
             .startCallback(c -> indicator.incrementAndGet())
             .build();
         assertEquals(0, indicator.get(), "The Counter should not have started yet");
@@ -171,9 +172,9 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counterBuilders")
-    void testTickCallback(Counter.Builder counterBuilder) throws InterruptedException {
-        AtomicInteger indicator = new AtomicInteger();
-        Counter counter = counterBuilder
+    void testTickCallback(final Counter.Builder counterBuilder) throws InterruptedException {
+        final AtomicInteger indicator = new AtomicInteger();
+        final Counter counter = counterBuilder
             .tickCallback(c -> indicator.incrementAndGet())
             .build();
         assertEquals(0, indicator.get(), "The Counter should not have ticked yet");
@@ -188,9 +189,9 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counterBuilders")
-    void testFinishCallback(Counter.Builder counterBuilder) throws InterruptedException {
-        AtomicInteger indicator = new AtomicInteger();
-        Counter counter = counterBuilder
+    void testFinishCallback(final Counter.Builder counterBuilder) throws InterruptedException {
+        final AtomicInteger indicator = new AtomicInteger();
+        final Counter counter = counterBuilder
             .finishCallback(c -> indicator.incrementAndGet())
             .build();
         assertEquals(0, indicator.get(), "The Counter should not have finished yet");
@@ -204,9 +205,9 @@ class CounterTest {
 
     @ParameterizedTest
     @MethodSource("counterBuilders")
-    void testCancelCallback(Counter.Builder counterBuilder) {
-        AtomicInteger indicator = new AtomicInteger();
-        Counter counter = counterBuilder
+    void testCancelCallback(final Counter.Builder counterBuilder) {
+        final AtomicInteger indicator = new AtomicInteger();
+        final Counter counter = counterBuilder
             .cancelCallback(c -> indicator.incrementAndGet())
             .build();
         assertEquals(0, indicator.get(), "The Counter should not have ticked yet");
@@ -217,12 +218,12 @@ class CounterTest {
         assertEquals(1, indicator.get(), "The Counter should have been cancelled exactly one time");
     }
 
-    private long expectedTimeNeeded(Counter counter) {
+    private long expectedTimeNeeded(final Counter counter) {
         //A buffer of one tick added.
         return counter.tickUnit().toMillis(this.ticksToFinish(counter) * counter.tickValue());
     }
 
-    private long ticksToFinish(Counter counter) {
+    private long ticksToFinish(final Counter counter) {
         return Math.abs(counter.startCount() - counter.stopCount()) + 1;
     }
 }

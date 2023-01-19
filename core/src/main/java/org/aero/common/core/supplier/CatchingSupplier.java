@@ -17,8 +17,9 @@
 package org.aero.common.core.supplier;
 
 import org.aero.common.core.validate.Check;
-import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Supplier;
 
 /**
  * Represents a {@link Supplier} that prints exceptions thrown.
@@ -28,7 +29,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public record CatchingSupplier<T>(Supplier<T> delegate) implements Supplier<T> {
 
-    public CatchingSupplier(@NotNull Supplier<T> delegate) {
+    /**
+     * Constructs a new catching supplier.
+     *
+     * @param delegate the delegating runnable to run
+     */
+    public CatchingSupplier(@NotNull final Supplier<T> delegate) {
         Check.notNull(delegate, "delegate");
         this.delegate = delegate;
     }
@@ -40,9 +46,9 @@ public record CatchingSupplier<T>(Supplier<T> delegate) implements Supplier<T> {
     public T get() {
         try {
             return this.delegate.get();
-        } catch (Throwable e) {
-            e.printStackTrace();
-            throw e;
+        } catch (final Throwable throwable) {
+            throwable.printStackTrace();
+            throw throwable;
         }
     }
 }

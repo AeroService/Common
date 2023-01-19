@@ -16,20 +16,26 @@
 
 package org.aero.common.task.scheduler;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
-import org.jetbrains.annotations.NotNull;
 
 final class TaskScheduleImpl {
 
     static TaskSchedule STOP = new Stop();
     static TaskSchedule IMMEDIATE = new Immediate();
 
+    private TaskScheduleImpl() {
+        throw new UnsupportedOperationException();
+    }
+
     record DurationSchedule(@NotNull Duration duration) implements TaskSchedule {
 
     }
 
     record FutureSchedule(CompletableFuture<?> future) implements TaskSchedule {
+
     }
 
     record Stop() implements TaskSchedule {

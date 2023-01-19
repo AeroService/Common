@@ -16,18 +16,19 @@
 
 package org.aero.common.core.consumer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CatchingConsumerTest {
 
     @Test
     void testAccept() {
-        AtomicInteger indicator = new AtomicInteger();
-        CatchingConsumer<Integer> consumer = new CatchingConsumer<>((a) -> indicator.set(value(a)));
+        final AtomicInteger indicator = new AtomicInteger();
+        final CatchingConsumer<Integer> consumer = new CatchingConsumer<>(indicator::set);
         consumer.accept(1);
         assertEquals(1, indicator.get(), "Indicator should indicate the input of 1");
         consumer.accept(2);
@@ -36,15 +37,12 @@ class CatchingConsumerTest {
 
     @Test
     void testThrowingAccept() {
-        CatchingConsumer<Integer> consumer = new CatchingConsumer<>(this::value);
+        final CatchingConsumer<Integer> consumer = new CatchingConsumer<>(i -> this.throwException());
         assertThrows(IllegalArgumentException.class, () ->
             consumer.accept(-1), "Consumer should throw an exception if the arguments don't meet the conditions");
     }
 
-    private int value(int a) {
-        if (a <= 0) {
-            throw new IllegalArgumentException();
-        }
-        return a;
+    private void throwException() {
+        throw new IllegalArgumentException();
     }
 }

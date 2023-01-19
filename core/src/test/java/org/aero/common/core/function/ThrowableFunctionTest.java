@@ -16,87 +16,79 @@
 
 package org.aero.common.core.function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ThrowableFunctionTest {
 
     @Test
     void testApply() {
-        ThrowableFunction<Integer, Integer, IllegalArgumentException> function = this::value;
+        final ThrowableFunction<Integer, Integer, IllegalArgumentException> function = i -> i;
         assertEquals(1, function.apply(1), "Function should return the input of 1");
         assertEquals(2, function.apply(2), "Function should return the input of 2");
     }
 
     @Test
-    void testApply2() {
-        ThrowableFunction<Integer, Integer, Exception> function = this::exceptionValue;
-        try {
-            assertEquals(1, function.apply(1), "Function should return the input of 1");
-            assertEquals(2, function.apply(2), "Function should return the input of 2");
-        } catch (Exception e) {
-            fail("Function should not throw an exception as the arguments are valid");
-        }
-    }
-
-    @Test
     void testThrowingApply() {
-        ThrowableFunction<Integer, Integer, IllegalArgumentException> function = this::value;
+        final ThrowableFunction<Integer, Integer, IllegalArgumentException> function = i -> {
+            this.throwException();
+            return i;
+        };
         assertThrows(IllegalArgumentException.class, () ->
             function.apply(-1), "Function should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
     void testThrowingApply2() {
-        ThrowableFunction<Integer, Integer, Exception> function = this::exceptionValue;
+        final ThrowableFunction<Integer, Integer, Exception> function = i -> {
+            throwException();
+            return i;
+        };
         assertThrows(Exception.class, () ->
             function.apply(-1), "Function should throw an exception if the arguments don't meet the conditions");
     }
 
     @Test
     void testAndThenApply() {
-        Function<Integer, Integer> andThenFunction = (a) -> (0);
-        ThrowableFunction<Integer, Integer, IllegalArgumentException> operation = this::value;
-        ThrowableFunction<Integer, Integer, IllegalArgumentException> function = operation.andThen(andThenFunction);
+        final Function<Integer, Integer> andThenFunction = (a) -> (0);
+        final ThrowableFunction<Integer, Integer, IllegalArgumentException> operation = i -> i;
+        final ThrowableFunction<Integer, Integer, IllegalArgumentException> function = operation.andThen(andThenFunction);
         assertEquals(0, function.apply(1), "Function should return zero");
         assertEquals(0, function.apply(2), "Function should return zero");
     }
 
     @Test
     void testAndThenNull() {
-        ThrowableFunction<Integer, Integer, IllegalArgumentException> function = this::value;
+        final ThrowableFunction<Integer, Integer, IllegalArgumentException> function = i -> {
+            this.throwException();
+            return i;
+        };
         assertThrows(NullPointerException.class, () ->
             function.andThen(null), "Function should throw a NullPointerException if the andThen function is invalid");
     }
 
     @Test
     void testAndThenExecution() {
-        AtomicInteger indicator = new AtomicInteger();
-        Function<Integer, Integer> andThenFunction = (a) -> indicator.incrementAndGet();
-        ThrowableFunction<Integer, Integer, IllegalArgumentException> operation = (a) -> {
+        final AtomicInteger indicator = new AtomicInteger();
+        final Function<Integer, Integer> andThenFunction = (a) -> indicator.incrementAndGet();
+        final ThrowableFunction<Integer, Integer, IllegalArgumentException> operation = (a) -> {
             throw new IllegalArgumentException();
         };
-        ThrowableFunction<Integer, Integer, IllegalArgumentException> function = operation.andThen(andThenFunction);
+        final ThrowableFunction<Integer, Integer, IllegalArgumentException> function = operation.andThen(andThenFunction);
         assertThrows(IllegalArgumentException.class, () -> function.apply(1), "The operation should fail");
         assertEquals(0, indicator.get(), "AndThenFunction should not have executed since the operation failed");
     }
 
-    private int value(int a) {
-        if (a <= 0) {
-            throw new IllegalArgumentException();
-        }
-        return a;
+    private void throwException() {
+        throw new IllegalArgumentException();
     }
 
-    private int exceptionValue(int a) throws Exception {
-        if (a <= 0) {
-            throw new Exception();
-        }
-        return a;
+    private int throwException2() throws Exception {
+        throw new Exception();
     }
 }
