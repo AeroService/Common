@@ -17,6 +17,7 @@
 package org.aero.common.core.function;
 
 import org.aero.common.core.validate.Check;
+
 import java.util.function.Function;
 
 /**

@@ -16,35 +16,35 @@
 
 package org.aero.common.core.runnable;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CatchingRunnableTest {
 
-    private static int a;
-
     @Test
     void testRun() {
-        CatchingRunnable runnable = new CatchingRunnable(this::check);
-        a = 1;
+        final AtomicBoolean result = new AtomicBoolean();
+        final CatchingRunnable runnable = new CatchingRunnable(() -> result.set(true));
+
+        assertFalse(result.get());
         assertDoesNotThrow(runnable::run);
-        a = 2;
-        assertDoesNotThrow(runnable::run);
+        assertTrue(result.get());
     }
 
     @Test
     void testThrowingRun() {
-        CatchingRunnable runnable = new CatchingRunnable(this::check);
-        a = -1;
+        final CatchingRunnable runnable = new CatchingRunnable(this::throwException);
         assertThrows(IllegalArgumentException.class,
             runnable::run, "Function should throw an exception if the arguments don't meet the conditions");
     }
 
-    private void check() {
-        if (a <= 0) {
-            throw new IllegalArgumentException();
-        }
+    private void throwException() {
+        throw new IllegalArgumentException();
     }
 }

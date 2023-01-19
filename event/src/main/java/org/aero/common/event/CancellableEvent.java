@@ -33,5 +33,5 @@ public interface CancellableEvent {
      *
      * @param cancel true if the event should be cancelled, false otherwise
      */
-    void setCancelled(boolean cancel);
+    void cancelled(boolean cancel);
 }

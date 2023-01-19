@@ -16,12 +16,13 @@
 
 package org.aero.common.task.scheduler;
 
-import java.time.Duration;
-import java.time.temporal.TemporalUnit;
-import java.util.concurrent.TimeUnit;
 import org.aero.common.core.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.time.Duration;
+import java.time.temporal.TemporalUnit;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Represents a task that is scheduled to run on a {@link Scheduler}.
@@ -60,6 +61,12 @@ public sealed interface Task permits TaskImpl {
      */
     sealed interface Builder permits TaskImpl.BuilderImpl {
 
+        /**
+         * Sets the delay for execution to the specified amount of time.
+         *
+         * @param schedule the {@link TaskSchedule}, which indicates the delay
+         * @return this builder, for chaining
+         */
         @NotNull Builder delay(@NotNull TaskSchedule schedule);
 
         /**
@@ -97,6 +104,12 @@ public sealed interface Task permits TaskImpl {
             return this.delay(time, timeUnit.toChronoUnit());
         }
 
+        /**
+         * Sets the delay for execution to the specified amount of time.
+         *
+         * @param schedule the {@link TaskSchedule}, which indicates the delay
+         * @return this builder, for chaining
+         */
         @NotNull Builder repeat(@NotNull TaskSchedule schedule);
 
         /**

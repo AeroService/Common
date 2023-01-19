@@ -16,12 +16,13 @@
 
 package org.aero.common.core.container;
 
-import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  * Represents a class that can capture two references of two types and set or clear the data using
- * {@link #setFirst(Object)} and {@link #setSecond(Object)}. It can be used to return multiple objects of a method, or
+ * {@link #first(Object)} and {@link #second(Object)}. It can be used to return multiple objects of a method, or
  * to easily capture multiple objects without creating their own class.
  *
  * @param <T> the type of the first reference
@@ -32,7 +33,7 @@ public final class Pair<T, U> {
     private T first;
     private U second;
 
-    private Pair(T first, U second) {
+    private Pair(final T first, final U second) {
         this.first = first;
         this.second = second;
     }
@@ -46,7 +47,7 @@ public final class Pair<T, U> {
      * @param <U>    the type of the second reference
      * @return the created pair
      */
-    public static <T, U> @NotNull Pair<T, U> of(T first, U second) {
+    public static <T, U> @NotNull Pair<T, U> of(final T first, final U second) {
         return new Pair<>(first, second);
     }
 
@@ -67,7 +68,7 @@ public final class Pair<T, U> {
      * @return the first reference
      */
     public T first() {
-        return first;
+        return this.first;
     }
 
     /**
@@ -76,7 +77,7 @@ public final class Pair<T, U> {
      * @param first the first reference
      * @return this pair, for chaining
      */
-    public Pair<T, U> setFirst(T first) {
+    public Pair<T, U> first(final T first) {
         this.first = first;
         return this;
     }
@@ -87,7 +88,7 @@ public final class Pair<T, U> {
      * @return the second reference
      */
     public U second() {
-        return second;
+        return this.second;
     }
 
     /**
@@ -96,21 +97,20 @@ public final class Pair<T, U> {
      * @param second the second reference
      * @return this pair, for chaining
      */
-    public Pair<T, U> setSecond(U second) {
+    public Pair<T, U> second(final U second) {
         this.second = second;
         return this;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
-        if (!obj.getClass().equals(this.getClass())) {
+        if (!(obj instanceof final Pair<?, ?> that)) {
             return false;
         }
 
-        Pair<?, ?> that = (Pair<?, ?>) obj;
         return Objects.deepEquals(this.first(), that.first())
             && Objects.deepEquals(this.second(), that.second());
     }

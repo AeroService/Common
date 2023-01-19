@@ -16,21 +16,21 @@
 
 package org.aero.common.event;
 
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import org.aero.common.core.builder.IBuilder;
 import org.aero.common.core.validate.Check;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Represents an event listener (handler) in an event graph.
- * <p>
- * A listener is responsible for executing some action based on an event triggering.
+ *
+ * <p>A listener is responsible for executing some action based on an event triggering.
  *
  * @param <T> the event type being handled
  */
-public interface EventListener<T> extends Comparable<EventListener<T>> {
+public sealed interface EventListener<T> extends Comparable<EventListener<T>> permits EventListenerImpl {
 
     /**
      * Created a new {@link Builder} for an event listener.
@@ -59,21 +59,18 @@ public interface EventListener<T> extends Comparable<EventListener<T>> {
     }
 
     /**
-     * Returns the type of the event listener is listening to
+     * Returns the type of the event listener is listening to.
      *
      * @return the type of the event
      */
     @NotNull Class<T> eventType();
 
     /**
-     * Returns the priority of the event listener
+     * Returns the priority of the event listener.
      *
      * @return the priority
      */
     int priority();
-
-    @ApiStatus.Internal
-    void handle(@NotNull T event);
 
     /**
      * Represent a build for an event listener.

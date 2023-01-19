@@ -16,13 +16,14 @@
 
 package org.aero.common.event;
 
+import org.aero.common.core.validate.Check;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
-import org.aero.common.core.validate.Check;
-import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings({"rawtypes"})
 final class EventBusImpl implements EventBus {
@@ -34,9 +35,9 @@ final class EventBusImpl implements EventBus {
     }
 
     @Override
-    public void register(@NotNull EventListener<?> listener) {
+    public void register(@NotNull final EventListener<?> listener) {
         Check.notNull(listener, "listener");
-        SortedSet<EventListener> typeListeners = this.listeners.computeIfAbsent(
+        final SortedSet<EventListener> typeListeners = this.listeners.computeIfAbsent(
             listener.eventType(),
             type -> new TreeSet<>()
         );
@@ -44,9 +45,9 @@ final class EventBusImpl implements EventBus {
     }
 
     @Override
-    public void unregister(@NotNull EventListener<?> listener) {
+    public void unregister(@NotNull final EventListener<?> listener) {
         Check.notNull(listener, "listener");
-        SortedSet<EventListener> typeListeners = this.listeners.get(listener.eventType());
+        final SortedSet<EventListener> typeListeners = this.listeners.get(listener.eventType());
 
         if (typeListeners == null) {
             return;
@@ -56,17 +57,17 @@ final class EventBusImpl implements EventBus {
     }
 
     @Override
-    public void unregisterIf(@NotNull Predicate<EventListener<?>> predicate) {
+    public void unregisterIf(@NotNull final Predicate<EventListener<?>> predicate) {
         Check.notNull(predicate, "predicate");
-        for (SortedSet<EventListener> typeListeners : this.listeners.values()) {
+        for (final SortedSet<EventListener> typeListeners : this.listeners.values()) {
             typeListeners.removeIf(predicate::test);
         }
     }
 
     @Override
-    public boolean has(@NotNull EventListener<?> listener) {
+    public boolean has(@NotNull final EventListener<?> listener) {
         Check.notNull(listener, "listener");
-        SortedSet<EventListener> typeListeners = this.listeners.get(listener.eventType());
+        final SortedSet<EventListener> typeListeners = this.listeners.get(listener.eventType());
 
         if (typeListeners == null) {
             return false;
@@ -77,18 +78,22 @@ final class EventBusImpl implements EventBus {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void call(@NotNull Object event) {
+    public void call(@NotNull final Object event) {
         Check.notNull(event, "event");
 
-        for (var entry : this.listeners.entrySet()) {
+        for (final Map.Entry<Class, SortedSet<EventListener>> entry : this.listeners.entrySet()) {
             if (!entry.getKey().isAssignableFrom(event.getClass())) {
                 continue;
             }
 
-            SortedSet<EventListener> typeListeners = entry.getValue();
+            final SortedSet<EventListener> typeListeners = entry.getValue();
 
-            for (EventListener listener : typeListeners) {
-                listener.handle(event);
+            for (final EventListener listener : typeListeners) {
+                if (!(listener instanceof EventListenerImpl handler)) {
+                    continue;
+                }
+
+                handler.handle(event);
             }
         }
     }

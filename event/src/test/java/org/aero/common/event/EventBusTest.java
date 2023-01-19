@@ -16,23 +16,24 @@
 
 package org.aero.common.event;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.aero.common.core.validate.Check;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.aero.common.core.validate.Check;
-import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EventBusTest {
 
     @Test
     void testCall() {
-        EventBus eventBus = EventBus.create();
-        AtomicBoolean result = new AtomicBoolean(false);
+        final EventBus eventBus = EventBus.create();
+        final AtomicBoolean result = new AtomicBoolean(false);
 
-        var listener = EventListener.of(EventTest.class, eventTest -> result.set(true));
+        final EventListener<EventTest> listener = EventListener.of(EventTest.class, eventTest -> result.set(true));
 
         eventBus.register(listener);
         assertFalse(result.get(), "The event should not be called before the call");
@@ -48,13 +49,13 @@ class EventBusTest {
 
     @Test
     void testCancellable() {
-        EventBus eventBus = EventBus.create();
-        AtomicBoolean result = new AtomicBoolean(false);
+        final EventBus eventBus = EventBus.create();
+        final AtomicBoolean result = new AtomicBoolean(false);
 
-        var listener = EventListener
+        final EventListener<CancellableTest> listener = EventListener
             .builder(CancellableTest.class)
             .handler(event -> {
-                event.setCancelled(true);
+                event.cancelled(true);
                 result.set(true);
                 assertTrue(event.isCancelled(), "The event should be cancelled");
             }).build();
@@ -70,57 +71,57 @@ class EventBusTest {
 
     @Test
     void testRecursive() {
-        EventBus eventBus = EventBus.create();
-        AtomicBoolean result1 = new AtomicBoolean(false);
-        AtomicBoolean result2 = new AtomicBoolean(false);
+        final EventBus eventBus = EventBus.create();
+        final AtomicBoolean result = new AtomicBoolean(false);
+        final AtomicBoolean result2 = new AtomicBoolean(false);
 
-        var listener1 = EventListener.of(Recursive1.class, event -> result1.set(true));
-        var listener2 = EventListener.of(Recursive2.class, event -> result2.set(true));
+        final EventListener<Recursive> listener = EventListener.of(Recursive.class, event -> result.set(true));
+        final EventListener<Recursive2> listener2 = EventListener.of(Recursive2.class, event -> result2.set(true));
 
-        eventBus.register(listener1);
+        eventBus.register(listener);
         eventBus.register(listener2);
 
         eventBus.call(new Recursive2());
         assertTrue(result2.get(), "Recursive2 should have been called directly");
-        assertTrue(result1.get(),
-            "Recursive1 should be called due to the fact that the Recursive2 event inherits from it");
+        assertTrue(result.get(),
+            "Recursive should be called due to the fact that the Recursive2 event inherits from it");
 
         // Remove the direct listener
-        result1.set(false);
+        result.set(false);
         result2.set(false);
         eventBus.unregister(listener2);
         eventBus.call(new Recursive2());
         assertFalse(result2.get(), "There is no listener for Recursive2");
-        assertTrue(result1.get(),
-            "Recursive1 should be called due to the fact that the Recursive2 event inherits from it");
+        assertTrue(result.get(),
+            "Recursive should be called due to the fact that the Recursive2 event inherits from it");
     }
 
     @Test
     void testPriorities() {
-        EventBus eventBus = EventBus.create();
-        AtomicInteger indicator = new AtomicInteger(0);
+        final EventBus eventBus = EventBus.create();
+        final AtomicInteger indicator = new AtomicInteger(0);
 
-        var listener1 = EventListener
+        final EventListener<EventTest> listener = EventListener
             .builder(EventTest.class)
             .priority(100)
             .handler(event -> {
-                int old = indicator.getAndSet(100);
+                final int old = indicator.getAndSet(100);
 
                 assertEquals(10, old);
             })
             .build();
-        var listener2 = EventListener
+        final EventListener<EventTest> listener2 = EventListener
             .builder(EventTest.class)
             .priority(10)
             .handler(event -> {
-                int old = indicator.getAndSet(10);
+                final int old = indicator.getAndSet(10);
 
                 assertEquals(5, old);
             })
             .build();
 
         eventBus.register(EventTest.class, event -> indicator.set(5));
-        eventBus.register(listener1);
+        eventBus.register(listener);
         eventBus.register(listener2);
 
         assertEquals(0, indicator.get());
@@ -137,12 +138,11 @@ class EventBusTest {
 
     }
 
-    static class Recursive1 {
+    static class Recursive {
 
     }
 
-    static class Recursive2 extends Recursive1 {
+    static class Recursive2 extends Recursive {
 
     }
-
 }

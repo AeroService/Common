@@ -49,11 +49,10 @@ public interface ThrowableBiConsumer<T, U, V extends Throwable> {
      * performed.
      *
      * @param after the operation to perform after this operation
-     * @return a composed {@code ThrowableBiConsumer} that performs in sequence this operation followed by the
-     * {@code after} operation
+     * @return a composed {@code ThrowableBiConsumer} that performs in sequence this operation followed by the {@code after} operation
      * @throws NullPointerException if {@code after} is null
      */
-    default ThrowableBiConsumer<T, U, V> andThen(ThrowableBiConsumer<? super T, ? super U, ? extends V> after) {
+    default ThrowableBiConsumer<T, U, V> andThen(final ThrowableBiConsumer<? super T, ? super U, ? extends V> after) {
         Check.notNull(after, "after");
         return (t, u) -> {
             this.accept(t, u);

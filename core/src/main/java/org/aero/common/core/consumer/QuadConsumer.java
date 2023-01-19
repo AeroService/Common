@@ -17,6 +17,7 @@
 package org.aero.common.core.consumer;
 
 import org.aero.common.core.validate.Check;
+
 import java.util.function.Consumer;
 
 /**
@@ -51,8 +52,7 @@ public interface QuadConsumer<T, U, V, W> {
      * operation. If performing this operation throws an exception, the {@code after} operation will not be performed.
      *
      * @param after the operation to perform after this operation
-     * @return a composed {@code QuadConsumer} that performs in sequence this operation followed by the {@code after}
-     * operation
+     * @return a composed {@code QuadConsumer} that performs in sequence this operation followed by the {@code after} operation
      * @throws NullPointerException if {@code after} is null
      */
     default QuadConsumer<T, U, V, W> andThen(QuadConsumer<? super T, ? super U, ? super V, ? super W> after) {
