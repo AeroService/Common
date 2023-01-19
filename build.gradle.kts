@@ -1,3 +1,5 @@
+import io.github.gradlenexus.publishplugin.NexusPublishExtension
+
 /*
  * Copyright 2020-2023 AeroService
  *
@@ -15,42 +17,52 @@
  */
 
 plugins {
-    id("java")
-    id("maven-publish")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("build-logic")
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.nexusPublish)
 }
 
-defaultTasks("build", "shadowJar")
+defaultTasks("build", "test", "shadowJar")
 
 allprojects {
     group = "org.aero"
-    version = "1.0.0"
+    version = "1.0.0-SNAPSHOT"
     description = "A common core library"
 
     repositories {
         mavenCentral()
+
+        maven("https://oss.sonatype.org/content/repositories/snapshots/")
+        maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     }
 }
 
 subprojects {
-    apply(plugin = "java")
     apply(plugin = "maven-publish")
-    apply(plugin = "com.github.johnrengelman.shadow")
+
+    apply(plugin = "java-library")
+    apply(plugin = "checkstyle")
+    apply(plugin = "com.diffplug.spotless")
 
     dependencies {
-        implementation("org.jetbrains:annotations:23.1.0")
-        implementation("org.slf4j:slf4j-api:2.0.5")
+        "implementation"(rootProject.libs.annotations)
+        "implementation"(rootProject.libs.slf4j)
 
-        testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.1")
-        testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
-        testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.1")
-        testImplementation("org.junit.platform:junit-platform-suite-api:1.9.1")
-        testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:1.9.1")
+        "testImplementation"(rootProject.libs.bundles.junit)
+        "testImplementation"(rootProject.libs.bundles.mockito)
     }
 
-    java {
-        withSourcesJar()
-        withJavadocJar()
+    tasks.withType<Jar> {
+        from(rootProject.file("LICENSE"))
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+        testLogging {
+            events("started", "passed", "skipped", "failed")
+        }
+        systemProperties(System.getProperties().mapKeys { it.key.toString() })
     }
 
     tasks.withType<JavaCompile> {
@@ -61,11 +73,39 @@ subprojects {
 
     }
 
-    publishing {
-        publications {
-            create<MavenPublication>(project.name) {
-                from(components.findByName("java"))
-            }
+    tasks.withType<Checkstyle> {
+        maxErrors = 0
+        maxWarnings = 0
+        configFile = rootProject.file("checkstyle.xml")
+    }
+
+    extensions.configure<CheckstyleExtension> {
+        toolVersion = "10.3.4"
+    }
+
+    tasks.register<org.gradle.jvm.tasks.Jar>("javadocJar") {
+        archiveClassifier.set("javadoc")
+        from(tasks.getByName("javadoc"))
+    }
+
+    tasks.register<org.gradle.jvm.tasks.Jar>("sourcesJar") {
+        archiveClassifier.set("sources")
+        from(project.the<JavaPluginExtension>().sourceSets["main"].allJava)
+    }
+
+    configurePublishing("java", true)
+}
+
+extensions.configure<NexusPublishExtension> {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+
+            username.set(System.getenv("SONATYPE_USER"))
+            password.set(System.getenv("SONATYPE_TOKEN"))
         }
     }
+
+    useStaging.set(!rootProject.version.toString().endsWith("-SNAPSHOT"))
 }
