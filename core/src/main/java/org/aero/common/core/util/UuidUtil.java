@@ -17,9 +17,10 @@
 package org.aero.common.core.util;
 
 import org.aero.common.core.validate.Check;
+import org.jetbrains.annotations.NotNull;
+
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents utility class that holds some methods to work with uuids.
@@ -36,7 +37,7 @@ public final class UuidUtil {
      * @param name the string for the generation
      * @return the uuid
      */
-    public static @NotNull UUID fromName(@NotNull String name) {
+    public static @NotNull UUID fromName(@NotNull final String name) {
         Check.notNull(name, "name");
         return UUID.nameUUIDFromBytes(name.toLowerCase().getBytes(StandardCharsets.UTF_8));
     }

@@ -16,12 +16,13 @@
 
 package org.aero.common.core.container;
 
-import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  * Represents a class that can capture three references of three types and set or clear the data using
- * {@link #setFirst(Object)}, {@link #setSecond(Object)} and {@link #setThird(Object)}. It can be used to return
+ * {@link #first(Object)} (Object)}, {@link #second(Object)} (Object)} and {@link #third(Object)} (Object)}. It can be used to return
  * multiple objects of a method, or to easily capture multiple objects without creating their own class.
  *
  * @param <T> the type of the first reference
@@ -34,7 +35,7 @@ public final class Triple<T, U, V> {
     private U second;
     private V third;
 
-    private Triple(T first, U second, V third) {
+    private Triple(final T first, final U second, final V third) {
         this.first = first;
         this.second = second;
         this.third = third;
@@ -51,7 +52,7 @@ public final class Triple<T, U, V> {
      * @param <V>    the type of the third reference
      * @return the created triple
      */
-    public static <T, U, V> @NotNull Triple<T, U, V> of(T first, U second, V third) {
+    public static <T, U, V> @NotNull Triple<T, U, V> of(final T first, final U second, final V third) {
         return new Triple<>(first, second, third);
     }
 
@@ -73,7 +74,7 @@ public final class Triple<T, U, V> {
      * @return the first reference
      */
     public T first() {
-        return first;
+        return this.first;
     }
 
     /**
@@ -82,7 +83,7 @@ public final class Triple<T, U, V> {
      * @param first the first reference
      * @return this pair, for chaining
      */
-    public Triple<T, U, V> setFirst(T first) {
+    public Triple<T, U, V> first(final T first) {
         this.first = first;
         return this;
     }
@@ -93,7 +94,7 @@ public final class Triple<T, U, V> {
      * @return the second reference
      */
     public U second() {
-        return second;
+        return this.second;
     }
 
     /**
@@ -102,7 +103,7 @@ public final class Triple<T, U, V> {
      * @param second the second reference
      * @return this pair, for chaining
      */
-    public Triple<T, U, V> setSecond(U second) {
+    public Triple<T, U, V> second(final U second) {
         this.second = second;
         return this;
     }
@@ -113,7 +114,7 @@ public final class Triple<T, U, V> {
      * @return the third reference
      */
     public V third() {
-        return third;
+        return this.third;
     }
 
     /**
@@ -122,21 +123,21 @@ public final class Triple<T, U, V> {
      * @param third the third reference
      * @return this pair, for chaining
      */
-    public Triple<T, U, V> setThird(V third) {
+    public Triple<T, U, V> third(final V third) {
         this.third = third;
         return this;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
-        if (!obj.getClass().equals(this.getClass())) {
+
+        if (!(obj instanceof final Triple<?, ?, ?> that)) {
             return false;
         }
 
-        Triple<?, ?, ?> that = (Triple<?, ?, ?>) obj;
         return Objects.deepEquals(this.first(), that.first())
             && Objects.deepEquals(this.second(), that.second())
             && Objects.deepEquals(this.third(), that.third());

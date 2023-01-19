@@ -16,6 +16,9 @@
 
 package org.aero.common.event;
 
+/**
+ * Represents an event which can be cancelled and is already implemented.
+ */
 public abstract class AbstractCancellableEvent implements CancellableEvent {
 
     private boolean cancelled = false;
@@ -26,7 +29,7 @@ public abstract class AbstractCancellableEvent implements CancellableEvent {
     }
 
     @Override
-    public void setCancelled(boolean cancel) {
+    public void cancelled(final boolean cancel) {
         this.cancelled = cancel;
     }
 }

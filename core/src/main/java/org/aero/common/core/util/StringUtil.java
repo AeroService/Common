@@ -16,9 +16,19 @@
 
 package org.aero.common.core.util;
 
+/**
+ * Miscellaneous {@link String} utility methods.
+ */
 public final class StringUtil {
 
+    /**
+     * Contains a space character as string.
+     */
     public static final String SPACE = " ";
+
+    /**
+     * Contains a space character as char.
+     */
     public static final char SPACE_CHAR = ' ';
 
     private StringUtil() {

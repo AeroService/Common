@@ -17,8 +17,9 @@
 package org.aero.common.core.function;
 
 import org.aero.common.core.validate.Check;
-import java.util.function.Function;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Function;
 
 /**
  * Represents a {@link Function} that prints exceptions thrown.
@@ -28,7 +29,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public record CatchingFunction<T, R>(Function<T, R> delegate) implements Function<T, R> {
 
-    public CatchingFunction(@NotNull Function<T, R> delegate) {
+    /**
+     * Constructs a new catching function.
+     *
+     * @param delegate the delegating runnable to run
+     */
+    public CatchingFunction(@NotNull final Function<T, R> delegate) {
         Check.notNull(delegate, "delegate");
         this.delegate = delegate;
     }
@@ -37,12 +43,12 @@ public record CatchingFunction<T, R>(Function<T, R> delegate) implements Functio
      * {@inheritDoc}
      */
     @Override
-    public R apply(T t) {
+    public R apply(final T t) {
         try {
             return this.delegate.apply(t);
-        } catch (Throwable e) {
-            e.printStackTrace();
-            throw e;
+        } catch (final Throwable throwable) {
+            throwable.printStackTrace();
+            throw throwable;
         }
     }
 }

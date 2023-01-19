@@ -16,19 +16,19 @@
 
 package org.aero.common.core.validate;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import org.junit.jupiter.api.Test;
 
 class CheckTest {
 
     @Test
     void testNotNull() {
-        assertThrows(NullPointerException.class, () -> Check.notNull(null, "nullObject"));
+        assertThrows(IllegalArgumentException.class, () -> Check.notNull(null, "nullObject"));
         assertDoesNotThrow(() -> Check.notNull("foo", "nullObject"));
 
-        assertThrows(NullPointerException.class, () -> Check.notNull(null, "{0}Object", "null"));
+        assertThrows(IllegalArgumentException.class, () -> Check.notNull(null, "{0}Object", "null"));
         assertDoesNotThrow(() -> Check.notNull("foo", "{0}Object", "null"));
     }
 

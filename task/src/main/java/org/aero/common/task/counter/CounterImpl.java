@@ -16,15 +16,15 @@
 
 package org.aero.common.task.counter;
 
+import org.aero.common.core.runnable.CatchingRunnable;
+import org.aero.common.core.validate.Check;
+import org.aero.common.task.scheduler.Scheduler;
+import org.aero.common.task.scheduler.Task;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
-import org.aero.common.core.runnable.CatchingRunnable;
-import org.aero.common.task.scheduler.Task;
-import org.aero.common.task.scheduler.Scheduler;
-import org.aero.common.core.validate.Check;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 final class CounterImpl implements Counter {
 
@@ -45,15 +45,15 @@ final class CounterImpl implements Counter {
     private volatile CounterStatus status;
 
     CounterImpl(
-        Scheduler scheduler,
-        long startCount,
-        long stopCount,
-        long tick,
-        TimeUnit tickUnit,
-        Consumer<Counter> startHandler,
-        Consumer<Counter> tickHandler,
-        Consumer<Counter> finishHandler,
-        Consumer<Counter> cancelHandler
+        final Scheduler scheduler,
+        final long startCount,
+        final long stopCount,
+        final long tick,
+        final TimeUnit tickUnit,
+        final Consumer<Counter> startHandler,
+        final Consumer<Counter> tickHandler,
+        final Consumer<Counter> finishHandler,
+        final Consumer<Counter> cancelHandler
     ) {
         Check.notNull(tickUnit, "tickUnit");
         Check.argCondition(tick <= 0, "tick");
@@ -78,7 +78,7 @@ final class CounterImpl implements Counter {
             throw new IllegalStateException("This counter is already running");
         }
 
-        this.currentCount.set(this.startCount - step);
+        this.currentCount.set(this.startCount - this.step);
         this.task = this.scheduler
             .buildTask(new CatchingRunnable(this::tick))
             .repeat(this.tick, this.tickUnit)
@@ -134,7 +134,7 @@ final class CounterImpl implements Counter {
     }
 
     @Override
-    public void setCurrentCount(long count) {
+    public void currentCount(final long count) {
         this.currentCount.set(count);
     }
 
@@ -190,7 +190,7 @@ final class CounterImpl implements Counter {
         this.cancelHandler.accept(this);
     }
 
-    private void cancel(Runnable callback) {
+    private void cancel(final Runnable callback) {
         this.status = CounterStatus.IDLING;
         if (this.task == null) {
             return;
@@ -231,24 +231,24 @@ final class CounterImpl implements Counter {
         private Consumer<Counter> finishHandler;
         private Consumer<Counter> cancelHandler;
 
-        BuilderImpl(Scheduler scheduler) {
+        BuilderImpl(final Scheduler scheduler) {
             this.scheduler = scheduler;
         }
 
         @Override
-        public Counter.@NotNull Builder startCount(long startCount) {
+        public Counter.@NotNull Builder startCount(final long startCount) {
             this.startCount = startCount;
             return this;
         }
 
         @Override
-        public Counter.@NotNull Builder stopCount(long stopCount) {
+        public Counter.@NotNull Builder stopCount(final long stopCount) {
             this.stopCount = stopCount;
             return this;
         }
 
         @Override
-        public Counter.@NotNull Builder tick(long tick, @NotNull TimeUnit tickUnit) {
+        public Counter.@NotNull Builder tick(final long tick, @NotNull final TimeUnit tickUnit) {
             Check.notNull(tickUnit, "tickUnit");
             Check.argCondition(tick <= 0, "tick must be positive");
             this.tick = tick;
@@ -257,25 +257,25 @@ final class CounterImpl implements Counter {
         }
 
         @Override
-        public Counter.@NotNull Builder startCallback(@Nullable Consumer<Counter> startCallback) {
+        public Counter.@NotNull Builder startCallback(final Consumer<Counter> startCallback) {
             this.startHandler = startCallback;
             return this;
         }
 
         @Override
-        public Counter.@NotNull Builder tickCallback(@Nullable Consumer<Counter> tickCallback) {
+        public Counter.@NotNull Builder tickCallback(final Consumer<Counter> tickCallback) {
             this.tickHandler = tickCallback;
             return this;
         }
 
         @Override
-        public Counter.@NotNull Builder finishCallback(@Nullable Consumer<Counter> finishCallback) {
+        public Counter.@NotNull Builder finishCallback(final Consumer<Counter> finishCallback) {
             this.finishHandler = finishCallback;
             return this;
         }
 
         @Override
-        public Counter.@NotNull Builder cancelCallback(@Nullable Consumer<Counter> cancelCallback) {
+        public Counter.@NotNull Builder cancelCallback(final Consumer<Counter> cancelCallback) {
             this.cancelHandler = cancelCallback;
             return this;
         }

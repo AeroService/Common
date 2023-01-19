@@ -16,36 +16,32 @@
 
 package org.aero.common.core.supplier;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.jupiter.api.Test;
-
-public class CatchingSupplierTest {
-
-    private static int a;
+class CatchingSupplierTest {
 
     @Test
     void testGet() {
-        CatchingSupplier<Integer> supplier = new CatchingSupplier<>(this::a);
-        a = 1;
+        final CatchingSupplier<Integer> supplier = new CatchingSupplier<>(() -> 1);
+
         assertEquals(1, supplier.get(), "Supplier should provide the input of 1");
-        a = 2;
-        assertEquals(2, supplier.get(), "Supplier should provide the input of 2");
     }
 
     @Test
     void testThrowingGet() {
-        CatchingSupplier<Integer> supplier = new CatchingSupplier<>(this::a);
-        a = -1;
+        final CatchingSupplier<Integer> supplier = new CatchingSupplier<>(() -> {
+            this.throwException();
+            return 1;
+        });
+
         assertThrows(IllegalArgumentException.class,
             supplier::get, "Supplier should throw an exception if the arguments don't meet the conditions");
     }
 
-    int a() {
-        if (a <= 0) {
-            throw new IllegalArgumentException();
-        }
-        return a;
+    private void throwException() {
+        throw new IllegalArgumentException();
     }
 }

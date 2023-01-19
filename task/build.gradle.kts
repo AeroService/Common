@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 /*
  * Copyright 2020-2023 AeroService
  *
@@ -13,6 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+plugins {
+    alias(libs.plugins.shadow)
+}
+
+tasks.withType<ShadowJar> {
+    archiveFileName.set("common-task.jar")
+    archiveVersion.set(null as String?)
+
+    // drop unused classes which are making the jar bigger
+    minimize()
+}
 
 dependencies {
     implementation(project(":core"))

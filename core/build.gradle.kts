@@ -14,3 +14,6 @@
  * limitations under the License.
  */
 
+tasks.withType<Jar> {
+    archiveFileName.set("common-core.jar")
+}

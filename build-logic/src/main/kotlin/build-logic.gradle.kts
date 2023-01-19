@@ -1,5 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
 /*
  * Copyright 2020-2023 AeroService
  *
@@ -17,17 +15,5 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
  */
 
 plugins {
-    alias(libs.plugins.shadow)
-}
-
-tasks.withType<ShadowJar> {
-    archiveFileName.set("common-event.jar")
-    archiveVersion.set(null as String?)
-
-    // drop unused classes which are making the jar bigger
-    minimize()
-}
-
-dependencies {
-    implementation(project(":core"))
+    id("net.kyori.indra.git")
 }

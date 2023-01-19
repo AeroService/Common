@@ -16,32 +16,37 @@
 
 package org.aero.common.task.scheduler;
 
+import org.aero.common.core.validate.Check;
+import org.jetbrains.annotations.NotNull;
+
 import java.time.Duration;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-import org.aero.common.core.validate.Check;
-import org.jetbrains.annotations.NotNull;
 
 final class SchedulerImpl implements Scheduler {
 
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(r -> {
-        Thread thread = new Thread(r);
+        final Thread thread = new Thread(r);
         thread.setDaemon(true);
         return thread;
     });
 
+    SchedulerImpl() {
+
+    }
+
     @Override
-    public @NotNull Task submitTask(@NotNull Supplier<TaskSchedule> task) {
+    public @NotNull Task submitTask(@NotNull final Supplier<TaskSchedule> task) {
         Check.notNull(task, "task");
 
-        TaskImpl taskWrapper = new TaskImpl(this, task);
+        final TaskImpl taskWrapper = new TaskImpl(this, task);
         this.handleTask(taskWrapper);
         return taskWrapper;
     }
 
-    private void execute(TaskImpl task) {
+    private void execute(final TaskImpl task) {
         if (!task.isAlive()) {
             return;
         }
@@ -49,14 +54,14 @@ final class SchedulerImpl implements Scheduler {
         this.executor.submit(() -> this.handleTask(task));
     }
 
-    private void handleTask(TaskImpl task) {
-        TaskSchedule schedule = task.task().get();
+    private void handleTask(final TaskImpl task) {
+        final TaskSchedule schedule = task.task().get();
 
-        if (schedule instanceof TaskScheduleImpl.DurationSchedule durationSchedule) {
-            Duration duration = durationSchedule.duration();
+        if (schedule instanceof final TaskScheduleImpl.DurationSchedule durationSchedule) {
+            final Duration duration = durationSchedule.duration();
 
             this.executor.schedule(() -> this.execute(task), duration.toMillis(), TimeUnit.MILLISECONDS);
-        } else if (schedule instanceof TaskScheduleImpl.FutureSchedule futureSchedule) {
+        } else if (schedule instanceof final TaskScheduleImpl.FutureSchedule futureSchedule) {
             futureSchedule.future().thenRun(() -> this.execute(task));
         } else if (schedule instanceof TaskScheduleImpl.Immediate) {
             this.execute(task);

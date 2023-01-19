@@ -17,8 +17,9 @@
 package org.aero.common.core.consumer;
 
 import org.aero.common.core.validate.Check;
-import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 /**
  * Represents a {@link Consumer} that prints exceptions thrown.
@@ -28,7 +29,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public record CatchingConsumer<T>(Consumer<T> delegate) implements Consumer<T> {
 
-    public CatchingConsumer(@NotNull Consumer<T> delegate) {
+    /**
+     * Constructs a new catching consumer.
+     *
+     * @param delegate the delegating runnable to run
+     */
+    public CatchingConsumer(@NotNull final Consumer<T> delegate) {
         Check.notNull(delegate, "delegate");
         this.delegate = delegate;
     }
@@ -37,12 +43,12 @@ public record CatchingConsumer<T>(Consumer<T> delegate) implements Consumer<T> {
      * {@inheritDoc}
      */
     @Override
-    public void accept(T t) {
+    public void accept(final T t) {
         try {
             this.delegate.accept(t);
-        } catch (Throwable e) {
-            e.printStackTrace();
-            throw e;
+        } catch (final Throwable throwable) {
+            throwable.printStackTrace();
+            throw throwable;
         }
     }
 }

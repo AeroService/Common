@@ -16,9 +16,10 @@
 
 package org.aero.common.task.scheduler;
 
-import java.util.function.Supplier;
 import org.aero.common.core.validate.Check;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Supplier;
 
 /**
  * Represents a scheduler to execute tasks.
@@ -36,12 +37,12 @@ public sealed interface Scheduler permits SchedulerImpl {
 
     /**
      * Submits a new task with custom scheduling logic.
-     * <p>
-     * This is the primitive method used by all scheduling shortcuts,
+     *
+     * <p>This is the primitive method used by all scheduling shortcuts,
      * {@code task} is immediately executed in the caller thread to retrieve its scheduling state
      * and the task will stay alive as long as {@link TaskSchedule#stop()} is not returned (or {@link Task#cancel()} is called).
      *
-     * @param task          the task to be directly executed in the caller thread
+     * @param task the task to be directly executed in the caller thread
      * @return the created task
      */
     @NotNull Task submitTask(@NotNull Supplier<TaskSchedule> task);
@@ -52,7 +53,7 @@ public sealed interface Scheduler permits SchedulerImpl {
      * @param runnable the runnable to run
      * @return the created task builder
      */
-    default @NotNull Task.Builder buildTask(@NotNull Runnable runnable) {
+    default @NotNull Task.Builder buildTask(@NotNull final Runnable runnable) {
         Check.notNull(runnable, "runnable");
         return new TaskImpl.BuilderImpl(this, runnable);
     }
