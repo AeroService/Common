@@ -25,7 +25,7 @@ plugins {
 defaultTasks("build", "test", "shadowJar")
 
 allprojects {
-    group = "org.aero"
+    group = "org.aero.common"
     version = "1.0.0-SNAPSHOT"
     description = "A common core library"
 
