@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-@SuppressWarnings("ClassCanBeRecord")
 final class EventListenerImpl<T> implements EventListener<T> {
 
     static int DEFAULT_PRIORITY = 0;
@@ -34,12 +33,11 @@ final class EventListenerImpl<T> implements EventListener<T> {
     private final int priority;
     private final Consumer<T> handler;
 
-    EventListenerImpl(final Class<T> type, final List<Predicate<T>> conditions, final int priority,
-        final Consumer<T> handler) {
-        this.type = type;
-        this.conditions = conditions;
-        this.priority = priority;
-        this.handler = handler;
+    EventListenerImpl(final BuilderImpl<T> builder) {
+        this.type = builder.type;
+        this.conditions = new ArrayList<>(builder.conditions);
+        this.priority = builder.priority;
+        this.handler = builder.handler;
     }
 
     @Override
@@ -110,7 +108,7 @@ final class EventListenerImpl<T> implements EventListener<T> {
 
         @Override
         public EventListener<T> build() {
-            return new EventListenerImpl<>(this.type, new ArrayList<>(this.conditions), this.priority, this.handler);
+            return new EventListenerImpl<>(this);
         }
     }
 }
