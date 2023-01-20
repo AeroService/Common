@@ -13,7 +13,6 @@ mockito = "4.11.0"
 # general
 annotations = "23.1.0"
 slf4j = "1.7.36"
-geantyref = "1.3.14"
 
 [libraries]
 
@@ -27,7 +26,6 @@ mockito = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref =
 # general
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
 slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
-geantyref = { group = "io.leangen.geantyref", name = "geantyref", version.ref = "geantyref" }
 
 [bundles]
 
