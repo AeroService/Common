@@ -12,7 +12,7 @@ mockito = "5.0.0"
 
 # general
 annotations = "23.1.0"
-slf4j = "1.7.36"
+slf4j = "2.0.6"
 
 [libraries]
 
