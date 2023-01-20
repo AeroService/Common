@@ -18,12 +18,12 @@ package org.aero.common.task.counter;
 
 import org.aero.common.core.runnable.CatchingRunnable;
 import org.aero.common.core.validate.Check;
+import org.aero.common.task.CountingRunnable;
 import org.aero.common.task.scheduler.Scheduler;
 import org.aero.common.task.scheduler.Task;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 final class CounterImpl implements Counter {
@@ -39,37 +39,26 @@ final class CounterImpl implements Counter {
     private final Consumer<Counter> tickHandler;
     private final Consumer<Counter> finishHandler;
     private final Consumer<Counter> cancelHandler;
-    private final AtomicLong currentCount;
 
+    private volatile CountingRunnable runnable;
     private volatile Task task;
     private volatile CounterStatus status;
 
-    CounterImpl(
-        final Scheduler scheduler,
-        final long startCount,
-        final long stopCount,
-        final long tick,
-        final TimeUnit tickUnit,
-        final Consumer<Counter> startHandler,
-        final Consumer<Counter> tickHandler,
-        final Consumer<Counter> finishHandler,
-        final Consumer<Counter> cancelHandler
-    ) {
-        Check.notNull(tickUnit, "tickUnit");
-        Check.argCondition(tick <= 0, "tick");
-        this.scheduler = scheduler;
+    CounterImpl(final BuilderImpl builder) {
+        Check.notNull(builder.tickUnit, "tickUnit");
+        Check.argCondition(builder.tick <= 0, "tick");
+        this.scheduler = builder.scheduler;
 
-        this.startHandler = startHandler;
-        this.tickHandler = tickHandler;
-        this.finishHandler = finishHandler;
-        this.cancelHandler = cancelHandler;
-        this.startCount = startCount;
-        this.stopCount = stopCount;
-        this.tick = tick;
-        this.tickUnit = tickUnit;
+        this.startHandler = builder.startHandler;
+        this.tickHandler = builder.tickHandler;
+        this.finishHandler = builder.finishHandler;
+        this.cancelHandler = builder.cancelHandler;
+        this.startCount = builder.startCount;
+        this.stopCount = builder.stopCount;
+        this.tick = builder.tick;
+        this.tickUnit = builder.tickUnit;
         this.status = CounterStatus.IDLING;
         this.step = stopCount > startCount ? 1 : -1;
-        this.currentCount = new AtomicLong();
     }
 
     @Override
@@ -78,9 +67,9 @@ final class CounterImpl implements Counter {
             throw new IllegalStateException("This counter is already running");
         }
 
-        this.currentCount.set(this.startCount - this.step);
+        this.runnable = new CountingRunnable(this::tick, this.step, this.startCount - this.step);
         this.task = this.scheduler
-            .buildTask(new CatchingRunnable(this::tick))
+            .buildTask(new CatchingRunnable(this.runnable))
             .repeat(this.tick, this.tickUnit)
             .schedule();
 
@@ -125,17 +114,17 @@ final class CounterImpl implements Counter {
 
     @Override
     public long tickedCount() {
-        return (this.startCount - this.currentCount.get()) * -this.step;
+        return (this.startCount - this.runnable.count()) * -this.step;
     }
 
     @Override
     public long currentCount() {
-        return this.currentCount.get();
+        return this.runnable.count();
     }
 
     @Override
     public void currentCount(final long count) {
-        this.currentCount.set(count);
+        this.runnable.count(count);
     }
 
     @Override
@@ -208,8 +197,7 @@ final class CounterImpl implements Counter {
             return;
         }
 
-        if (this.currentCount.get() * this.step < this.stopCount * this.step) {
-            this.currentCount.addAndGet(this.step);
+        if (this.runnable.count() * this.step < this.stopCount * this.step) {
             this.handleTick();
             return;
         }
@@ -282,17 +270,7 @@ final class CounterImpl implements Counter {
 
         @Override
         public @NotNull Counter build() {
-            return new CounterImpl(
-                this.scheduler,
-                this.startCount,
-                this.stopCount,
-                this.tick,
-                this.tickUnit,
-                this.startHandler,
-                this.tickHandler,
-                this.finishHandler,
-                this.cancelHandler
-            );
+            return new CounterImpl(this);
         }
     }
 }
