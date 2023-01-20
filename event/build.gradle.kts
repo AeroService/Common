@@ -29,5 +29,5 @@ tasks.withType<ShadowJar> {
 }
 
 dependencies {
-    implementation(project(":core"))
+    "implementation"(projects.core)
 }
