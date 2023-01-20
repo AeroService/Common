@@ -1,5 +1,3 @@
-import io.github.gradlenexus.publishplugin.NexusPublishExtension
-
 /*
  * Copyright 2020-2023 AeroService
  *
@@ -15,6 +13,8 @@ import io.github.gradlenexus.publishplugin.NexusPublishExtension
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import io.github.gradlenexus.publishplugin.NexusPublishExtension
 
 plugins {
     id("build-logic")

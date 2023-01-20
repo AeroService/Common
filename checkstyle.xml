@@ -1,22 +1,23 @@
 <?xml version="1.0"?>
+<!--
+  ~ Copyright 2020-2023 AeroService
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <!DOCTYPE module PUBLIC
         "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
-
-<!--
-    Checkstyle configuration that checks the Google coding conventions from Google Java Style
-    that can be found at https://google.github.io/styleguide/javaguide.html
-
-    Checkstyle is very configurable. Be sure to read the documentation at
-    http://checkstyle.org (or in your downloaded distribution).
-
-    To completely disable a check, just comment it out or delete it from the file.
-    To suppress certain violations please review suppression filters.
-
-    Authors: Max Vetrenko, Ruslan Diachenko, Roman Ivanov.
-
-    This file modified to incorporate Sponge and Configurate customizations.
- -->
 
 <module name="Checker">
     <module name="BeforeExecutionExclusionFileFilter">
@@ -56,7 +57,7 @@
     <!-- See http://checkstyle.org/config_whitespace.html -->
     <module name="NewlineAtEndOfFile"/>
 
-    <!-- Sponge code style extras -->
+    <!-- Our code style extras -->
     <module name="RegexpMultiline">
         <property name="format" value="^([^\r\n ]+ )*(class|interface|enum) [^{]*\{\r?\n[^\r\n}]"/>
         <property name="message" value="Leave empty row after class/interface/enum definition!"/>
@@ -70,7 +71,7 @@
 
     <module name="SuppressWarningsFilter"/>
 
-    <!-- Sponge: empty line at beginning and ends of classes -->
+    <!-- Empty line at beginning and ends of classes -->
     <!-- Temporary until https://github.com/checkstyle/checkstyle/issues/5313 -->
     <module name="TreeWalker">
         <module name="JavadocVariable">
@@ -86,7 +87,7 @@
             <property name="validateOnlyOverlapping" value="false"/>
         </module>
 
-        <!-- Configurate-specific changes -->
+        <!-- Our specific changes -->
 
         <!-- https://checkstyle.org/config_coding.html#AvoidDoubleBraceInitialization -->
         <module name="AvoidDoubleBraceInitialization"/>
@@ -207,7 +208,7 @@
                     COMPACT_CTOR_DEF"/>
         </module>
         <module name="SuppressionXpathSingleFilter">
-            <!-- suppresion is required till https://github.com/checkstyle/checkstyle/issues/7541 -->
+            <!-- Suppression is required till https://github.com/checkstyle/checkstyle/issues/7541 -->
             <property name="id" value="RightCurlyAlone"/>
             <property name="query" value="//RCURLY[parent::SLIST[count(./*)=1]
                                                  or preceding-sibling::*[last()][self::LCURLY]]"/>
@@ -244,13 +245,13 @@
         <module name="UpperEll"/>
         <module name="ModifierOrder"/>
         <module name="EmptyLineSeparator">
-            <!-- Configurate: No new line after the license header -->
+            <!-- No new line after the license header -->
             <property name="tokens"
                     value="IMPORT, STATIC_IMPORT, CLASS_DEF, INTERFACE_DEF, ENUM_DEF,
                     STATIC_INIT, INSTANCE_INIT, METHOD_DEF, CTOR_DEF, VARIABLE_DEF, RECORD_DEF,
                     COMPACT_CTOR_DEF"/>
             <property name="allowNoEmptyLineBetweenFields" value="true"/>
-            <property name="allowMultipleEmptyLines" value="false"/> <!-- Configurate: false -->
+            <property name="allowMultipleEmptyLines" value="false"/> <!-- false -->
         </module>
         <module name="SeparatorWrap">
             <property name="id" value="SeparatorWrapDot"/>
@@ -302,7 +303,7 @@
         </module>
         <module name="LambdaParameterName">
             <message key="name.invalidPattern"
-                    value="Lambda parameter name ''{0}'' must match pattern ''{1}''."/> <!-- Configurate: allow $ param -->
+                    value="Lambda parameter name ''{0}'' must match pattern ''{1}''."/> <!-- allow $ param -->
             <property name="format" value="^\$+|([a-z]([a-z0-9][a-zA-Z0-9]*)?)$"/>
         </module>
         <module name="CatchParameterName">
@@ -417,7 +418,7 @@
         <module name="RequireEmptyLineBeforeBlockTagGroup"/>
         <module name="AtclauseOrder">
             <property name="tagOrder"
-                    value="@param, @return, @throws, @see, @since, @deprecated"/> <!-- Configurate: extra tags -->
+                    value="@param, @return, @throws, @see, @since, @deprecated"/> <!-- extra tags -->
             <property name="target"
                     value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
         </module>
@@ -428,7 +429,7 @@
         </module>
         <module name="MissingJavadocMethod">
             <property name="scope" value="public"/>
-            <!-- <property name="minLineCount" value="2"/> Configurate: no minimum lines -->
+            <!-- <property name="minLineCount" value="2"/> no minimum lines -->
             <property name="allowedAnnotations" value="Override, Test"/>
             <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF"/>
         </module>
@@ -441,7 +442,7 @@
             <property name="ignoreInlineTags" value="false"/>
         </module>
         <module name="EmptyCatchBlock">
-            <property name="exceptionVariableName" value="(expected|ignore)"/> <!-- Configurate: allow ignore -->
+            <property name="exceptionVariableName" value="(expected|ignore)"/> <!-- allow ignore -->
         </module>
         <module name="CommentsIndentation">
             <property name="tokens" value="SINGLE_LINE_COMMENT, BLOCK_COMMENT_BEGIN"/>
