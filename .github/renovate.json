@@ -1,11 +1,11 @@
 {
-  "extends": [
-    "config:base",
-    ":rebaseStalePrs"
-  ],
-  "labels": [
-    "t: dependencies"
-  ],
-  "commitMessagePrefix": "chore: ",
-  "commitMessageAction": "update"
+    "extends": [
+        "config:base",
+        ":rebaseStalePrs"
+    ],
+    "labels": [
+        "t: dependencies"
+    ],
+    "commitMessagePrefix": "chore: ",
+    "commitMessageAction": "update"
 }
