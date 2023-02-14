@@ -34,4 +34,14 @@ public final class StringUtil {
     private StringUtil() {
         throw new UnsupportedOperationException();
     }
+
+    /**
+     * Returns whether a string is null or empty or not.
+     *
+     * @param string the string to check
+     * @return true, if the string is null or empty, false, if not.
+     */
+    public static boolean isNullOrEmpty(final String string) {
+        return string == null || string.isEmpty();
+    }
 }
