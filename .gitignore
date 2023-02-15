@@ -54,3 +54,8 @@ out/
 
 # Logs
 /*.log
+
+# Replit
+.breakpoints
+.replit
+replit.nix
