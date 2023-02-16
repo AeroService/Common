@@ -18,7 +18,7 @@ package org.aero.common.task.counter;
 
 import org.aero.common.core.runnable.CatchingRunnable;
 import org.aero.common.core.validate.Check;
-import org.aero.common.task.CountingRunnable;
+import org.aero.common.task.count.CountingRunnable;
 import org.aero.common.task.scheduler.Scheduler;
 import org.aero.common.task.scheduler.Task;
 import org.jetbrains.annotations.NotNull;
@@ -202,13 +202,8 @@ final class CounterImpl implements Counter {
             return false;
         }
 
-        if (this.runnable.count() * this.step > this.stopCount * this.step) {
-            return false;
-        }
-
-        System.out.println(this.runnable.count());
         this.handleTick();
-        return true;
+        return this.runnable.count() * this.step < this.stopCount * this.step;
     }
 
     private void tick(final boolean result) {
@@ -216,7 +211,6 @@ final class CounterImpl implements Counter {
             return;
         }
 
-        System.out.println("Finish");
         this.handleFinish();
         this.cancel(null);
     }
