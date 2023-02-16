@@ -22,8 +22,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@SuppressWarnings("MissingJavadocType")
 public interface CountingRunnable extends Runnable {
 
+    @SuppressWarnings("MissingJavadocMethod")
     static @NotNull Builder builder() {
         return new CountingRunnableImpl.BuilderImpl();
     }
@@ -34,19 +36,20 @@ public interface CountingRunnable extends Runnable {
     @SuppressWarnings("MissingJavadocMethod")
     void count(long count);
 
+    @SuppressWarnings("MissingJavadocType")
     interface Builder extends IBuilder<CountingRunnable> {
 
         @SuppressWarnings("MissingJavadocMethod")
-        @NotNull Builder step(final int step);
+        @NotNull Builder step(int step);
 
         @SuppressWarnings("MissingJavadocMethod")
-        @NotNull Builder initialCount(final long initial);
+        @NotNull Builder initialCount(long initial);
 
         @SuppressWarnings("MissingJavadocMethod")
-        @NotNull Builder condition(final Supplier<Boolean> condition);
+        @NotNull Builder condition(Supplier<Boolean> condition);
 
         @SuppressWarnings("MissingJavadocMethod")
-        @NotNull Builder callback(final Consumer<Boolean> callback);
+        @NotNull Builder callback(Consumer<Boolean> callback);
 
     }
 }

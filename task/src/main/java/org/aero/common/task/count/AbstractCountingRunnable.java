@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@SuppressWarnings("MissingJavadocType")
 public abstract class AbstractCountingRunnable implements CountingRunnable {
 
     protected final Supplier<Boolean> condition;
@@ -28,7 +29,7 @@ public abstract class AbstractCountingRunnable implements CountingRunnable {
     protected final AtomicLong count;
 
     @SuppressWarnings("MissingJavadocMethod")
-    public AbstractCountingRunnable(int step, long count, Supplier<Boolean> condition, Consumer<Boolean> callback) {
+    public AbstractCountingRunnable(final int step, final long count, final Supplier<Boolean> condition, final Consumer<Boolean> callback) {
         this.step = step;
         this.count = new AtomicLong(count);
         this.condition = condition;
