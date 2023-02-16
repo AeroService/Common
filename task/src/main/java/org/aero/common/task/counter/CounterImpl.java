@@ -18,7 +18,7 @@ package org.aero.common.task.counter;
 
 import org.aero.common.core.runnable.CatchingRunnable;
 import org.aero.common.core.validate.Check;
-import org.aero.common.task.CountingRunnable;
+import org.aero.common.task.count.CountingRunnable;
 import org.aero.common.task.scheduler.Scheduler;
 import org.aero.common.task.scheduler.Task;
 import org.jetbrains.annotations.NotNull;
@@ -58,7 +58,7 @@ final class CounterImpl implements Counter {
         this.tick = builder.tick;
         this.tickUnit = builder.tickUnit;
         this.status = CounterStatus.IDLING;
-        this.step = stopCount > startCount ? 1 : -1;
+        this.step = this.stopCount > this.startCount ? 1 : -1;
     }
 
     @Override
@@ -67,7 +67,13 @@ final class CounterImpl implements Counter {
             throw new IllegalStateException("This counter is already running");
         }
 
-        this.runnable = new CountingRunnable(this::tick, this.step, this.startCount - this.step);
+        this.runnable = CountingRunnable
+            .builder()
+            .step(this.step)
+            .initialCount(this.startCount)
+            .condition(this::condition)
+            .callback(this::tick)
+            .build();
         this.task = this.scheduler
             .buildTask(new CatchingRunnable(this.runnable))
             .repeat(this.tick, this.tickUnit)
@@ -75,7 +81,6 @@ final class CounterImpl implements Counter {
 
         this.status = CounterStatus.RUNNING;
         this.handleStart();
-        this.tick();
     }
 
     @Override
@@ -192,13 +197,17 @@ final class CounterImpl implements Counter {
         callback.run();
     }
 
-    private void tick() {
+    private boolean condition() {
         if (this.status != CounterStatus.RUNNING) {
-            return;
+            return false;
         }
 
-        if (this.runnable.count() * this.step < this.stopCount * this.step) {
-            this.handleTick();
+        this.handleTick();
+        return this.runnable.count() * this.step < this.stopCount * this.step;
+    }
+
+    private void tick(final boolean result) {
+        if (result) {
             return;
         }
 
