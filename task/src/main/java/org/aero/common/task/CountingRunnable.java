@@ -16,50 +16,99 @@
 
 package org.aero.common.task;
 
-import org.aero.common.core.validate.Check;
+import org.aero.common.core.builder.IBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
+@SuppressWarnings("MissingJavadocType")
 public final class CountingRunnable implements Runnable {
 
-    private final static int DEFAULT_STEP = 1;
-    private final static long DEFAULT_COUNT = 0;
-
-    private final Runnable runnable;
+    private final Supplier<Boolean> condition;
+    private final Consumer<Boolean> callback;
     private final int step;
     private final AtomicLong count;
 
-    public CountingRunnable(@NotNull Runnable runnable, int step, long initialCount) {
-        Check.notNull(runnable, "runnable");
-        this.runnable = runnable;
-        this.step = step;
-        this.count = new AtomicLong(initialCount);
+    @SuppressWarnings("MissingJavadocMethod")
+    private CountingRunnable(@NotNull final Builder builder) {
+        this.step = builder.step;
+        this.count = new AtomicLong(builder.initial);
+        this.condition = builder.condition;
+        this.callback = builder.callback;
     }
 
-    public CountingRunnable(@NotNull Runnable runnable, long initialCount) {
-        this(runnable, DEFAULT_STEP, initialCount);
+    @SuppressWarnings("MissingJavadocMethod")
+    public static @NotNull Builder builder() {
+        return new Builder();
     }
 
-    public CountingRunnable(@NotNull Runnable runnable) {
-        this(runnable, DEFAULT_COUNT);
-    }
-
+    @SuppressWarnings("MissingJavadocMethod")
     @Override
     public void run() {
-        this.count.getAndAdd(this.step);
-        this.runnable.run();
+        final boolean result = this.condition.get();
+        if (result) {
+            this.count.getAndAdd(this.step);
+            return;
+        }
+        this.callback.accept(result);
     }
 
+    @SuppressWarnings("MissingJavadocMethod")
     public int step() {
         return this.step;
     }
 
+    @SuppressWarnings("MissingJavadocMethod")
     public long count() {
         return this.count.getAcquire();
     }
 
-    public void count(long count) {
+    @SuppressWarnings("MissingJavadocMethod")
+    public void count(final long count) {
         this.count.set(count);
+    }
+
+    public static final class Builder implements IBuilder<CountingRunnable> {
+
+        private int step = 1;
+        private long initial = 0;
+        private Supplier<Boolean> condition;
+        private Consumer<Boolean> callback;
+
+        private Builder() {
+
+        }
+
+        @SuppressWarnings("MissingJavadocMethod")
+        public @NotNull Builder step(final int step) {
+            this.step = step;
+            return this;
+        }
+
+        @SuppressWarnings("MissingJavadocMethod")
+        public @NotNull Builder initialCount(final long initial) {
+            this.initial = initial;
+            return this;
+        }
+
+        @SuppressWarnings("MissingJavadocMethod")
+        public @NotNull Builder condition(final Supplier<Boolean> condition) {
+            this.condition = condition;
+            return this;
+        }
+
+        @SuppressWarnings("MissingJavadocMethod")
+        public @NotNull Builder callback(final Consumer<Boolean> callback) {
+            this.callback = callback;
+            return this;
+        }
+
+        @SuppressWarnings("MissingJavadocMethod")
+        @Override
+        public @NotNull CountingRunnable build() {
+            return new CountingRunnable(this);
+        }
     }
 }
