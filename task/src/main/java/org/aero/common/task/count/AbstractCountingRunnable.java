@@ -24,12 +24,12 @@ import java.util.function.Supplier;
 public abstract class AbstractCountingRunnable implements CountingRunnable {
 
     protected final Supplier<Boolean> condition;
-    protected final Consumer<Boolean> callback;
+    protected final Runnable callback;
     protected final int step;
     protected final AtomicLong count;
 
     @SuppressWarnings("MissingJavadocMethod")
-    public AbstractCountingRunnable(final int step, final long count, final Supplier<Boolean> condition, final Consumer<Boolean> callback) {
+    public AbstractCountingRunnable(final int step, final long count, final Supplier<Boolean> condition, final Runnable callback) {
         this.step = step;
         this.count = new AtomicLong(count);
         this.condition = condition;
@@ -39,11 +39,10 @@ public abstract class AbstractCountingRunnable implements CountingRunnable {
     @SuppressWarnings("MissingJavadocMethod")
     @Override
     public void run() {
-        final boolean result = this.condition.get();
-        if (result) {
+        if (this.condition.get()) {
             this.count.getAndAdd(this.step);
         }
-        this.callback.accept(result);
+        this.callback.run();
     }
 
     @SuppressWarnings("MissingJavadocMethod")

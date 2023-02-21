@@ -49,7 +49,7 @@ public interface CountingRunnable extends Runnable {
         @NotNull Builder condition(Supplier<Boolean> condition);
 
         @SuppressWarnings("MissingJavadocMethod")
-        @NotNull Builder callback(Consumer<Boolean> callback);
+        @NotNull Builder callback(Runnable callback);
 
     }
 }
