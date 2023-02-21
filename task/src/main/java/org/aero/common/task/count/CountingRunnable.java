@@ -19,7 +19,6 @@ package org.aero.common.task.count;
 import org.aero.common.core.builder.IBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings("MissingJavadocType")

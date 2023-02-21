@@ -207,7 +207,7 @@ final class CounterImpl implements Counter {
     }
 
     private void tick() {
-        if(this.step * (this.step - this.runnable.count() + this.stopCount) > 0) {
+        if (this.step * (this.step - this.runnable.count() + this.stopCount) > 0) {
             return;
         }
 
