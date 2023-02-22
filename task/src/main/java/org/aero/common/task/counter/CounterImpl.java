@@ -53,12 +53,12 @@ final class CounterImpl implements Counter {
         this.tickHandler = builder.tickHandler;
         this.finishHandler = builder.finishHandler;
         this.cancelHandler = builder.cancelHandler;
-        this.startCount = builder.startCount;
         this.stopCount = builder.stopCount;
         this.tick = builder.tick;
         this.tickUnit = builder.tickUnit;
         this.status = CounterStatus.IDLING;
-        this.step = this.stopCount > this.startCount ? 1 : -1;
+        this.step = this.stopCount > builder.startCount ? 1 : -1;
+        this.startCount = builder.startCount - this.step;
     }
 
     @Override
@@ -203,11 +203,11 @@ final class CounterImpl implements Counter {
         }
 
         this.handleTick();
-        return this.runnable.count() * this.step < this.stopCount * this.step;
+        return true;
     }
 
-    private void tick(final boolean result) {
-        if (result) {
+    private void tick() {
+        if (this.step * (this.step - this.runnable.count() + this.stopCount) > 0) {
             return;
         }
 

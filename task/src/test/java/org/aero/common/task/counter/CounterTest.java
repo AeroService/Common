@@ -221,8 +221,8 @@ class CounterTest {
     }
 
     private long expectedTimeNeeded(final Counter counter) {
-        //A buffer of one tick added.
-        return counter.tickUnit().toMillis(this.ticksToFinish(counter) * counter.tickValue());
+        //Adding a buffer of one tick
+        return counter.tickUnit().toMillis((this.ticksToFinish(counter) + 1) * counter.tickValue());
     }
 
     private long ticksToFinish(final Counter counter) {
