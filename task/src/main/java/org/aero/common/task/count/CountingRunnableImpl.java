@@ -18,7 +18,6 @@ package org.aero.common.task.count;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings("MissingJavadocType")
@@ -33,7 +32,7 @@ final class CountingRunnableImpl extends AbstractCountingRunnable {
         private int step = 1;
         private long initial = 0;
         private Supplier<Boolean> condition;
-        private Consumer<Boolean> callback;
+        private Runnable callback;
 
         BuilderImpl() {
 
@@ -58,7 +57,7 @@ final class CountingRunnableImpl extends AbstractCountingRunnable {
         }
 
         @SuppressWarnings("MissingJavadocMethod")
-        public @NotNull CountingRunnableImpl.BuilderImpl callback(final Consumer<Boolean> callback) {
+        public @NotNull CountingRunnableImpl.BuilderImpl callback(final Runnable callback) {
             this.callback = callback;
             return this;
         }
