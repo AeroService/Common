@@ -184,7 +184,6 @@ class CounterTest {
         Thread.sleep(expectedTimeNeeded(counter));
         counter.stop();
         final var ticks = ticksToFinish(counter);
-        System.out.println(ticks);
         assertEquals(ticks, indicator.get(),
             "The Counter should have ticked from startCount to stopCount");
     }
