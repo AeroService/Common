@@ -207,12 +207,16 @@ final class CounterImpl implements Counter {
     }
 
     private void tick(final boolean result) {
+        if (this.status != CounterStatus.RUNNING) {
+            return;
+        }
+
         if (result) {
             return;
         }
 
-        this.handleFinish();
         this.cancel(null);
+        this.handleFinish();
     }
 
     static final class BuilderImpl implements Counter.Builder {
