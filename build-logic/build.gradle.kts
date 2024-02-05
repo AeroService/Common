@@ -23,5 +23,5 @@ repositories {
 }
 
 dependencies {
-    implementation("net.kyori", "indra-common", "3.0.1")
+    implementation("net.kyori", "indra-common", "3.1.3")
 }
